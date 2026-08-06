@@ -6,7 +6,17 @@ A Claude Code plugin marketplace (`siegler-plugins`) by [Bill Siegler](https://g
 
 ### [delegation-steering](plugins/delegation-steering/)
 
-Explicit model/effort tiering for every delegated agent: a decision-tree skill (`model-selection`), a steering-mechanism guide (`steering-claude-code`), and a PreToolUse gate that denies model-less Agent calls and lints Workflow scripts at launch — plus evals and a freshness pipeline.
+Explicit model/effort tiering for every delegated agent, enforced — plus a decision guide for where Claude Code behavior should live.
+
+| Component                    | What it does                                                                       |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| `model-selection` skill      | Assigns each delegated agent the lowest sufficient model/effort tier               |
+| `steering-claude-code` skill | Decision tree: CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles |
+| `agent-model-gate` hook      | PreToolUse gate: denies model-less Agent calls, lints Workflow scripts at launch   |
+| `canary` command             | Live end-to-end verification of the gate, plus legacy cutover cleanup              |
+| `evals/`                     | Offline hook contract tests and skill application scenarios with baselines         |
+| `scripts/check-drift.js`     | Deterministic doc/version drift detection against dated anchors                    |
+| `docs/REMEDIATION.md`        | The drift procedure: scope the diff, re-verify empirically, ship via PR            |
 
 ## Install
 
