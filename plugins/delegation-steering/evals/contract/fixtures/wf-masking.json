@@ -1,0 +1,1 @@
+{"tool_name":"Workflow","tool_input":{"script":"const a = await agent('do x'); const b = await agent ('do y', { model: 'haiku', effort: 'low' });"}}
