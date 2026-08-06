@@ -19,6 +19,10 @@ Follow this when `scripts/check-drift.js` exits 1 (doc-page or Claude Code versi
 
 6. **After merge**: update the installed plugin (marketplace pull), restart the session, run `/delegation-steering:canary` once more against the installed copy.
 
+## Deferred hardenings
+
+- **Scoped rationale gate** — deny top-tier Agent calls (`fable`, or `opus` when it is the session's top tier) whose input carries no rationale marker. Deliberately NOT built: rationale strings demanded on every call degrade into gate-passing boilerplate. Trigger to build it: the weekly ledger summary shows top-tier over-provisioning actually happening (e.g. a sustained top-tier share on mechanical-sounding delegations). Scope it to top-tier calls only.
+
 ## Failure classes seen so far
 
 - 2026-08-05: lint span-boundary desync (space-styled `agent (` masked a model-less neighbor) — caught by review, now guarded by `--test`. Lesson: any lint change needs a masking-direction test case.

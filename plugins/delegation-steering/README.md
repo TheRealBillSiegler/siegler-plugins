@@ -4,15 +4,15 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 
 ## Components
 
-| Component | Role |
-|---|---|
-| `skills/model-selection/` | The tier ladder and selection questions for delegated agents (Agent tool, Workflow `agent()`, multi-agent plans). Loads on invocation. |
-| `skills/steering-claude-code/` | Decision tree for CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends, with locally verified addenda the article doesn't cover. |
-| `hooks/agent-model-gate.js` | PreToolUse gate (matcher `Agent\|Workflow`): denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. `--test` self-check guards the lint's span-boundary logic. |
-| `commands/canary.md` | `/delegation-steering:canary` — end-to-end live verification + rule-file install + legacy cutover cleanup. |
-| `evals/` | Offline hook contract tests (fixtures + runner) and application scenarios for both skills with recorded baselines. |
-| `scripts/check-drift.js` | Deterministic doc/version drift detection against `anchors.json`. |
-| `docs/REMEDIATION.md` | The agentic procedure that runs only when drift touches an anchored claim. |
+- **`skills/delegation-tiering/`** — the tier ladder and selection questions for delegated agents (Agent tool, Workflow `agent()`, multi-agent plans). Loads on invocation.
+- **`skills/steering-claude-code/`** — decision tree for CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends, with locally verified addenda the article doesn't cover.
+- **`hooks/agent-model-gate.js`** — PreToolUse gate (matcher `Agent|Workflow`): denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. `--test` self-check guards the lint's span-boundary logic.
+- **`hooks/delegation-ledger.js`** — PostToolUse observability: appends one JSONL line per delegation to `~/.claude/delegation-ledger.jsonl` (model, agent type, description; per-workflow model lists) so tier choices are reviewable, not just explicit.
+- **`commands/canary.md`** — `/delegation-steering:canary`: end-to-end live verification, rule-file install, and legacy cutover cleanup.
+- **`evals/`** — offline hook contract tests (fixtures + runner) and application scenarios for both skills with recorded baselines.
+- **`scripts/check-drift.js`** — deterministic doc/version drift detection against `anchors.json`.
+- **`scripts/weekly-drift-task.ps1`** — Task Scheduler wrapper: drift check, weekly behavioral probe (one headless session asserting both gate paths deny), and a 7-day delegation-mix summary from the ledger.
+- **`docs/REMEDIATION.md`** — the drift procedure, plus deferred hardenings and their evidence triggers.
 
 ## Three-layer enforcement
 
@@ -20,11 +20,13 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 2. **Skill** (on invocation): the judgment layer — which tier is lowest-sufficient.
 3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses false positives), predefined workflows and unreadable scriptPaths fail open with a reminder, and headless `claude -p` delegation is covered by no layer.
 
+The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary is the evidence base for the deferred rationale-gate hardening (see REMEDIATION.md).
+
 ## Verify
 
 ```bash
 node hooks/agent-model-gate.js --test              # lint self-check
-node evals/contract/run-contract-tests.js           # offline contract
+node evals/contract/run-contract-tests.js           # offline contract (gate + ledger)
 # then, in a live session with the plugin enabled:
 /delegation-steering:canary                         # end-to-end + cutover
 ```
@@ -33,4 +35,4 @@ node evals/contract/run-contract-tests.js           # offline contract
 
 - **Article-only claims** (advisor figure, start-smart posture): dated quote digests in each skill's `references/` — the blogs are the primary source; digests are the ceiling.
 - **Mechanics**: specific `code.claude.com/docs` pages, listed per claim in each SKILL.md's Doc anchors; docs win over articles.
-- **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — the docs are silent here; the canary re-establishes these after Claude Code updates.
+- **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — the docs are silent here; the canary and the weekly probe re-establish these after Claude Code updates.
