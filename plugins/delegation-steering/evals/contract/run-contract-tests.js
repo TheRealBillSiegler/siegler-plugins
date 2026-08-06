@@ -38,6 +38,28 @@ for (const c of CASES) {
   }
 }
 
+// Ledger contract: one JSONL line per delegation, models captured.
+const os = require('os');
+const LEDGER_HOOK = path.join(__dirname, '..', '..', 'hooks', 'delegation-ledger.js');
+const tmpLedger = path.join(os.tmpdir(), 'delegation-ledger-test-' + process.pid + '.jsonl');
+try {
+  const env = { ...process.env, DELEGATION_LEDGER: tmpLedger };
+  execFileSync('node', [LEDGER_HOOK], { input: fs.readFileSync(path.join(FIXTURES, 'agent-with-model.json')), env });
+  execFileSync('node', [LEDGER_HOOK], { input: fs.readFileSync(path.join(FIXTURES, 'wf-clean.json')), env });
+  const lines = fs.readFileSync(tmpLedger, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+  if (lines.length === 2 && lines[0].model === 'sonnet' && Array.isArray(lines[1].models) && lines[1].models.join(',') === 'haiku,sonnet') {
+    console.log('ok   ledger (agent + workflow entries)');
+  } else {
+    failures++;
+    console.error('FAIL ledger: ' + JSON.stringify(lines));
+  }
+} catch (e) {
+  failures++;
+  console.error('FAIL ledger: ' + e.message);
+} finally {
+  try { fs.unlinkSync(tmpLedger); } catch {}
+}
+
 // The hook's own span-boundary self-test is part of the contract.
 try {
   execFileSync('node', [HOOK, '--test']);
