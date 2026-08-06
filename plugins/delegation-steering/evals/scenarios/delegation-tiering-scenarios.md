@@ -1,6 +1,6 @@
-# Model-selection skill: tier-assignment eval
+# Delegation-tiering skill: tier-assignment eval
 
-Run each scenario against a fresh subagent given ONLY `skills/model-selection/SKILL.md`. Pass = assigned tier matches Expected (effort within the stated band). Not yet baselined — first run establishes the baseline.
+Run each scenario against a fresh subagent given ONLY `skills/delegation-tiering/SKILL.md`. Pass = assigned tier matches Expected (effort within the stated band). Not yet baselined — first run establishes the baseline.
 
 | # | Scenario | Expected |
 |---|---|---|

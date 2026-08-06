@@ -18,7 +18,7 @@ Take the first branch that fits:
 5. **Is it project orientation — build commands, layout, conventions, norms?** → Root CLAUDE.md; keep it under 200 lines and review changes like code.
 6. **Is it specific to one subdirectory?** → Subdirectory CLAUDE.md (loads when files there are read).
 7. **Is it personal rather than project?** → The user-level counterpart (`~/.claude/CLAUDE.md`, `~/.claude/rules/`, `~/.claude/skills/`) — never project files.
-8. **Is it a noisy side task or parallelizable work?** → Subagent (isolated context, only the summary returns). For which model the subagent gets, use the model-selection skill.
+8. **Is it a noisy side task or parallelizable work?** → Subagent (isolated context, only the summary returns). For which model the subagent gets, use the delegation-tiering skill.
 9. **Is it a wholesale role change?** → Output style (highest instruction weight, never compacted — use judiciously; rare).
 10. **Is it one-off, for a single invocation?** → Append the system prompt via CLI flag.
 
@@ -46,7 +46,7 @@ Take the first branch that fits:
 - User-level rules `~/.claude/rules/` are documented: always loaded, before project rules (project wins conflicts).
 - PreToolUse structured output (`hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow) is the current JSON control surface; the article's exit-code-2/stderr path is the simpler alternative.
 - Hook matchers use bare tool names; `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable (PreToolUse never fires for them — live-tested; SubagentStart exists but cannot block). To enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Worked example: this plugin's `hooks/agent-model-gate.js`.
-- Three-layer pattern for a rule that must hold everywhere: always-loaded rule (floor) + skill (judgment on invocation) + PreToolUse hook (deterministic gate). Worked example: `~/.claude/rules/delegation.md` + this plugin's model-selection skill + agent-model-gate.js.
+- Three-layer pattern for a rule that must hold everywhere: always-loaded rule (floor) + skill (judgment on invocation) + PreToolUse hook (deterministic gate). Worked example: `~/.claude/rules/delegation.md` + this plugin's delegation-tiering skill + agent-model-gate.js.
 
 ## Source
 

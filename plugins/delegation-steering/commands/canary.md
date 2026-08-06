@@ -2,6 +2,8 @@
 description: Verify the delegation gate end-to-end (contract tests + live Agent/Workflow canaries), install the rule file if missing, and finish cutover from legacy loose-file copies
 ---
 
+# Delegation gate canary
+
 Run the delegation-steering verification canary. Execute the steps in order; do not skip a step because an earlier one "probably" covers it.
 
 1. **Rule file (probabilistic floor).** If `~/.claude/rules/delegation.md` does not exist, create it with exactly:
@@ -9,7 +11,7 @@ Run the delegation-steering verification canary. Execute the steps in order; do 
    ```markdown
    # Delegated-agent model rule
 
-   Every delegated agent — Agent tool call or Workflow `agent()` call — gets an explicit `model` (and `effort` where supported) at the lowest tier sufficient for its task. Never inherit the session model silently; if inheritance genuinely is the lowest sufficient choice, write that model out explicitly. Tier ladder and rationale: the model-selection skill (delegation-steering plugin).
+   Every delegated agent — Agent tool call or Workflow `agent()` call — gets an explicit `model` (and `effort` where supported) at the lowest tier sufficient for its task. Never inherit the session model silently; if inheritance genuinely is the lowest sufficient choice, write that model out explicitly. Tier ladder and rationale: the delegation-tiering skill (delegation-steering plugin).
    ```
 
 2. **Contract tests (offline).** Run `node "${CLAUDE_PLUGIN_ROOT}/evals/contract/run-contract-tests.js"`. All cases plus the `--test` self-check must pass.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// PreToolUse gate enforcing the explicit-model rule from the model-selection
+// PreToolUse gate enforcing the explicit-model rule from the delegation-tiering
 // skill (shipped in this plugin) on both delegation paths:
 //  - Agent tool: no explicit `model` -> deny with re-issue instructions;
 //    explicit model -> inject a one-line tiering reminder.
@@ -73,22 +73,22 @@ process.stdin.on('end', () => {
     }
     if (!src) {
       // Named/predefined workflow: no script text available to lint.
-      allow('model-selection: this predefined workflow cannot be linted for explicit per-agent models. Confirm its agent() calls set model explicitly at the lowest sufficient tier (' + TIERS + ').');
+      allow('delegation-tiering: this predefined workflow cannot be linted for explicit per-agent models. Confirm its agent() calls set model explicitly at the lowest sufficient tier (' + TIERS + ').');
       return;
     }
     const missing = lintScript(src);
     if (missing.length) {
-      deny('Workflow script has ' + missing.length + ' agent() call(s) without an explicit model: ' + missing.map((s) => '`' + s + '`').join(' ; ') + '. Apply the model-selection skill: set model (and effort) explicitly on every agent() call at the lowest sufficient tier (' + TIERS + '). If a flagged call genuinely sets its model via a variable or shared options object, add a /* model-gate:allow */ comment inside that call.');
+      deny('Workflow script has ' + missing.length + ' agent() call(s) without an explicit model: ' + missing.map((s) => '`' + s + '`').join(' ; ') + '. Apply the delegation-tiering skill: set model (and effort) explicitly on every agent() call at the lowest sufficient tier (' + TIERS + '). If a flagged call genuinely sets its model via a variable or shared options object, add a /* model-gate:allow */ comment inside that call.');
     } else {
-      allow('model-selection: workflow script lints clean for explicit per-agent models. Confirm each chosen tier is the lowest sufficient; consult the model-selection skill if unsure.');
+      allow('delegation-tiering: workflow script lints clean for explicit per-agent models. Confirm each chosen tier is the lowest sufficient; consult the delegation-tiering skill if unsure.');
     }
     return;
   }
 
   // Agent tool.
   if (ti.model) {
-    allow('model-selection: chosen tier ' + ti.model + ' — confirm it is the lowest sufficient for this task; consult the model-selection skill if unsure.');
+    allow('delegation-tiering: chosen tier ' + ti.model + ' — confirm it is the lowest sufficient for this task; consult the delegation-tiering skill if unsure.');
   } else {
-    deny('Agent call has no explicit model. Apply the model-selection skill: choose the lowest sufficient tier (' + TIERS + ') and re-issue this exact Agent call with the model parameter set. If the agent type’s definition already pins a suitable model, restate that model; if inheriting the session model is genuinely the lowest sufficient choice, state that model explicitly.');
+    deny('Agent call has no explicit model. Apply the delegation-tiering skill: choose the lowest sufficient tier (' + TIERS + ') and re-issue this exact Agent call with the model parameter set. If the agent type’s definition already pins a suitable model, restate that model; if inheriting the session model is genuinely the lowest sufficient choice, state that model explicitly.');
   }
 });

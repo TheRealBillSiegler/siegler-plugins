@@ -1,9 +1,9 @@
 ---
-name: model-selection
+name: delegation-tiering
 description: Use when spawning or configuring any delegated agent — an Agent tool call, a Workflow agent() call, or a multi-agent plan — including choosing model or effort parameters, authoring a workflow script, tiering a fan-out, or deciding which tier a delegated task needs.
 ---
 
-# Model Selection for Delegated Agents
+# Delegation Tiering
 
 Standing rule: every delegated agent gets an **explicit model** at the **lowest tier sufficient** for its task. State the tiering rationale when presenting a plan that spawns agents.
 
