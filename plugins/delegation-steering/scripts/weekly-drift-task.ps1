@@ -1,15 +1,19 @@
-# Weekly drift check for delegation-steering, registered in Windows Task Scheduler
-# (task: claude-plugins-drift-check). Deterministic detection always; a metered
-# agent launches only on confirmed drift, and only for read-only scoping
-# (REMEDIATION.md step 1 - classify noise vs claim-affecting, write a report).
+# Weekly drift check for delegation-steering (Windows Task Scheduler wrapper).
+# Register with a trigger of your choice, e.g.:
+#   $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"<path-to-this-script>`""
+#   $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 09:17
+#   Register-ScheduledTask -TaskName "claude-plugins-drift-check" -Action $action -Trigger $trigger
+# Deterministic detection always; a metered agent launches only on confirmed
+# drift, and only for read-only scoping (REMEDIATION.md step 1 - classify noise
+# vs claim-affecting, write a report).
 # ponytail: scoping-only automation; upgrade path is auto-PR remediation via
 # claude -p with scoped allowed tools, once the scoping reports prove reliable.
-$repo = "C:\Users\billy\source\repos\claude-plugins"
-$plugin = Join-Path $repo "plugins\delegation-steering"
-$log = Join-Path $plugin "scripts\drift.log"
+$plugin = Split-Path $PSScriptRoot -Parent
+$repo = Split-Path (Split-Path $plugin -Parent) -Parent
+$log = Join-Path $PSScriptRoot "drift.log"
 $stamp = Get-Date -Format o
 
-node (Join-Path $plugin "scripts\check-drift.js") *>> $log
+node (Join-Path $PSScriptRoot "check-drift.js") *>> $log
 $code = $LASTEXITCODE
 
 if ($code -eq 1) {
