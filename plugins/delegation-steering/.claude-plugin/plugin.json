@@ -1,6 +1,6 @@
 {
   "name": "delegation-steering",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Explicit model/effort tiering for every delegated agent — decision-tree skill, deterministic PreToolUse gate on Agent and Workflow calls, steering-mechanism guide, evals, and doc-drift detection.",
   "author": {
     "name": "Bill Siegler",
