@@ -19,6 +19,10 @@ Follow this when `scripts/check-drift.js` exits 1 (doc-page or Claude Code versi
 
 6. **After merge**: update the installed plugin (marketplace pull), restart the session, run `/delegation-steering:canary` once more against the installed copy.
 
+## Known blindness: drift detection is preservation-only
+
+The drift check answers "did what we rely on change?" — it cannot answer "did something new appear that we should use?" A new Claude Code capability fires nothing unless it happens to alter an anchored claim (the 2026-08-06 effort-frontmatter catch was that lucky case), and features landing on unwatched pages or in release notes are fully invisible. Opportunity detection is a separate, judgment-based review: periodically (monthly is proportionate) read the Claude Code changelog/release notes with the question "does anything new bear on delegation, spawn surfaces, hook events, or effort control?" — as a deliberate session, not an always-on agent. Findings route through the normal PR path.
+
 ## Deferred hardenings
 
 - **Scoped rationale gate** — deny top-tier Agent calls (`fable`, or `opus` when it is the session's top tier) whose input carries no rationale marker. Deliberately NOT built: rationale strings demanded on every call degrade into gate-passing boilerplate. Trigger to build it: the weekly ledger summary shows top-tier over-provisioning actually happening (e.g. a sustained top-tier share on mechanical-sounding delegations). Scope it to top-tier calls only.

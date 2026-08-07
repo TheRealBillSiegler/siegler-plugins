@@ -27,6 +27,21 @@ What the evals verify, where each layer's cases come from, and how the set grows
 
 **Growth rule — toward production-drawn evals:** the source article's counsel is that real evals are "drawn from production." The delegation ledger (`~/.claude/delegation-ledger.jsonl`) is the production feed: when a weekly mix summary or manual review surfaces a mis-tiered delegation, convert it into a scenario with the correct expected tier. Author-derived scenarios (the current set) are the floor, not the end state.
 
+## Necessity (ablation) status
+
+Everything above proves the components *work*; ablation asks whether each still *earns its place* — remove it, observe matched behavior, stamp the verdict with model and date (stamps expire on model upgrade). Current status, stamped claude-fable-5 / 2026-08-06 (tier-2 assertions except where evidence is noted):
+
+| Component | Verdict | Evidence | Next step |
+| --- | --- | --- | --- |
+| Gate (deny branches) | load-bearing | violation history: 2026-08-01, three model-less calls silently inherited the top tier, pre-gate; denial counting added 2026-08-06 | count real denials (`denied: true` ledger lines; weekly summary reports them) |
+| Allow-branch reminder | ceremony-candidate | none either way — rule + skill may already suffice | probe arms: matched delegations with/without the reminder |
+| Rule file (floor) | untested, confounded | clean sessions can't be attributed between rule, skill, and reminder | ablate alone, not as a cluster |
+| Skill bodies | capability-verified, necessity untested | 12/12 and 7/7 evals prove guidance is retrievable, not that tier choices differ without it | judgment probes with/without skill access |
+| Tier policy (lowest-sufficient) | article-claimed, locally unmeasured | no local outcome comparison exists | outcome ablation: same real task at prescribed vs top tier, blind-graded; the ledger accumulates candidate tasks |
+| Drift pipeline | one real catch (n=1) | 2026-08-06: claim-affecting doc change caught in week one | track catch/noise ratio across runs |
+
+Harm surveillance (the third verdict): denial rate (friction on legitimate work), `model-gate:allow` marker frequency (lint false positives), redos after cheap delegations (ledger review). Cadence: re-run verdicts after each model upgrade — a verdict stamped on one model says nothing about the next.
+
 ## What the evals cannot show
 
 Tier *optimality*. The layers prove models are explicit (gate), the gate is alive (probe), and the skills' guidance is retrievable and applicable (scenarios). Whether a specific real-world delegation used the cheapest sufficient tier is a judgment call — the ledger makes those calls reviewable, and REMEDIATION.md's deferred hardenings state what evidence would justify enforcing more.
