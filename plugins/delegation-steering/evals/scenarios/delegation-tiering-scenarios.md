@@ -1,6 +1,6 @@
 # Delegation-tiering skill: tier-assignment eval
 
-Run each scenario against a fresh subagent given ONLY `skills/delegation-tiering/SKILL.md`. Pass = assigned tier matches Expected (effort within the stated band). Not yet baselined — first run establishes the baseline.
+Run each scenario against a fresh subagent given ONLY `skills/delegation-tiering/SKILL.md`. Pass = assigned tier matches Expected (effort within the stated band). Baseline (2026-08-06): haiku 12/12, sonnet 12/12.
 
 | # | Scenario | Expected |
 | --- | --- | --- |
