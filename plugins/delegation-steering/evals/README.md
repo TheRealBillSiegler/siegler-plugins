@@ -42,6 +42,10 @@ Everything above proves the components *work*; ablation asks whether each still 
 
 Harm surveillance (the third verdict): denial rate (friction on legitimate work), `model-gate:allow` marker frequency (lint false positives), redos after cheap delegations (ledger review). Cadence: re-run verdicts after each model upgrade — a verdict stamped on one model says nothing about the next.
 
+## Run records
+
+Every eval or verdict run records its methodology in [../docs/RUNS.md](../docs/RUNS.md) — date, question, orchestration shape, per-role model + effort, adjudication structure, raw→surviving counts, limitations. Baselines cited in scenario files must have a corresponding run record.
+
 ## What the evals cannot show
 
 Tier *optimality*. The layers prove models are explicit (gate), the gate is alive (probe), and the skills' guidance is retrievable and applicable (scenarios). Whether a specific real-world delegation used the cheapest sufficient tier is a judgment call — the ledger makes those calls reviewable, and REMEDIATION.md's deferred hardenings state what evidence would justify enforcing more.

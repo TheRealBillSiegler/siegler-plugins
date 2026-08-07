@@ -13,6 +13,7 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 - **`scripts/check-drift.js`** — deterministic doc/version drift detection against `anchors.json`.
 - **`scripts/weekly-drift-task.ps1`** — Task Scheduler wrapper: drift check, weekly behavioral probe (one headless session asserting both gate paths deny), and a 7-day delegation-mix summary from the ledger.
 - **`docs/COVERAGE.md`** — the enforcement coverage matrix: every delegation path × every layer, with per-cell verification dates. The canonical claim set of what is enforced where.
+- **`docs/RUNS.md`** — the run register: methodology records (shape, tiers, adjudication, counts, limitations) for every multi-agent run whose conclusions landed in this repo. No record, no legitimacy.
 - **`docs/REMEDIATION.md`** — the drift procedure, plus deferred hardenings and their evidence triggers.
 
 ## Three-layer enforcement
