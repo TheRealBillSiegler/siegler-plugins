@@ -60,6 +60,37 @@ try {
   try { fs.unlinkSync(tmpLedger); } catch {}
 }
 
+// scriptPath lint branches: deny via file read, silent allow when unreadable.
+const tmpScript = path.join(os.tmpdir(), 'gate-scriptpath-test-' + process.pid + '.js');
+fs.writeFileSync(tmpScript, "export const meta={};\nawait agent('no model here');\n");
+try {
+  const input = JSON.stringify({ tool_name: 'Workflow', tool_input: { scriptPath: tmpScript } });
+  const out = JSON.parse(execFileSync('node', [HOOK], { input }).toString()).hookSpecificOutput;
+  if (out.permissionDecision === 'deny' && (out.permissionDecisionReason || '').includes('1 agent() call(s)')) {
+    console.log('ok   scriptPath lint (deny)');
+  } else {
+    failures++;
+    console.error('FAIL scriptPath lint: ' + JSON.stringify(out));
+  }
+} catch (e) {
+  failures++;
+  console.error('FAIL scriptPath lint: ' + e.message);
+} finally {
+  try { fs.unlinkSync(tmpScript); } catch {}
+}
+try {
+  const input = JSON.stringify({ tool_name: 'Workflow', tool_input: { scriptPath: tmpScript + '.missing' } });
+  const stdout = execFileSync('node', [HOOK], { input }).toString().trim();
+  if (stdout === '') console.log('ok   scriptPath unreadable (silent allow)');
+  else {
+    failures++;
+    console.error('FAIL scriptPath unreadable: expected silence, got ' + stdout);
+  }
+} catch (e) {
+  failures++;
+  console.error('FAIL scriptPath unreadable: ' + e.message);
+}
+
 // The hook's own span-boundary self-test is part of the contract.
 try {
   execFileSync('node', [HOOK, '--test']);
