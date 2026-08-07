@@ -12,20 +12,27 @@
 #      the evidence base for the deferred rationale-gate hardening.
 # On drift, a read-only scoping agent runs (REMEDIATION.md step 1); editing
 # anything stays a human-reviewed PR.
-# PowerShell 5.1-safe: no ??, no ternary (scheduled powershell.exe is 5.1).
+# Runs under Windows PowerShell 5.1 AND PowerShell 7 (pwsh). Deliberately kept
+# 5.1-compatible (no ??, no ternary) because powershell.exe is the only host
+# guaranteed present on Windows; register with pwsh.exe instead if you prefer -
+# the script behaves identically under either.
 $plugin = Split-Path $PSScriptRoot -Parent
 $repo = Split-Path (Split-Path $plugin -Parent) -Parent
 $log = Join-Path $PSScriptRoot "drift.log"
 $stamp = Get-Date -Format o
 
 # --- 1. Drift detection ---
-node (Join-Path $PSScriptRoot "check-drift.js") *>> $log
+# Capture output and Add-Content it: `*>>` under Windows PowerShell 5.1 writes
+# UTF-16 into the log, garbling a file the rest of this script appends as ANSI.
+$driftOut = node (Join-Path $PSScriptRoot "check-drift.js") 2>&1 | Out-String
 $code = $LASTEXITCODE
+Add-Content $log $driftOut.TrimEnd()
 if ($code -eq 1) {
     Add-Content $log "$stamp drift detected - launching scoping agent"
     Set-Location $repo
     $date = Get-Date -Format yyyy-MM-dd
-    claude -p "Drift was detected by plugins/delegation-steering/scripts/check-drift.js. Follow ONLY step 1 of plugins/delegation-steering/docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the claims mapped in the skills' Doc anchors sections, and write a report to plugins/delegation-steering/docs/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." *>> $log
+    $scope = claude -p "Drift was detected by plugins/delegation-steering/scripts/check-drift.js. Follow ONLY step 1 of plugins/delegation-steering/docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the claims mapped in the skills' Doc anchors sections, and write a report to plugins/delegation-steering/docs/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
+    Add-Content $log $scope.TrimEnd()
     Add-Content $log "$stamp scoping agent finished (exit $LASTEXITCODE)"
 } elseif ($code -eq 0) {
     Add-Content $log "$stamp no drift"
