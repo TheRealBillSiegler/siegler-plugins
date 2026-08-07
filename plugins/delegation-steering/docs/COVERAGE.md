@@ -5,11 +5,12 @@ Every delegation path crossed with every layer. This file is the canonical claim
 | Delegation path | Gate (deterministic) | Rule (probabilistic) | Ledger (observability) | Last verified |
 | --- | --- | --- | --- | --- |
 | Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-05, live |
+| Nested Agent call inside a subagent | same as Agent tool call — hooks fire for subagent tool calls | always loaded | expected (doc-attested), unverified live | 2026-08-06, live (gate); ledger unverified |
 | Workflow launch, inline script | launch-time lint; heuristic (`model-gate:allow` escape) | always loaded | models extracted from script text | 2026-08-05, live |
 | Workflow launch, `scriptPath` | lint if readable; **silent allow if unreadable** | always loaded | models extracted if readable | 2026-08-05, contract test |
 | Workflow launch, predefined name | **none** — reminder only (no script text to lint) | always loaded | name only, no models | 2026-08-05, contract test |
 | `agent()` spawns inside a running workflow | **none** — not hookable (PreToolUse never fires; SubagentStart can't block) | always loaded | covered only via launch lint | 2026-08-05, live |
-| Headless `claude -p` from Bash | **none** | **outside the rule's literal scope** | **none** | 2026-08-06, analysis |
+| Headless `claude -p` from Bash | **none** | always loaded (wording broadened 2026-08-06 to cover spawned workers) | **none** | 2026-08-06, analysis |
 
 The skill layer (judgment, on invocation) applies to all paths equally and is validated by the scenario evals, not per-path — so it is not a column here.
 

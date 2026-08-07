@@ -11,7 +11,7 @@ Run the delegation-steering verification canary. Execute the steps in order; do 
    ```markdown
    # Delegated-agent model rule
 
-   Every delegated agent — Agent tool call or Workflow `agent()` call — gets an explicit `model` (and `effort` where supported) at the lowest tier sufficient for its task. Never inherit the session model silently; if inheritance genuinely is the lowest sufficient choice, write that model out explicitly. Tier ladder and rationale: the delegation-tiering skill (delegation-steering plugin).
+   Every delegated agent — an Agent tool call, a Workflow `agent()` call, or any other worker this session spawns (nested subagents, headless `claude -p` children, scheduled runs) — gets an explicit `model` (and `effort` where supported) at the lowest tier sufficient for its task. Never inherit the session model silently; if inheritance genuinely is the lowest sufficient choice, write that model out explicitly. Tier ladder and rationale: the delegation-tiering skill (delegation-steering plugin).
    ```
 
 2. **Contract tests (offline).** Run `node "${CLAUDE_PLUGIN_ROOT}/evals/contract/run-contract-tests.js"`. All cases plus the `--test` self-check must pass.
