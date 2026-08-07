@@ -19,10 +19,15 @@ const CASES = [
   { fixture: 'wf-predefined.json', expect: { decision: 'allow', contains: ['cannot be linted'] } },
 ];
 
+// Gate cases share a temp ledger so denial-logging is assertable.
+const osMod = require('os');
+const tmpGateLedger = path.join(osMod.tmpdir(), 'gate-deny-ledger-test-' + process.pid + '.jsonl');
+const gateEnv = { ...process.env, DELEGATION_LEDGER: tmpGateLedger };
+
 let failures = 0;
 for (const c of CASES) {
   const input = fs.readFileSync(path.join(FIXTURES, c.fixture));
-  const stdout = execFileSync('node', [HOOK], { input }).toString();
+  const stdout = execFileSync('node', [HOOK], { input, env: gateEnv }).toString();
   const out = JSON.parse(stdout).hookSpecificOutput;
   const decision = out.permissionDecision === 'deny' ? 'deny' : 'allow';
   const text = out.permissionDecisionReason || out.additionalContext || '';
@@ -65,7 +70,7 @@ const tmpScript = path.join(os.tmpdir(), 'gate-scriptpath-test-' + process.pid +
 fs.writeFileSync(tmpScript, "export const meta={};\nawait agent('no model here');\n");
 try {
   const input = JSON.stringify({ tool_name: 'Workflow', tool_input: { scriptPath: tmpScript } });
-  const out = JSON.parse(execFileSync('node', [HOOK], { input }).toString()).hookSpecificOutput;
+  const out = JSON.parse(execFileSync('node', [HOOK], { input, env: gateEnv }).toString()).hookSpecificOutput;
   if (out.permissionDecision === 'deny' && (out.permissionDecisionReason || '').includes('1 agent() call(s)')) {
     console.log('ok   scriptPath lint (deny)');
   } else {
@@ -89,6 +94,21 @@ try {
 } catch (e) {
   failures++;
   console.error('FAIL scriptPath unreadable: ' + e.message);
+}
+
+// Denial logging: the three deny cases above must each have left a counted line.
+try {
+  const denies = fs.readFileSync(tmpGateLedger, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((e) => e.denied === true);
+  if (denies.length === 3) console.log('ok   denial logging (3 denies counted)');
+  else {
+    failures++;
+    console.error('FAIL denial logging: expected 3, got ' + denies.length);
+  }
+} catch (e) {
+  failures++;
+  console.error('FAIL denial logging: ' + e.message);
+} finally {
+  try { fs.unlinkSync(tmpGateLedger); } catch {}
 }
 
 // The hook's own span-boundary self-test is part of the contract.

@@ -54,16 +54,19 @@ if ($probe -match 'GATE-AGENT:\s*DENIED' -and $probe -match 'GATE-WORKFLOW:\s*DE
 $ledger = Join-Path $env:USERPROFILE ".claude\delegation-ledger.jsonl"
 if (Test-Path $ledger) {
     $cut = (Get-Date).AddDays(-7)
+    $denied = 0
     $models = foreach ($line in Get-Content $ledger) {
         try { $e = $line | ConvertFrom-Json } catch { continue }
         try { $ts = [datetime]$e.ts } catch { continue }
         if ($ts -lt $cut) { continue }
+        if ($e.denied) { $denied++; continue }
         if ($e.tool -eq 'Agent') {
             if ($null -eq $e.model) { 'NONE' } else { $e.model }
         } elseif ($e.models) {
             $e.models
         }
     }
+    Add-Content $log "$stamp gate denials (7-day): $denied"
     if ($models) {
         $summary = ($models | Group-Object | Sort-Object Count -Descending | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' '
         Add-Content $log "$stamp 7-day delegation mix: $summary"

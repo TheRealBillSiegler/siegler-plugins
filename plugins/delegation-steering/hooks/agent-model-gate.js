@@ -11,6 +11,20 @@
 // occurring between two calls can mask a violation. Upgrade path if it
 // misfires in practice: balanced-paren scan of each call's argument list.
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+// Denials never reach the PostToolUse ledger (the call is blocked before it
+// runs), so the gate records them itself — each denial is a counted, would-be
+// violation: the evidence that the deterministic layer is load-bearing.
+function logDenial(tool, detail) {
+  try {
+    const file = process.env.DELEGATION_LEDGER || path.join(os.homedir(), '.claude', 'delegation-ledger.jsonl');
+    fs.appendFileSync(file, JSON.stringify({ ts: new Date().toISOString(), tool, denied: true, detail }) + '\n');
+  } catch {
+    // Counting must never block the gate itself.
+  }
+}
 
 const TIERS =
   'haiku=mechanical scouting/extraction; sonnet=anchored implementation/doc research; opus=reasoning beyond sonnet; top tier=adversarial review gates/open-ended design/security reads, where top tier is the most capable model available in the session — fable, else opus, else sonnet';
@@ -78,6 +92,7 @@ process.stdin.on('end', () => {
     }
     const missing = lintScript(src);
     if (missing.length) {
+      logDenial('Workflow', missing.length + ' model-less call(s)');
       deny('Workflow script has ' + missing.length + ' agent() call(s) without an explicit model: ' + missing.map((s) => '`' + s + '`').join(' ; ') + '. Apply the delegation-tiering skill: set model (and effort) explicitly on every agent() call at the lowest sufficient tier (' + TIERS + '). If a flagged call genuinely sets its model via a variable or shared options object, add a /* model-gate:allow */ comment inside that call.');
     } else {
       allow('delegation-tiering: workflow script lints clean for explicit per-agent models. Confirm each chosen tier is the lowest sufficient; consult the delegation-tiering skill if unsure.');
@@ -89,6 +104,7 @@ process.stdin.on('end', () => {
   if (ti.model) {
     allow('delegation-tiering: chosen tier ' + ti.model + ' — confirm it is the lowest sufficient for this task; consult the delegation-tiering skill if unsure.');
   } else {
+    logDenial('Agent', 'no model');
     deny('Agent call has no explicit model. Apply the delegation-tiering skill: choose the lowest sufficient tier (' + TIERS + ') and re-issue this exact Agent call with the model parameter set. If the agent type’s definition already pins a suitable model, restate that model; if inheriting the session model is genuinely the lowest sufficient choice, state that model explicitly.');
   }
 });
