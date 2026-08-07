@@ -1,11 +1,11 @@
 {
-  "capturedAt": "2026-08-06T01:59:35.430Z",
+  "capturedAt": "2026-08-07T02:23:57.986Z",
   "claudeVersion": "2.1.218 (Claude Code)",
   "pages": {
-    "https://code.claude.com/docs/en/hooks.md": "752d3f5e868f28d114afc8090e6e037c40b81625fed2b6fa51e3a6b7ad157b99",
+    "https://code.claude.com/docs/en/hooks.md": "4f8ff174eb69b916b7bed1d3017ebc8ead8d7cb39d9605390197a3c2359154ab",
     "https://code.claude.com/docs/en/hooks-guide.md": "cee1ae59db08b02d2fd876dcdfd181a0233473132eb5313e7b18679973b39252",
     "https://code.claude.com/docs/en/memory.md": "bd9dcc0069d792cc6acfe231ccfbabd760e641f969237d15b6523f69f80a3f5b",
-    "https://code.claude.com/docs/en/sub-agents.md": "4a931152f374c73de64cb75f50eeee35ad087a0202db0fa495f62c8c7ad1aacc",
+    "https://code.claude.com/docs/en/sub-agents.md": "779e64d7e7d1f441978869dd5beca2610b7393d586e1abbfba5c54016fb4a797",
     "https://code.claude.com/docs/en/workflows.md": "991975639184580ea32e4e0023c2bdf4c3550ef1584e14e7059309df64e4f136",
     "https://code.claude.com/docs/en/tools-reference.md": "9924ca8c1a0b7b94427753813c8880e65281810cc6153bf7717fbac311803117"
   }
