@@ -25,7 +25,7 @@ Take the first branch that fits:
 ## Mechanism table
 
 | Mechanism | Loads | Authority |
-|---|---|---|
+| --- | --- | --- |
 | Root CLAUDE.md / unscoped rules | session start, persistent | probabilistic |
 | Subdir CLAUDE.md / path-scoped rules | on demand (file access) | probabilistic |
 | Skill | name+description at start; body on invocation | probabilistic |
