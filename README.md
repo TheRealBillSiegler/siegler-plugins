@@ -1,27 +1,8 @@
 # claude-plugins
 
-A Claude Code plugin marketplace (`siegler-plugins`) by [Bill Siegler](https://github.com/TheRealBillSiegler). Plugins here turn engineering discipline into enforceable configuration: probabilistic guidance (skills, rules) backed by deterministic gates (hooks), with evals and doc-drift detection so Claude Code's release cadence can't silently rot the claims they rest on.
-
-## Plugins
-
-### [delegation-steering](plugins/delegation-steering/)
-
-Explicit model/effort tiering for every delegated agent, enforced — plus a decision guide for where Claude Code behavior should live.
-
-| Component                    | What it does                                                                       |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| `delegation-tiering` skill   | Assigns each delegated agent the lowest sufficient model/effort tier               |
-| `steering-claude-code` skill | Decision tree: CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles |
-| `agent-model-gate` hook      | PreToolUse gate: denies model-less Agent calls, lints Workflow scripts at launch   |
-| `delegation-ledger` hook     | Appends one JSONL line per delegation for tier-quality review                      |
-| `canary` command             | Live end-to-end verification of the gate, plus legacy cutover cleanup              |
-| `evals/`                     | Offline hook contract tests and skill application scenarios with baselines         |
-| `scripts/check-drift.js`     | Deterministic doc/version drift detection against dated anchors                    |
-| `docs/REMEDIATION.md`        | The drift procedure: scope the diff, re-verify empirically, ship via PR            |
+Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), served from the `siegler-plugins` marketplace. Currently one plugin: **delegation-steering** — explicit model/effort tiering for every delegated agent, enforced by a deterministic gate rather than trusted to prose, with the evals and drift detection that keep it true as Claude Code evolves.
 
 ## Install
-
-In Claude Code:
 
 ```text
 /plugin marketplace add TheRealBillSiegler/claude-plugins
@@ -37,23 +18,34 @@ Or directly in `~/.claude/settings.json`:
 "enabledPlugins": { "delegation-steering@siegler-plugins": true }
 ```
 
-Then restart your session and run `/delegation-steering:canary` — it verifies the gate end-to-end (deny, allow, and lint branches), installs the always-loaded rule file, and cleans up any pre-plugin loose-file install if you had one.
+Restart your session, then run `/delegation-steering:canary` — it verifies the gate end-to-end, installs the always-loaded rule file, and cleans up any pre-plugin loose-file setup.
 
-**Requirements:** Node.js on `PATH` (the hook and scripts run via `node`); on Windows, Git for Windows (hooks declare `"shell": "bash"`).
+**Requirements:** Node.js on `PATH`; on Windows, Git for Windows (hooks declare `"shell": "bash"`).
 
-## Using the skills
+## What you get
 
-- `delegation-tiering` triggers when Claude spawns or configures subagents and workflow fan-outs — it assigns each delegated agent the lowest sufficient model tier, and the hook makes the "explicit model, always" rule non-optional.
-- `steering-claude-code` is a consultation skill: ask Claude "where should this behavior/constraint live?" (CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles) and it applies the decision tree. It also fires when Claude authors or refactors that configuration on your behalf. Its value shows up at configuration time, not during ordinary coding.
+The two skills are consultation surfaces — `delegation-tiering` fires when Claude spawns or configures agents; ask `steering-claude-code` "where should this behavior live?" — and the hooks enforce and observe without being asked:
 
-## Freshness pipeline
+| Component                    | What it does                                                                       |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| `delegation-tiering` skill   | Assigns each delegated agent the lowest sufficient model/effort tier               |
+| `steering-claude-code` skill | Decision tree: CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles |
+| `agent-model-gate` hook      | PreToolUse gate: denies model-less Agent calls, lints Workflow scripts at launch   |
+| `delegation-ledger` hook     | Appends one JSONL line per delegation for tier-quality review                      |
+| `canary` command             | Live end-to-end verification of the gate, plus legacy cutover cleanup              |
+| `evals/`                     | Offline hook contract tests and skill application scenarios with baselines         |
+| `scripts/check-drift.js`     | Deterministic doc/version drift detection against dated anchors                    |
+| `docs/REMEDIATION.md`        | The drift procedure: scope the diff, re-verify empirically, ship via PR            |
 
-Claude Code updates frequently; these plugins anchor their claims instead of assuming them:
+Full component docs: [plugins/delegation-steering/](plugins/delegation-steering/)
 
-1. **Anchored sources** — every skill claim carries its fidelity tier: article-only claims pin to dated quote digests in `references/`; mechanics cite specific [code.claude.com/docs](https://code.claude.com/docs) pages (docs win over articles); enforcement-boundary behavior is verified empirically with dated live tests.
-2. **Deterministic detection + weekly probe** — `scripts/check-drift.js` hashes the anchored doc pages and records the Claude Code version against `scripts/anchors.json`. The `weekly-drift-task.ps1` Task Scheduler wrapper runs it weekly, fires one tiny headless session probing that the gate still denies model-less delegation, and appends a 7-day delegation-mix summary from the ledger; the metered scoping agent runs only on confirmed drift.
-3. **Agentic remediation** — on drift, [REMEDIATION.md](plugins/delegation-steering/docs/REMEDIATION.md): scope the diff (exit early on noise), re-verify empirically (contract tests + live canary), edit at the right layer, ship via PR. Never auto-merged.
-4. **Evals** — `evals/contract/` (offline hook contract), `/delegation-steering:canary` (live end-to-end), `evals/scenarios/` (skill application scenarios with recorded baselines).
+## Why trust it
+
+Every claim is verified or explicitly marked pending: the gate is live-tested on all branches (deny, allow, launch-lint, nested spawns), the contract suite runs 10/10, both skills carry dated eval baselines (12/12 and 7/7 at haiku and sonnet), and the drift pipeline caught real upstream doc changes in its first week. What is *not* yet proven is tracked in the open — an active measurement program is stamping load-bearing / ceremony / harmful verdicts per component. Receipts: [coverage matrix](plugins/delegation-steering/docs/COVERAGE.md) · [run register](plugins/delegation-steering/docs/RUNS.md) · [eval methodology](plugins/delegation-steering/evals/README.md) · [measurement map](https://github.com/TheRealBillSiegler/claude-plugins/issues/2)
+
+## How it stays fresh
+
+Claude Code ships fast; these plugins anchor their claims instead of assuming them — dated quote digests for article-only claims, specific doc pages for mechanics (docs win over articles), dated live tests for enforcement boundaries. A weekly scheduled task runs the loop:
 
 ```mermaid
 flowchart LR
@@ -66,9 +58,13 @@ flowchart LR
     LGR["ledger summary<br>weekly, free"] --> MIX["7-day delegation mix<br>evidence for deferred hardenings"]
 ```
 
+Drift triage and edit rules: [REMEDIATION.md](plugins/delegation-steering/docs/REMEDIATION.md)
+
 ## Development
 
 - Branch → PR into `main`; no direct pushes. Conventional commits.
 - Contract tests: `node plugins/delegation-steering/evals/contract/run-contract-tests.js`
 - Any change to hook lint semantics must keep `node plugins/delegation-steering/hooks/agent-model-gate.js --test` passing and add a case for the failure class it fixes.
-- Refresh the drift baseline (`check-drift.js --update`) only as part of a reviewed PR.
+- Multi-agent runs that produce conclusions must record their methodology in [RUNS.md](plugins/delegation-steering/docs/RUNS.md).
+
+[MIT licensed](LICENSE).
