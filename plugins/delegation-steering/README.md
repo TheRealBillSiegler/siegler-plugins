@@ -9,7 +9,7 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 - **`hooks/agent-model-gate.js`** — PreToolUse gate (matcher `Agent|Workflow`): denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. `--test` self-check guards the lint's span-boundary logic.
 - **`hooks/delegation-ledger.js`** — PostToolUse observability: appends one JSONL line per delegation to `~/.claude/delegation-ledger.jsonl` (model, agent type, description; per-workflow model lists) so tier choices are reviewable, not just explicit.
 - **`commands/canary.md`** — `/delegation-steering:canary`: end-to-end live verification, rule-file install, and legacy cutover cleanup.
-- **`evals/`** — offline hook contract tests (fixtures + runner) and application scenarios for both skills with recorded baselines.
+- **`evals/`** — offline hook contract tests (fixtures + runner) and application scenarios for both skills with recorded baselines; provenance and growth rules in [evals/README.md](evals/README.md).
 - **`scripts/check-drift.js`** — deterministic doc/version drift detection against `anchors.json`.
 - **`scripts/weekly-drift-task.ps1`** — Task Scheduler wrapper: drift check, weekly behavioral probe (one headless session asserting both gate paths deny), and a 7-day delegation-mix summary from the ledger.
 - **`docs/REMEDIATION.md`** — the drift procedure, plus deferred hardenings and their evidence triggers.
