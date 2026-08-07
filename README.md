@@ -55,6 +55,17 @@ Claude Code updates frequently; these plugins anchor their claims instead of ass
 3. **Agentic remediation** — on drift, [REMEDIATION.md](plugins/delegation-steering/docs/REMEDIATION.md): scope the diff (exit early on noise), re-verify empirically (contract tests + live canary), edit at the right layer, ship via PR. Never auto-merged.
 4. **Evals** — `evals/contract/` (offline hook contract), `/delegation-steering:canary` (live end-to-end), `evals/scenarios/` (skill application scenarios with recorded baselines).
 
+```mermaid
+flowchart LR
+    SRC["anchored sources<br>(6 doc pages + CC version)"] --> CHK["check-drift.js<br>weekly, deterministic, free"]
+    CHK -- "no drift" --> LOG["one log line, done"]
+    CHK -- "drift" --> SCOPE["read-only scoping agent<br>writes DRIFT-REPORT"]
+    SCOPE -- "noise" --> UPD["refresh anchors.json via PR"]
+    SCOPE -- "claim-affecting" --> REM["REMEDIATION.md: re-verify<br>empirically, edit, PR — never auto-merge"]
+    PRB["behavioral probe<br>weekly, one headless session"] --> PP["gate alive? PASS/FAIL in drift.log"]
+    LGR["ledger summary<br>weekly, free"] --> MIX["7-day delegation mix<br>evidence for deferred hardenings"]
+```
+
 ## Development
 
 - Branch → PR into `main`; no direct pushes. Conventional commits.

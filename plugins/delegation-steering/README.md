@@ -22,6 +22,19 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 
 The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary is the evidence base for the deferred rationale-gate hardening (see REMEDIATION.md).
 
+### Coverage map
+
+```mermaid
+flowchart TD
+    A["Agent tool call"] --> G{"PreToolUse gate<br>agent-model-gate.js"}
+    W["Workflow launch"] --> G
+    G -- "no model / lint fails" --> DENY["denied, with re-issue instructions"]
+    G -- "explicit models" --> RUN["runs, one-line tiering reminder injected"]
+    RUN --> LED["delegation-ledger.js (PostToolUse)<br>appends to ~/.claude/delegation-ledger.jsonl"]
+    IN["agent() spawns inside a running workflow"] -. "not hookable — always-loaded rule + skill discipline only" .-> RUN
+    HP["headless claude -p from Bash"] -. "covered by no layer — manual discipline" .-> HP2["(documented gap)"]
+```
+
 ## Verify
 
 ```bash
