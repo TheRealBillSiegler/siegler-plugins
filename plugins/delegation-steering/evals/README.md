@@ -29,7 +29,11 @@ What the evals verify, where each layer's cases come from, and how the set grows
 
 ## Necessity (ablation) status
 
-Everything above proves the components *work*; ablation asks whether each still *earns its place* — remove it, observe matched behavior, stamp the verdict with model and date (stamps expire on model upgrade). Current status, stamped claude-fable-5 / 2026-08-06 (tier-2 assertions except where evidence is noted):
+Everything above proves the components *work*; ablation asks whether each still *earns its place* — remove it, observe matched behavior, stamp the verdict.
+
+**Probe-arm protocol** — the evidence bar for every verdict, defined here so it is self-contained (the methodology derives from a machine-local ablation skill, but this text governs): run matched arms for the component under test — control (component present) vs ablated (component absent) — in isolated per-arm configuration (prepared config directories; see the arm-isolation research record), at least 3 reps per arm on realistic probes, outputs graded blind to arm identity, tallied mechanically. Verdict: **load-bearing** (behavior degrades without it), **ceremony** (no observable difference), or **harmful** (better without it) — stamped with model, date, and probe/rep counts. Stamps expire on model upgrade.
+
+Current status, stamped claude-fable-5 / 2026-08-06 (static-read assertions — no probe-arm evidence yet — except where noted):
 
 | Component | Verdict | Evidence | Next step |
 | --- | --- | --- | --- |
