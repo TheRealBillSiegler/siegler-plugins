@@ -16,18 +16,20 @@ The source article's default recommendation is the opposite direction: "start wi
 Stop at the first tier that is sufficient:
 
 | Tier | Effort | Use for |
-|------|--------|---------|
+| ------ | -------- | --------- |
 | fastest/cheapest (`haiku`) | low–medium | Mechanical work: repo/file scouting, verbatim extraction, inventories, reflows, format conversion |
 | balanced (`sonnet`) | medium | Pattern-following implementation with verified anchors, doc research, toolchain iteration, fidelity checks |
 | balanced (`sonnet`) | high | Implementation from near-code design; complex but well-specified multi-file edits |
 | reasoning (`opus`) | high | Reasoning-intensive work where the balanced tier demonstrably falls short AND the task is not a top-tier category |
-| top tier (`fable`; `opus` when fable is unavailable) | high–xhigh | Top-tier categories ONLY: adversarial review gates, open-ended design, security-boundary reads |
+| top tier (most capable in session: `fable`, else `opus`, else `sonnet`) | high–xhigh | Top-tier categories ONLY: adversarial review gates, open-ended design, security-boundary reads |
 
 Durable rules about the table:
 
-- **"Top tier" means the most capable model available in the session** — not last generation's flagship by habit, and not a fixed name. In a fable session, top tier is fable; in a session where fable is unavailable (opus-topped plans, fast mode), opus is the top tier and takes the top-tier categories. When the model lineup changes, remap tiers by position (fastest/cheapest ↔ most capable), not by name — the names in parentheses reflect the Claude 5 generation.
+- **"Top tier" means the most capable model available in the session** — not last generation's flagship by habit, and not a fixed name. In a fable session, top tier is fable; in fable-less sessions (opus- or sonnet-topped plans, fast mode), the most capable available model takes the top-tier categories. When the ladder compresses — e.g. a sonnet-topped session where sonnet is both worker and gate — the gate stage still earns its place through independence (fresh context, adversarial framing), not extra capability. When the model lineup changes, remap tiers by position (fastest/cheapest ↔ most capable), not by name — the names in parentheses reflect the Claude 5 generation.
 - **When fable is available, top-tier categories stay on fable.** The article notes larger models "tend to have more wisdom, creativity, and writing skills despite having similar benchmark scores" — exactly the margin adversarial gates and open-ended design pay for. Opus substitutes as top tier; it does not co-equal fable when fable is present.
 - **Both directions fail the rule.** Over-provisioning (top tier for scouting) and under-provisioning (balanced tier for the final adversarial review of production config) are equally wrong.
+- **Effort is per-call only on some surfaces.** Workflow `agent()` calls accept `effort` per call; direct Agent tool calls have no effort parameter and inherit the session's effort level. If the session runs below a tier's band for a top-tier category, route that delegation through a workflow to pin effort, or accept the session effort — model class is the bigger lever (the article notes higher-class models at lower efforts can outperform smaller models).
+- **Orchestration modes don't change the ladder.** Exhaustive-verification modes (e.g. ultracode) scale how many agents you spawn and how many verify stages you add — not the tier each agent gets. Fan-out multiplication makes over-provisioning costlier, not more acceptable; the advisor pattern below is what heavy orchestration should look like.
 
 ## Selection questions
 

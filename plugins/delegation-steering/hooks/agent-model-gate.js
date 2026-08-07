@@ -13,7 +13,7 @@
 const fs = require('fs');
 
 const TIERS =
-  'haiku=mechanical scouting/extraction; sonnet=anchored implementation/doc research; opus=reasoning beyond sonnet; top tier=adversarial review gates/open-ended design/security reads, where top tier is the most capable model available in the session — fable where available, otherwise opus';
+  'haiku=mechanical scouting/extraction; sonnet=anchored implementation/doc research; opus=reasoning beyond sonnet; top tier=adversarial review gates/open-ended design/security reads, where top tier is the most capable model available in the session — fable, else opus, else sonnet';
 
 function lintScript(src) {
   const missing = [];
