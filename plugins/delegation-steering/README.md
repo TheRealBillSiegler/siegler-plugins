@@ -12,6 +12,7 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 - **`evals/`** — offline hook contract tests (fixtures + runner) and application scenarios for both skills with recorded baselines; provenance and growth rules in [evals/README.md](evals/README.md).
 - **`scripts/check-drift.js`** — deterministic doc/version drift detection against `anchors.json`.
 - **`scripts/weekly-drift-task.ps1`** — Task Scheduler wrapper: drift check, weekly behavioral probe (one headless session asserting both gate paths deny), and a 7-day delegation-mix summary from the ledger.
+- **`docs/COVERAGE.md`** — the enforcement coverage matrix: every delegation path × every layer, with per-cell verification dates. The canonical claim set of what is enforced where.
 - **`docs/REMEDIATION.md`** — the drift procedure, plus deferred hardenings and their evidence triggers.
 
 ## Three-layer enforcement

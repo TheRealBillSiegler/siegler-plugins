@@ -11,7 +11,7 @@ Follow this when `scripts/check-drift.js` exits 1 (doc-page or Claude Code versi
    - Run `/delegation-steering:canary` in a live session (Agent deny, Workflow launch-lint deny).
    - If a canary fails, diagnose against the changed doc page: renamed tool (matcher dead), changed hook JSON contract, changed Workflow tool_input shape are the known failure classes.
 
-3. **Edit at the right layer.** Hook behavior changes go in `hooks/agent-model-gate.js` (keep `--test` passing; extend it if the fix changes lint semantics). Claim changes go in the affected SKILL.md section AND its dated reference digest if the source moved. Update "Last verified" dates only for claims actually re-verified.
+3. **Edit at the right layer.** Hook behavior changes go in `hooks/agent-model-gate.js` (keep `--test` passing; extend it if the fix changes lint semantics). Claim changes go in the affected SKILL.md section AND its dated reference digest if the source moved. Update "Last verified" dates only for claims actually re-verified — including the affected cells of [COVERAGE.md](COVERAGE.md), which must change in the same PR as any fix that changes what a cell claims.
 
 4. **Re-run everything**: contract tests, `--test`, canary, and the scenario evals (`evals/scenarios/*.md`) if skill prose changed.
 
