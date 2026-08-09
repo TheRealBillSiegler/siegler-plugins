@@ -21,7 +21,7 @@ Stop at the first tier that is sufficient:
 | balanced (`sonnet`) | medium | Pattern-following implementation with verified anchors, doc research, toolchain iteration, fidelity checks |
 | balanced (`sonnet`) | high | Implementation from near-code design; complex but well-specified multi-file edits |
 | reasoning (`opus`) | high | Reasoning-intensive work where the balanced tier demonstrably falls short AND the task is not a top-tier category |
-| top tier (most capable in session: `fable`, else `opus`, else `sonnet`) | high–xhigh | Top-tier categories ONLY: adversarial review gates, open-ended design, security-boundary reads |
+| top tier (most capable in session: `fable` — the Claude 5 flagship above `opus` — else `opus`, else `sonnet`) | high–xhigh | Top-tier categories ONLY: adversarial review gates, open-ended design, security-boundary reads |
 
 Durable rules about the table:
 

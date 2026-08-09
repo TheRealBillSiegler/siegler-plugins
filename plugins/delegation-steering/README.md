@@ -6,7 +6,7 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 
 - **`skills/delegation-tiering/`** — the tier ladder and selection questions for delegated agents (Agent tool, Workflow `agent()`, multi-agent plans). Loads on invocation.
 - **`skills/steering-claude-code/`** — decision tree for CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends, with locally verified addenda the article doesn't cover.
-- **`hooks/agent-model-gate.js`** — PreToolUse gate (matcher `Agent|Workflow`): denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. `--test` self-check guards the lint's span-boundary logic.
+- **`hooks/agent-model-gate.js`** — PreToolUse gate (matcher `Agent|Workflow`): denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. `--test` embeds the regression case for the lint's known failure class: an `agent (` call written with a space must not throw off call-span detection and hide a neighboring model-less call.
 - **`hooks/delegation-ledger.js`** — PostToolUse observability: appends one JSONL line per delegation to `~/.claude/delegation-ledger.jsonl` (model, agent type, description; per-workflow model lists) so tier choices are reviewable, not just explicit.
 - **`commands/canary.md`** — `/delegation-steering:canary`: end-to-end live verification, rule-file install, and legacy cutover cleanup.
 - **`evals/`** — offline hook contract tests (fixtures + runner) and application scenarios for both skills with recorded baselines; provenance and growth rules in [evals/README.md](evals/README.md).
@@ -18,11 +18,11 @@ Explicit model/effort tiering for every delegated agent, enforced — plus a dec
 
 ## Three-layer enforcement
 
-1. **Always-loaded rule** (`~/.claude/rules/delegation.md`, installed by the canary command): the standing rule survives compaction and holds without skill invocation. Probabilistic floor.
+1. **Always-loaded rule** (`~/.claude/rules/delegation.md`, installed by the canary command): the standing rule survives compaction and holds without skill invocation — a probabilistic floor: it depends on the model following it, unlike the deterministic hook below.
 2. **Skill** (on invocation): the judgment layer — which tier is lowest-sufficient.
 3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses false positives), predefined workflows and unreadable scriptPaths fail open with a reminder, and headless `claude -p` delegation is covered by no layer.
 
-The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary is the evidence base for the deferred rationale-gate hardening (see REMEDIATION.md).
+The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary is the evidence base for a deferred hardening — denying top-tier Agent calls that state no rationale — described in REMEDIATION.md.
 
 ### Coverage map
 

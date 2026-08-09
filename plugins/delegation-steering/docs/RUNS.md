@@ -27,7 +27,15 @@ Any multi-agent run whose conclusions land in durable artifacts (commits, PRs, t
 
 - **Protocol:** per [../evals/README.md](../evals/README.md) — fresh-context subagent, skill file only, weakest deployable tier first.
 - **Runs:** steering-claude-code: 7 scenarios, haiku 7/7 and sonnet 7/7 (2026-08-05; two gaps found by the eval itself — `paths:` format, hook-vs-permission criterion — fixed same day). delegation-tiering: 12 scenarios, haiku 12/12 and sonnet 12/12 (2026-08-06).
-- **Limitations:** single rep per tier (no variance estimate); grader = the map-driving session, not blinded — an unblinded LLM comparison against Expected, i.e. weak-signal by this repo's own grading standards (the endpoint is categorical, so the fix is mechanical extraction, not a better judge); models recorded as aliases at run time — resolved IDs inferred afterward (2026-08-09) from run-date platform defaults as claude-haiku-4-5 and claude-sonnet-5, an inference, not a capture. Later records stamp full model IDs.
+- **Limitations:** single rep per tier (no variance estimate); grader = the same session that orchestrated the eval, not an independent blinded rater — an unblinded LLM comparison against the scenario files' Expected column, i.e. weak-signal by this repo's own grading standards (the endpoint is categorical, so the fix is mechanical extraction, not a better judge); models recorded as aliases at run time — resolved IDs inferred afterward (2026-08-09) from run-date platform defaults as claude-haiku-4-5 and claude-sonnet-5, an inference, not a capture. Later records stamp full model IDs.
+
+## 2026-08-09 — Cryptic-wording sweep (pre-public readability)
+
+- **Question:** which passages in the fifteen public-facing files stall a cold reader — undefined coined terms, compressed grammar, insider references, or sentences depending on conversation context the repo does not contain?
+- **Shape:** 1 workflow, 7 parallel readers (general-purpose type, sonnet, effort medium), one per file group, precision-biased rubric (false flag costs more than a miss).
+- **Counts:** 22 raw findings → 18 accepted and rewritten, 4 rejected. All four rejections flagged the model name `fable` as undefined or unreal — a reviewer knowledge-cutoff artifact (two proposed rewrites mis-described a released model as an "alias" or "codename"); one defensive gloss was added at the skill ladder's first use anyway.
+- **Limitations:** single reader per file group; acceptance adjudicated unblinded by the authoring session.
+- **Landed in:** the cryptic-wording commit across 11 files.
 
 ## 2026-08-09 — Prior-art and eval-methodology research
 

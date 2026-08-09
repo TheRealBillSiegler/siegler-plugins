@@ -21,7 +21,7 @@ Follow this when `scripts/check-drift.js` exits 1 (doc-page or Claude Code versi
 
 ## Known blindness: drift detection is preservation-only
 
-The drift check answers "did what we rely on change?" — it cannot answer "did something new appear that we should use?" A new Claude Code capability fires nothing unless it happens to alter an anchored claim (the 2026-08-06 effort-frontmatter catch was that lucky case), and features landing on unwatched pages or in release notes are fully invisible. Opportunity detection is a separate, judgment-based review: periodically (monthly is proportionate) read the Claude Code changelog/release notes with the question "does anything new bear on delegation, spawn surfaces, hook events, or effort control?" — as a deliberate session, not an always-on agent. Findings route through the normal PR path.
+The drift check answers "did what we rely on change?" — it cannot answer "did something new appear that we should use?" A new Claude Code capability fires nothing unless it happens to alter an anchored claim (the 2026-08-06 catch — a new `effort` field documented in agent-definition frontmatter — was that lucky case), and features landing on unwatched pages or in release notes are fully invisible. Opportunity detection is a separate, judgment-based review: periodically (monthly is proportionate) read the Claude Code changelog/release notes with the question "does anything new bear on delegation, spawn surfaces, hook events, or effort control?" — as a deliberate session, not an always-on agent. Findings route through the normal PR path.
 
 ## Deferred hardenings
 
@@ -29,4 +29,4 @@ The drift check answers "did what we rely on change?" — it cannot answer "did 
 
 ## Failure classes seen so far
 
-- 2026-08-05: lint span-boundary desync (space-styled `agent (` masked a model-less neighbor) — caught by review, now guarded by `--test`. Lesson: any lint change needs a masking-direction test case.
+- 2026-08-05: lint span-boundary desync — `agent (` written with a space threw off the lint's call-span detection, so a neighboring call with no `model` went unchecked. Caught by review, now guarded by `--test`. Lesson: any lint change needs a masking-direction test case.

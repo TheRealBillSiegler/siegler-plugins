@@ -6,7 +6,7 @@ description: Verify the delegation gate end-to-end (contract tests + live Agent/
 
 Run the delegation-steering verification canary. Execute the steps in order; do not skip a step because an earlier one "probably" covers it.
 
-1. **Rule file (probabilistic floor).** If `~/.claude/rules/delegation.md` does not exist, create it with exactly:
+1. **Rule file — the probabilistic layer** (holds only if the model follows it, unlike the deterministic hook verified in steps 2–4). If `~/.claude/rules/delegation.md` does not exist, create it with exactly:
 
    ```markdown
    # Delegated-agent model rule
