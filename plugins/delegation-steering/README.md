@@ -54,4 +54,4 @@ This plugin is a stopgap for a missing platform feature, not a product to defend
 
 - **Article-only claims** (advisor figure, start-smart posture): dated quote digests in each skill's `references/` — the blogs are the primary source; digests are the ceiling.
 - **Mechanics**: specific `code.claude.com/docs` pages, listed per claim in each SKILL.md's Doc anchors; docs win over articles.
-- **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — the docs are silent here; the canary and the weekly probe re-establish these after Claude Code updates.
+- **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — largely undocumented; where a doc page does state a boundary, [COVERAGE.md](docs/COVERAGE.md)'s dependency table cites it, and the canary and weekly probe re-establish the behavior after Claude Code updates either way.

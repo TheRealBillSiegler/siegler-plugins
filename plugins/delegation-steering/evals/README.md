@@ -12,7 +12,7 @@ What the evals verify, where each layer's cases come from, and how the set grows
 
 ## Layer 2: live verification (canary + weekly probe)
 
-**Based on:** the enforcement-boundary claims the docs are silent on — what actually fires for what. These were established by dated live tests (see the skill's Enforcement section) and can silently change on any Claude Code update, so they are re-established empirically, never assumed.
+**Based on:** the enforcement-boundary claims — what actually fires for what. These are largely undocumented (per-claim doc status is in [../docs/COVERAGE.md](../docs/COVERAGE.md)'s dependency table), were established by dated live tests (see the skill's Enforcement section), and can silently change on any Claude Code update — so they are re-established empirically, never assumed.
 
 **Protocol:** `/delegation-steering:canary` in a live session (both gate paths must deny; also performs rule-file install and legacy cutover). The weekly probe in `../scripts/weekly-drift-task.ps1` automates the same two assertions headlessly and logs PASS/FAIL to `drift.log`.
 
