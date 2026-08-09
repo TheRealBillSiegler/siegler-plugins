@@ -46,6 +46,10 @@ node evals/contract/run-contract-tests.js           # offline contract (gate + l
 /delegation-steering:canary                         # end-to-end + cutover
 ```
 
+## Sunset criterion
+
+This plugin is a stopgap for a missing platform feature, not a product to defend. If Claude Code ships native per-delegation model routing (demand is tracked upstream in anthropics/claude-code#27665, #44976, #67898), verify parity against [docs/COVERAGE.md](docs/COVERAGE.md) — every delegation path, deterministically enforced — and archive this plugin. The drift pipeline exists to notice that day, not to outlive it.
+
 ## Source fidelity tiers
 
 - **Article-only claims** (advisor figure, start-smart posture): dated quote digests in each skill's `references/` — the blogs are the primary source; digests are the ceiling.
