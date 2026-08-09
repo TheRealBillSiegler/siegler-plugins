@@ -27,7 +27,7 @@ Any multi-agent run whose conclusions land in durable artifacts (commits, PRs, t
 
 - **Protocol:** per [../evals/README.md](../evals/README.md) — fresh-context subagent, skill file only, weakest deployable tier first.
 - **Runs:** steering-claude-code: 7 scenarios, haiku 7/7 and sonnet 7/7 (2026-08-05; two gaps found by the eval itself — `paths:` format, hook-vs-permission criterion — fixed same day). delegation-tiering: 12 scenarios, haiku 12/12 and sonnet 12/12 (2026-08-06).
-- **Limitations:** single rep per tier (no variance estimate); grader = the map-driving session, not blinded.
+- **Limitations:** single rep per tier (no variance estimate); grader = the map-driving session, not blinded — an unblinded LLM comparison against Expected, i.e. weak-signal by this repo's own grading standards (the endpoint is categorical, so the fix is mechanical extraction, not a better judge); models recorded as aliases at run time — resolved IDs inferred afterward (2026-08-09) from run-date platform defaults as claude-haiku-4-5 and claude-sonnet-5, an inference, not a capture. Later records stamp full model IDs.
 
 ## 2026-08-06 — Full verification sweep
 

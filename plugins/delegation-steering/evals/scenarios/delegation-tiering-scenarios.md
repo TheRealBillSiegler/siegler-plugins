@@ -1,6 +1,6 @@
 # Delegation-tiering skill: tier-assignment eval
 
-Run each scenario against a fresh subagent given ONLY `skills/delegation-tiering/SKILL.md`. Pass = assigned tier matches Expected (effort within the stated band). Baseline (2026-08-06): haiku 12/12, sonnet 12/12.
+Run each scenario against a fresh subagent given ONLY `skills/delegation-tiering/SKILL.md`. Pass = assigned tier matches Expected (effort within the stated band). Baseline (2026-08-06): 12/12 at both tiers — run via aliases `haiku`/`sonnet`; resolved IDs inferred from that date's platform defaults as claude-haiku-4-5 and claude-sonnet-5, not captured at run time. Future baselines record full model IDs at run time.
 
 | # | Scenario | Expected |
 | --- | --- | --- |

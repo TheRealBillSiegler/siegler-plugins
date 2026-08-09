@@ -1,6 +1,6 @@
 # Steering-claude-code skill: application eval
 
-Run each scenario against a fresh subagent given ONLY `skills/steering-claude-code/SKILL.md` ("Read the skill and answer from it alone"). Pass = the prescribed mechanism matches Expected. Baseline (2026-08-05): haiku 7/7, sonnet 7/7.
+Run each scenario against a fresh subagent given ONLY `skills/steering-claude-code/SKILL.md` ("Read the skill and answer from it alone"). Pass = the prescribed mechanism matches Expected. Baseline (2026-08-05): 7/7 at both tiers — run via aliases `haiku`/`sonnet`; resolved IDs inferred from that date's platform defaults as claude-haiku-4-5 and claude-sonnet-5, not captured at run time. Future baselines record full model IDs at run time.
 
 | # | Scenario | Expected |
 | --- | --- | --- |
