@@ -1,6 +1,6 @@
 # Enforcement coverage matrix
 
-Every delegation path crossed with every layer. This file is the canonical claim set for what the plugin enforces where — the coverage map diagram in the README visualizes flow; this matrix tracks completeness and freshness. When a cell's behavior is re-verified (canary, probe, or drift remediation), update its date; when Claude Code changes a cell's truth, this file changes in the same PR as the fix.
+Every delegation path crossed with every layer. This file is the canonical claim set for what the plugin enforces where — the coverage map diagram in the README visualizes flow; this matrix tracks completeness and freshness. When a cell's behavior is re-verified (canary, probe, or drift remediation), update its date; when Claude Code changes a cell's truth, this file changes in the same PR as the fix. Every cell's truth rests on the platform dependencies tabled at the bottom, each tied to its Anthropic doc basis or explicitly marked docs-silent.
 
 | Delegation path | Gate (deterministic) | Rule (probabilistic) | Ledger (observability) | Last verified |
 | --- | --- | --- | --- | --- |
@@ -15,3 +15,18 @@ Every delegation path crossed with every layer. This file is the canonical claim
 The skill layer (judgment, on invocation) applies to all paths equally and is validated by the scenario evals, not per-path — so it is not a column here.
 
 Reading the gaps: bold cells are the accepted holes, each documented in the skill's Enforcement section with its mitigation. The last row is covered by no layer at all — manual discipline, flagged in the skill. If any bold cell becomes closable (e.g. a future hook event reaches workflow-internal spawns), close it and record the evidence here.
+
+## Load-bearing platform dependencies
+
+Every assumption the matrix rests on, tied back to the Anthropic documentation that states it — or marked **docs silent** where no doc states it and the claim is empirical. All cited pages are hashed by `scripts/check-drift.js` (`scripts/anchors.json`), so a change to any doc basis surfaces in the weekly drift check. The docs-silent rows are the plugin's empirical perimeter: they are re-established by dated live tests, never assumed across Claude Code updates.
+
+| # | Assumption | Anthropic doc basis | Watched by |
+| --- | --- | --- | --- |
+| A1 | PreToolUse hooks can deny via `hookSpecificOutput.permissionDecision` + reason | <https://code.claude.com/docs/en/hooks.md>, <https://code.claude.com/docs/en/hooks-guide.md> | canary + weekly probe (deny assertions) |
+| A2 | Matchers match the bare tool names `Agent` and `Workflow` | <https://code.claude.com/docs/en/hooks.md>, <https://code.claude.com/docs/en/tools-reference.md> | weekly probe — a matcher break silences denials → FAIL |
+| A3 | Agent-tool calls surface `model` in `tool_input` | <https://code.claude.com/docs/en/tools-reference.md>; regressed upstream once (anthropics/claude-code#31027) | canary allow path + probe deny path; a schema regression would spike ledger denials |
+| A4 | Workflow launches surface `script`/`scriptPath` in `tool_input` | <https://code.claude.com/docs/en/tools-reference.md>, <https://code.claude.com/docs/en/workflows.md> | weekly probe (GATE-WORKFLOW assertion) |
+| A5 | PostToolUse fires for Agent/Workflow calls | <https://code.claude.com/docs/en/hooks.md> | weekly ledger mix summary — zero entries is a visible failure |
+| A6 | `~/.claude/rules/*.md` load at session start and persist | <https://code.claude.com/docs/en/memory.md> | drift anchor only — probabilistic layer, no behavioral assertion |
+| A7 | Hooks fire for tool calls made *inside* subagents | **docs silent** — empirical, live-tested 2026-08-06 | no standing watch (canary and probe run from the main session) — re-verify manually after Claude Code updates; candidate probe extension |
+| A8 | PreToolUse does **not** fire for `agent()` spawns inside a running workflow — the gap the launch lint exists for | **docs silent** — empirical, live-tested 2026-08-05 | monthly changelog review; if a future hook event closes it, close the matrix cell above |
