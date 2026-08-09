@@ -60,7 +60,7 @@ Orchestrator commentary only in a clearly marked "notes" section, visually separ
 ## Prerequisites, in order
 
 1. Doc-alignment pass on the delegation-tiering/model-selection skill (test what you'd ship, not stale wisdom).
-2. Exact-test tally: study workflow computing d, McNemar, CIs, and the power check in code — confirmatory-grade, upgrading from screening-style fixed thresholds.
+2. Tally script: code, not judgment, computes every number the verdict depends on — the discordance rate and its confidence interval, the direction test, and the pre-run power check, all as defined under Endpoints above. The verdict bucket then falls out of arithmetic; no eyeballed thresholds.
 3. Renderer script: data JSON → report.html, deterministic.
 4. Owner gold labels (blind), then frame approval → this file freezes, hash stamped.
 
