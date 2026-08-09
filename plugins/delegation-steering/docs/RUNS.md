@@ -29,6 +29,15 @@ Any multi-agent run whose conclusions land in durable artifacts (commits, PRs, t
 - **Runs:** steering-claude-code: 7 scenarios, haiku 7/7 and sonnet 7/7 (2026-08-05; two gaps found by the eval itself — `paths:` format, hook-vs-permission criterion — fixed same day). delegation-tiering: 12 scenarios, haiku 12/12 and sonnet 12/12 (2026-08-06).
 - **Limitations:** single rep per tier (no variance estimate); grader = the map-driving session, not blinded — an unblinded LLM comparison against Expected, i.e. weak-signal by this repo's own grading standards (the endpoint is categorical, so the fix is mechanical extraction, not a better judge); models recorded as aliases at run time — resolved IDs inferred afterward (2026-08-09) from run-date platform defaults as claude-haiku-4-5 and claude-sonnet-5, an inference, not a capture. Later records stamp full model IDs.
 
+## 2026-08-09 — Prior-art and eval-methodology research
+
+- **Question:** (1) prior art for this plugin's components; (2) empirical (non-judge-only) assessment of model selection and steering config in the literature; (3) what the strongest primary sources prescribe for eval methodology.
+- **Shape:** 4 read-only web-research agents (general-purpose type, sonnet, session effort), 3 launched in parallel (prior-art sweep; empirical/routing literature; Pocock primary sources) + 1 supplemental (definitive methodology sources, replacing tweet-grade citations where stronger sources exist).
+- **Verification structure:** no adversarial gate — instead per-claim confidence labels preserved end-to-end (agents instructed to label anything not read from a primary source UNVERIFIED); orchestrator independently re-verified two load-bearing claims live (Zheng et al. reference-guided 70%→15% figure re-fetched from paper text; hooks.md subagent statement checked against a Wayback snapshot).
+- **Counts:** not gated, so no raw→surviving figure; 8 items remain explicitly UNVERIFIED and are listed as such in the record.
+- **Limitations:** one agent per axis (no cross-agent replication); WebFetch summarization is unreliable for PDFs (all PDF-derived quotes flagged); two tweets retrieved via a mirror API after x.com blocked direct fetch (provenance disclosed in the record); awesome-list sweeps were title-level, not line-by-line — the prior-art sweep is non-exhaustive by construction.
+- **Landed in:** [research/prior-art-and-eval-methodology-2026-08-09.md](research/prior-art-and-eval-methodology-2026-08-09.md), the ablation-protocol precedent citations in [../evals/README.md](../evals/README.md), and the sunset criterion in the plugin README.
+
 ## 2026-08-06 — Full verification sweep
 
 - **Question:** verify everything not yet verified (user directive).
