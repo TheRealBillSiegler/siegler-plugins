@@ -16,12 +16,33 @@ claude plugin marketplace add TheRealBillSiegler/claude-plugins
 claude plugin install delegation-steering@siegler-plugins
 ```
 
-Inside a session: `/plugin marketplace add TheRealBillSiegler/claude-plugins`, then `/plugin install delegation-steering@siegler-plugins`.
-
 Then:
 
-1. Restart or run `/reload-plugins` — neither install form takes effect in a running session.
+1. Restart or run `/reload-plugins` — no install form takes effect in a running session.
 2. Run `/delegation-steering:canary` to verify the gate end-to-end.
+
+### Other ways to install
+
+**In a session** — `/plugin marketplace add TheRealBillSiegler/claude-plugins`, then `/plugin install delegation-steering@siegler-plugins`.
+
+**By hand**, for dotfiles or config you version yourself — merge these keys into `~/.claude/settings.json` ([settings reference](https://code.claude.com/docs/en/settings#plugin-settings)):
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "siegler-plugins": {
+      "source": { "source": "github", "repo": "TheRealBillSiegler/claude-plugins" }
+    }
+  },
+  "enabledPlugins": { "delegation-steering@siegler-plugins": true }
+}
+```
+
+**Without installing**, to try it or test a local change — clone the repo and load the plugin for one session only:
+
+```bash
+claude --plugin-dir ./plugins/delegation-steering
+```
 
 ## delegation-steering
 
