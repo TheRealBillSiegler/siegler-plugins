@@ -10,6 +10,6 @@ Run each scenario against a fresh subagent given ONLY `skills/steering-claude-co
 | 4 | Personal preference for terse commit messages, all projects | User-level file (`~/.claude/CLAUDE.md` / `~/.claude/rules/`) — branch 7 |
 | 5 | Dependency audit producing hundreds of lines of intermediate output | Subagent — branch 8 |
 | 6 | New teammate needs monorepo layout and build commands | Root CLAUDE.md — branch 5 |
-| 7 | Guarantee every Workflow-spawned agent has an explicit model; why can't a per-spawn hook do it? | Lint script text at Workflow launch (PreToolUse on `Workflow`); per-spawn events aren't hookable and SubagentStart can't block — from the skill's "Verified platform behavior" section, not its decision tree |
+| 7 | Guarantee every Workflow-spawned agent has an explicit model; why can't a per-spawn hook do it? | Lint script text at Workflow launch (PreToolUse on `Workflow`); per-spawn events aren't hookable and SubagentStart can't block — from the skill's building-enforcement guidance, not its decision tree |
 
-Grading notes: #7 tests retrieval from the verified-platform-behavior section, not just the decision tree. If a model at or below sonnet scores <7/7, the skill's guidance is insufficient — fix the skill, don't blame the model.
+Grading notes: #7 tests retrieval of the building-enforcement guidance, not just the decision tree. If a model at or below sonnet scores <7/7, the skill's guidance is insufficient — fix the skill, don't blame the model.

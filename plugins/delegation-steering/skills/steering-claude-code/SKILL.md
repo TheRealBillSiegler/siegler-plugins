@@ -26,7 +26,7 @@ Take the first branch that fits:
 
 | Mechanism | Loads | Authority |
 | --- | --- | --- |
-| Root CLAUDE.md / unscoped rules | session start, persistent | probabilistic |
+| Root CLAUDE.md / unscoped rules (user-level loads before project; project wins conflicts) | session start, persistent | probabilistic |
 | Subdir CLAUDE.md / path-scoped rules | on demand (file access) | probabilistic |
 | Skill | name+description at start; body on invocation | probabilistic |
 | Subagent | isolated context per spawn | probabilistic, contained |
@@ -41,17 +41,16 @@ Take the first branch that fits:
 - A "never do this" instruction as the only guard — when something absolutely must not happen, an instruction is the wrong tool.
 - Personal preferences in project-level files — every file-based method has a user-level counterpart.
 
-## Verified platform behavior
+## Building enforcement (hooks)
 
-Mechanics the article does not cover, each established against the docs or by live test (verified 2026-08-05; re-established after Claude Code updates via the repo's drift watch):
+When branch 1 lands on a hook: PreToolUse controls via structured JSON — `hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow; the exit-code-2/stderr path is the simpler alternative. Matchers use bare tool names, and `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable (PreToolUse never fires for them; SubagentStart exists but cannot block) — to enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Worked example: this plugin's `hooks/agent-model-gate.js`.
 
-- User-level rules `~/.claude/rules/` are documented: always loaded, before project rules (project wins conflicts).
-- PreToolUse structured output (`hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow) is the current JSON control surface; the article's exit-code-2/stderr path is the simpler alternative.
-- Hook matchers use bare tool names; `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable (PreToolUse never fires for them — live-tested; SubagentStart exists but cannot block). To enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Worked example: this plugin's `hooks/agent-model-gate.js`.
-- Three-layer pattern for a rule that must hold everywhere: always-loaded rule (floor) + skill (judgment on invocation) + PreToolUse hook (deterministic gate). Worked example: `~/.claude/rules/delegation.md` + this plugin's delegation-tiering skill + agent-model-gate.js.
+## Pattern: a rule that must hold everywhere
+
+Always-loaded rule (floor) + skill (judgment on invocation) + PreToolUse hook (deterministic gate). Worked example: `~/.claude/rules/delegation.md` + this plugin's delegation-tiering skill + agent-model-gate.js.
 
 ## Source
 
-- [Steering Claude Code: skills, hooks, rules, subagents, and more](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) — Anthropic, claude.com blog. The core split, mechanism guidance, and anti-patterns are drawn from it; the decision-tree ordering and the verified-platform-behavior section are local adaptations.
+- [Steering Claude Code: skills, hooks, rules, subagents, and more](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) — Anthropic, claude.com blog. The core split, mechanism guidance, and anti-patterns are drawn from it; the decision-tree ordering and the building-enforcement and pattern sections are local adaptations, verified 2026-08-05 against the doc anchors below and by live test, and re-established after Claude Code updates.
 - [Quote-anchored digest](references/steering-claude-code-2026-08-05.md) — captured 2026-08-05; re-verify against the live URL before relying on an article claim.
 - Doc anchors (mechanics, per verified-behavior claim): hooks events and JSON control — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; CLAUDE.md and rules loading — <https://code.claude.com/docs/en/memory.md>; subagents — <https://code.claude.com/docs/en/sub-agents.md>; workflows — <https://code.claude.com/docs/en/workflows.md>; tool names — <https://code.claude.com/docs/en/tools-reference.md>. Where the article and these docs disagree, the docs win — re-verify mechanics there before relying on them for config that must not silently break. Doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`).
