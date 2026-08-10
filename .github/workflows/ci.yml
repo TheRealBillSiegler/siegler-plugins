@@ -1,0 +1,66 @@
+name: CI
+
+# Read-only validation only: no publish, no release or tag creation, no artifact
+# upload. The permissions block below pins least-privilege `contents: read`; do
+# not raise it without explicit maintainer approval.
+#
+# Everything here is deterministic and offline. The suites run the hooks as
+# subprocesses against fixtures, so no ANTHROPIC_API_KEY and no model inference
+# is involved, and forked PRs run with no secrets. What CI cannot prove is that
+# Claude Code still routes Agent and Workflow calls into the hook — a matcher
+# rename upstream would leave every assertion here green while the gate silently
+# stopped firing. That is what /delegation-steering:canary and the weekly
+# behavioural probe are for, and why they stay out of CI.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    # ready_for_review is not a default activity type; without it a draft
+    # flipped to ready would never get a CI run.
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# Superseded runs waste runner time and delay fresh results: cancel them.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: Hook contract suite
+    # Draft PRs skip CI; flipping to ready triggers the one real run. The guard
+    # must pass push events through: they carry no pull_request context.
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    # Every job sets timeout-minutes: the GitHub default is 360, so one hung job
+    # could burn a large slice of the monthly included minutes.
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      # No setup-node: ubuntu-latest ships Node, and both hooks import only
+      # fs/os/path, so there is no version-sensitive surface to pin.
+      - run: node --version
+      - name: Contract suite
+        run: node evals/contract/run-contract-tests.js
+      - name: Lint span-boundary self-test
+        run: node plugins/delegation-steering/hooks/agent-model-gate.js --test
+
+  version-bump:
+    name: Plugin version raised when the plugin changes
+    if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # The guard diffs against the base commit, which a shallow clone lacks.
+          fetch-depth: 0
+      - name: Check plugin version against base
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/check-version-bump.js "$BASE" "$HEAD"
