@@ -13,6 +13,13 @@ Two parts: the requirements a methods record must satisfy, then the records them
 
 ## Records
 
+## 2026-08-10 — Correction to "Landing-page redesign panel"
+
+- **Corrects:** the `2026-08-10 — Landing-page redesign panel` record below. Its orchestration shape, tiers, counts, and limitations stand; two reference defects are corrected here.
+- **Landed in:** PR #15 (landing page and linked pages) and PR #16 (defects found by rendering the page). The original record said "merge pending" and named an unmerged draft rather than a tracker artifact.
+- **Identifiers:** that record cites workflow run IDs and an agent id that exist only in a machine-local session transcript and cannot be resolved by any reader. Disregard them; the orchestration is reproducible from the structure, tiers, and adjudication rules the record already states.
+- **Convention going forward:** methods records name tracker artifacts for where work landed, and describe orchestration by structure rather than by session-local run identifiers.
+
 ## 2026-08-10 — Landing-page redesign panel
 
 - **Question:** how should the claude-plugins repo landing page (README.md) be restructured — minimal, visual (trees/tables/diagrams), CLI-first install — informed by popular marketplace landing pages and a six-expert panel?
