@@ -1,0 +1,12 @@
+{
+  "capturedAt": "2026-08-09T21:02:39.824Z",
+  "claudeVersion": "2.1.224 (Claude Code)",
+  "pages": {
+    "https://code.claude.com/docs/en/hooks.md": "d29d21b554b5c6bd0b0ed1f7a28161c1cd05954510a6fd0acb84b74d496987fb",
+    "https://code.claude.com/docs/en/hooks-guide.md": "44481165eb466f1a3e7f27dd1375642b02f2b9e71df319085521af8f8e485f6d",
+    "https://code.claude.com/docs/en/memory.md": "a26a68f8fc3caeb2e52a01a8b781db56262c1e07eeabdb4f56c1a9b353f7a6a4",
+    "https://code.claude.com/docs/en/sub-agents.md": "2f08d529620dba34468ea6a0b660843f4b7bbe17f50874f11294c1ba6e45c5f8",
+    "https://code.claude.com/docs/en/workflows.md": "5e2e750ad5a2112c67cb1d79f5fe62eb49517ea5dcb70d881e4603869bec8145",
+    "https://code.claude.com/docs/en/tools-reference.md": "22086883c6fa5f786933f388e7fb1975b08ba0e0e09d630d0fd24e75802eaaa6"
+  }
+}

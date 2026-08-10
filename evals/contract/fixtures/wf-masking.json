@@ -1,0 +1,1 @@
+{"_purpose":"Regression for the 2026-08-05 span-boundary bug: an agent ( call written with a space must not hide the model-less call next to it.","tool_name":"Workflow","tool_input":{"script":"const a = await agent('do x'); const b = await agent ('do y', { model: 'haiku', effort: 'low' });"}}

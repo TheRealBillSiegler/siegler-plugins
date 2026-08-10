@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "siegler-plugins",
+  "description": "Bill Siegler's Claude Code plugins: delegation tiering enforcement, steering-mechanism guidance, and their freshness pipeline.",
+  "owner": {
+    "name": "Bill Siegler",
+    "url": "https://github.com/TheRealBillSiegler"
+  },
+  "plugins": [
+    {
+      "name": "delegation-steering",
+      "description": "Model/effort tiering for every delegated agent (skill + deterministic PreToolUse gate) and a steering-mechanism decision guide, with evals and doc-drift detection.",
+      "source": "./plugins/delegation-steering",
+      "category": "productivity"
+    }
+  ]
+}

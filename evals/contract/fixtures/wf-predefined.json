@@ -1,0 +1,1 @@
+{"_purpose":"Fail-open branch: a predefined workflow name carries no script text to lint; allowed with a reminder.","tool_name":"Workflow","tool_input":{"name":"some-predefined-workflow"}}

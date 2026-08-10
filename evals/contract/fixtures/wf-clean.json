@@ -1,0 +1,1 @@
+{"_purpose":"Workflow lint allow branch: every agent() call carries an explicit model, so the launch proceeds with a clean-lint note.","tool_name":"Workflow","tool_input":{"script":"const a = await agent('do x', { model: 'haiku' }); const b = await agent ('do y', { model: 'sonnet' });"}}
