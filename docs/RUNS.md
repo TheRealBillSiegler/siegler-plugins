@@ -29,6 +29,14 @@ Any multi-agent run whose conclusions land in durable artifacts (commits, PRs, t
 - **Runs:** steering-claude-code: 7 scenarios, haiku 7/7 and sonnet 7/7 (2026-08-05; two gaps found by the eval itself — `paths:` format, hook-vs-permission criterion — fixed same day). delegation-tiering: 12 scenarios, haiku 12/12 and sonnet 12/12 (2026-08-06).
 - **Limitations:** single rep per tier (no variance estimate); grader = the same session that orchestrated the eval, not an independent blinded rater — an unblinded LLM comparison against the scenario files' Expected column, i.e. weak-signal by this repo's own grading standards (the endpoint is categorical, so the fix is mechanical extraction, not a better judge); models recorded as aliases at run time — resolved IDs inferred afterward (2026-08-09) from run-date platform defaults as claude-haiku-4-5 and claude-sonnet-5, an inference, not a capture. Later records stamp full model IDs.
 
+## 2026-08-09 — Instrument-detection critique import
+
+- **Question:** does the parallel "Improve instrument detection of false claims" session (a critique workflow over the A7/A3/A4 citation incident, run in another project) bear on current work?
+- **Shape:** 1 transcript-investigation agent (general-purpose type, sonnet) over that session's file and workflow record; the source run itself was 3 parallel critics (opus, sonnet, sonnet — high effort) plus an adversarial gate (fable, high), recorded in that workflow's own output.
+- **Findings imported:** a fourth defect-class pillar for the calibration ticket (false doc-basis attribution, with a hard spec for planted units), an A8-class placebo requirement, an adjudication guard on refutations, and an attribution correction — the review question caught A7 only; routine unblinded scoping caught A3/A4; fresh-context blinding has no demonstrated catch in this repo.
+- **Limitations:** the investigator read the source session selectively (tail-weighted); the source run's verdicts were analytical and were not independently re-executed here.
+- **Landed in:** issue #13 (defect-class addition section).
+
 ## 2026-08-09 — Cryptic-wording sweep (pre-public readability)
 
 - **Question:** which passages in the fifteen public-facing files stall a cold reader — undefined coined terms, compressed grammar, insider references, or sentences depending on conversation context the repo does not contain?
