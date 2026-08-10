@@ -45,7 +45,7 @@ for (const c of CASES) {
 
 // Ledger contract: one JSONL line per delegation, models captured.
 const os = require('os');
-const LEDGER_HOOK = path.join(__dirname, '..', '..', 'hooks', 'delegation-ledger.js');
+const LEDGER_HOOK = path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 'hooks', 'delegation-ledger.js');
 const tmpLedger = path.join(os.tmpdir(), 'delegation-ledger-test-' + process.pid + '.jsonl');
 try {
   const env = { ...process.env, DELEGATION_LEDGER: tmpLedger };

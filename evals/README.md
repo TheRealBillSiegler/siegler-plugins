@@ -2,6 +2,18 @@
 
 What the evals verify, where each layer's cases come from, and how the set grows. The layers are ordered by what they can prove: deterministic contract → live behavior → skill application quality.
 
+Directory map: [contract/](contract/) — offline hook contract tests and fixtures (layer 1; own README); [scenarios/](scenarios/) — skill application evals with recorded baselines (layer 3); [routing-impact-study/](routing-impact-study/) — the draft pre-registered protocol for the tier-policy outcome study.
+
+```mermaid
+flowchart TD
+    L1["Layer 1 — contract tests<br>deterministic, offline, free"] -- "proves the hooks' contract as implemented" --> Q1["hooks work?"]
+    L2["Layer 2 — canary + weekly probe<br>live sessions, dated"] -- "proves Claude Code still routes calls to them" --> Q2["hooks alive?"]
+    L3["Layer 3 — scenario evals<br>fresh-context subagents, mechanical grading"] -- "proves the skills' guidance is retrievable at the weakest tier" --> Q3["skills usable?"]
+    ABL["Ablation studies<br>controlled, blinded, replicated — none run yet"] -- "would prove each component still earns its place" --> Q4["components necessary?"]
+    Q1 --> Q2 --> Q3 --> Q4
+    LED["delegation ledger<br>production feed"] -. "mis-tiered delegations become new scenarios" .-> L3
+```
+
 ## Layer 1: contract tests (`contract/`)
 
 **Based on:** observed hook behavior and found bugs — one fixture per exercised branch, plus a regression fixture for every fixed bug (per the failure-classes ledger in [../docs/REMEDIATION.md](../docs/REMEDIATION.md)). `wf-masking.json` is the archetype: it encodes the span-boundary bug found by adversarial review on 2026-08-05 (an `agent (` call written with a space threw off call-span detection, hiding a model-less neighboring call), and the same case is embedded in the hook as `node hooks/agent-model-gate.js --test`.
