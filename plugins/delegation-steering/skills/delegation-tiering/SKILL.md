@@ -64,11 +64,11 @@ Three layers back the standing rule:
   - Per-spawn events inside a running workflow are not hookable (checked 2026-08-05: PreToolUse never fires for them — confirmed live — and SubagentStart cannot block), so launch-time linting is the only deterministic contact point for this path.
 - **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-steering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
 
-Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to `~/.claude/delegation-ledger.jsonl` — the gate makes models explicit; the ledger makes tier choices reviewable (7-day mix summary in `scripts/weekly-drift-task.ps1`).
+Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to `~/.claude/delegation-ledger.jsonl` — the gate makes models explicit; the ledger makes tier choices reviewable (a 7-day mix summary runs in the plugin repo's weekly task, TheRealBillSiegler/claude-plugins `scripts/weekly-drift-task.ps1`).
 
 Uncovered entirely: headless delegation (`claude -p` spawned from Bash) is invisible to the matcher and outside the rule file's literal scope — apply the standing rule manually there.
 
-Maintenance: `Agent` and `Workflow` are documented tool names ([tools-reference](https://code.claude.com/docs/en/tools-reference.md)), but a rename would disable the gate silently — after a Claude Code update, run `/delegation-steering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Doc drift is watched by `scripts/check-drift.js` against `scripts/anchors.json`. Last verified: 2026-08-05.
+Maintenance: `Agent` and `Workflow` are documented tool names ([tools-reference](https://code.claude.com/docs/en/tools-reference.md)), but a rename would disable the gate silently — after a Claude Code update, run `/delegation-steering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`). Last verified: 2026-08-05.
 
 ## Source
 

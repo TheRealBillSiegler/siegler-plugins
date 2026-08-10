@@ -16,8 +16,7 @@
 # 5.1-compatible (no ??, no ternary) because powershell.exe is the only host
 # guaranteed present on Windows; register with pwsh.exe instead if you prefer -
 # the script behaves identically under either.
-$plugin = Split-Path $PSScriptRoot -Parent
-$repo = Split-Path (Split-Path $plugin -Parent) -Parent
+$repo = Split-Path $PSScriptRoot -Parent
 $log = Join-Path $PSScriptRoot "drift.log"
 $stamp = Get-Date -Format o
 
@@ -31,7 +30,7 @@ if ($code -eq 1) {
     Add-Content $log "$stamp drift detected - launching scoping agent"
     Set-Location $repo
     $date = Get-Date -Format yyyy-MM-dd
-    $scope = claude -p "Drift was detected by plugins/delegation-steering/scripts/check-drift.js. Follow ONLY step 1 of plugins/delegation-steering/docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the claims mapped in the skills' Doc anchors sections, and write a report to plugins/delegation-steering/docs/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
+    $scope = claude -p "Drift was detected by scripts/check-drift.js. Follow ONLY step 1 of docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the claims mapped in the skills' Doc anchors sections, and write a report to docs/drift/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
     Add-Content $log $scope.TrimEnd()
     Add-Content $log "$stamp scoping agent finished (exit $LASTEXITCODE)"
 } elseif ($code -eq 0) {

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// Contract tests for hooks/agent-model-gate.js: pipe each fixture to the hook
+// Contract tests for the agent-model-gate hook: pipe each fixture to the hook
 // and assert the decision and message substrings. Pure and offline — verifies
 // the hook's contract as implemented, NOT whether Claude Code still routes
 // Agent/Workflow calls to it (that's the /delegation-steering:canary command).
-// Run from the plugin root: node evals/contract/run-contract-tests.js
+// Run from the repo root: node evals/contract/run-contract-tests.js
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const HOOK = path.join(__dirname, '..', '..', 'hooks', 'agent-model-gate.js');
+const HOOK = path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 'hooks', 'agent-model-gate.js');
 const FIXTURES = path.join(__dirname, 'fixtures');
 
 const CASES = [

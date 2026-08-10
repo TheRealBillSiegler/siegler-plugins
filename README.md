@@ -18,7 +18,7 @@ Or directly in `~/.claude/settings.json`:
 "enabledPlugins": { "delegation-steering@siegler-plugins": true }
 ```
 
-Restart your session, then run `/delegation-steering:canary` — it verifies the gate end-to-end, installs the always-loaded rule file, and cleans up any pre-plugin loose-file setup.
+Restart your session, then run `/delegation-steering:canary` — it verifies the gate end-to-end and installs the always-loaded rule file.
 
 **Requirements:** Node.js on `PATH`; on Windows, Git for Windows (hooks declare `"shell": "bash"`).
 
@@ -32,16 +32,13 @@ The two skills are consultation surfaces — `delegation-tiering` fires when Cla
 | `steering-claude-code` skill | Decision tree: CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles |
 | `agent-model-gate` hook      | PreToolUse gate: denies model-less Agent calls, lints Workflow scripts at launch   |
 | `delegation-ledger` hook     | Appends one JSONL line per delegation for tier-quality review                      |
-| `canary` command             | Live end-to-end verification of the gate, plus legacy cutover cleanup              |
-| `evals/`                     | Offline hook contract tests and skill application scenarios with baselines         |
-| `scripts/check-drift.js`     | Deterministic doc/version drift detection against dated anchors                    |
-| `docs/REMEDIATION.md`        | The drift procedure: scope the diff, re-verify empirically, ship via PR            |
+| `canary` command             | Live end-to-end verification of the gate, plus rule-file install                   |
 
-Full component docs: [plugins/delegation-steering/](plugins/delegation-steering/)
+Full component docs: [plugins/delegation-steering/](plugins/delegation-steering/). The measurement apparatus — contract tests and fixtures, scenario evals, coverage matrix, drift detection, run register — lives at repo level ([evals/](evals/), [docs/](docs/), [scripts/](scripts/)) and is deliberately **not** part of the installed plugin.
 
 ## Why trust it
 
-Every claim is verified or explicitly marked pending: the gate is live-tested on all branches (deny, allow, launch-lint, nested spawns), the contract suite runs 10/10, both skills carry dated eval baselines (12/12 and 7/7 at haiku and sonnet), and the drift pipeline caught real upstream doc changes in its first week. What is *not* yet proven is tracked in the open — an active measurement program is stamping load-bearing / ceremony / harmful verdicts per component. Receipts: [coverage matrix](plugins/delegation-steering/docs/COVERAGE.md) · [run register](plugins/delegation-steering/docs/RUNS.md) · [eval methodology](plugins/delegation-steering/evals/README.md) · [measurement map](https://github.com/TheRealBillSiegler/claude-plugins/issues/2)
+Every claim is verified or explicitly marked pending: the gate is live-tested on all branches (deny, allow, launch-lint, nested spawns), the contract suite runs 10/10, both skills carry dated eval baselines (12/12 and 7/7 at haiku and sonnet), and the drift pipeline caught real upstream doc changes in its first week. What is *not* yet proven is tracked in the open — an active measurement program is stamping load-bearing / ceremony / harmful verdicts per component. Receipts: [coverage matrix](docs/COVERAGE.md) · [run register](docs/RUNS.md) · [eval methodology](evals/README.md) · [measurement map](https://github.com/TheRealBillSiegler/claude-plugins/issues/2)
 
 ## How it stays fresh
 
@@ -58,13 +55,13 @@ flowchart LR
     LGR["ledger summary<br>weekly, free"] --> MIX["7-day delegation mix<br>evidence for deferred hardenings"]
 ```
 
-Drift triage and edit rules: [REMEDIATION.md](plugins/delegation-steering/docs/REMEDIATION.md)
+Drift triage and edit rules: [REMEDIATION.md](docs/REMEDIATION.md)
 
 ## Development
 
 - Branch → PR into `main`; no direct pushes. Conventional commits.
-- Contract tests: `node plugins/delegation-steering/evals/contract/run-contract-tests.js`
+- Contract tests: `node evals/contract/run-contract-tests.js`
 - Any change to hook lint semantics must keep `node plugins/delegation-steering/hooks/agent-model-gate.js --test` passing and add a case for the failure class it fixes.
-- Multi-agent runs that produce conclusions must record their methodology in [RUNS.md](plugins/delegation-steering/docs/RUNS.md).
+- Multi-agent runs that produce conclusions must record their methodology in [RUNS.md](docs/RUNS.md).
 
 [MIT licensed](LICENSE).
