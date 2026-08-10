@@ -1,4 +1,4 @@
-# Run register: multi-agent methodology records
+# Methods records
 
 Any multi-agent run whose conclusions land in durable artifacts (commits, PRs, tickets, verdicts) records its methodology here — the run is not legitimate evidence without it. Reproducibility caveat, stated once: agent runs are stochastic; a record makes a run *re-executable and auditable* (same structure, prompts, tiers, adjudication rules), not bit-identical.
 

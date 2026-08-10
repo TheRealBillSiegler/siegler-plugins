@@ -34,11 +34,11 @@ The two skills are consultation surfaces — `delegation-tiering` fires when Cla
 | `delegation-ledger` hook     | Appends one JSONL line per delegation for tier-quality review                      |
 | `canary` command             | Live end-to-end verification of the gate, plus rule-file install                   |
 
-Full component docs: [plugins/delegation-steering/](plugins/delegation-steering/). The measurement apparatus — contract tests and fixtures, scenario evals, coverage matrix, drift detection, run register — lives at repo level ([evals/](evals/), [docs/](docs/), [scripts/](scripts/)) and is deliberately **not** part of the installed plugin.
+Full component docs: [plugins/delegation-steering/](plugins/delegation-steering/). The measurement apparatus — contract tests and fixtures, scenario evals, coverage matrix, drift detection, methods records — lives at repo level ([evals/](evals/), [docs/](docs/), [scripts/](scripts/)) and is deliberately **not** part of the installed plugin.
 
 ## Why trust it
 
-Every claim is verified or explicitly marked pending: the gate is live-tested on all branches (deny, allow, launch-lint, nested spawns), the contract suite runs 10/10, both skills carry dated eval baselines (12/12 and 7/7 at haiku and sonnet), and the drift pipeline caught real upstream doc changes in its first week. What is *not* yet proven is tracked in the open — an active measurement program is stamping load-bearing / ceremony / harmful verdicts per component. Receipts: [coverage matrix](docs/COVERAGE.md) · [run register](docs/RUNS.md) · [eval methodology](evals/README.md) · [measurement map](https://github.com/TheRealBillSiegler/claude-plugins/issues/2)
+Every claim is verified or explicitly marked pending: the gate is live-tested on all branches (deny, allow, launch-lint, nested spawns), the contract suite runs 10/10, both skills carry dated eval baselines (12/12 and 7/7 at haiku and sonnet), and the drift pipeline caught real upstream doc changes in its first week. What is *not* yet proven is tracked in the open — an active measurement program is stamping load-bearing / ceremony / harmful verdicts per component. Receipts: [coverage matrix](docs/COVERAGE.md) · [methods records](docs/METHODS.md) · [eval methodology](evals/README.md) · [measurement map](https://github.com/TheRealBillSiegler/claude-plugins/issues/2)
 
 ## How it stays fresh
 
@@ -62,6 +62,6 @@ Drift triage and edit rules: [REMEDIATION.md](docs/REMEDIATION.md)
 - Branch → PR into `main`; no direct pushes. Conventional commits.
 - Contract tests: `node evals/contract/run-contract-tests.js`
 - Any change to hook lint semantics must keep `node plugins/delegation-steering/hooks/agent-model-gate.js --test` passing and add a case for the failure class it fixes.
-- Multi-agent runs that produce conclusions must record their methodology in [RUNS.md](docs/RUNS.md).
+- Multi-agent runs that produce conclusions must record their methodology in [METHODS.md](docs/METHODS.md).
 
 [MIT licensed](LICENSE).
