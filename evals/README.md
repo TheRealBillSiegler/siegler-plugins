@@ -14,6 +14,8 @@ flowchart TD
     LED["delegation ledger<br>production feed"] -. "mis-tiered delegations become new scenarios" .-> L3
 ```
 
+The four evaluation layers chain from proving the hooks' contract as implemented, through proving Claude Code still routes calls to them, to proving the skills' guidance is retrievable, up to proving each component is still necessary, with mis-tiered delegations from the production ledger feeding new Layer 3 scenarios along the way.
+
 ## Layer 1: contract tests (`contract/`)
 
 **Based on:** observed hook behavior and found bugs — one fixture per exercised branch, plus a regression fixture for every fixed bug (per the failure-classes ledger in [../docs/REMEDIATION.md](../docs/REMEDIATION.md)). `wf-masking.json` is the archetype: it encodes the span-boundary bug found by adversarial review on 2026-08-05 (an `agent (` call written with a space threw off call-span detection, hiding a model-less neighboring call), and the same case is embedded in the hook as `node hooks/agent-model-gate.js --test`.
@@ -26,7 +28,7 @@ flowchart TD
 
 **Based on:** the enforcement-boundary claims — what actually fires for what. These are largely undocumented (per-claim doc status is in [../docs/COVERAGE.md](../docs/COVERAGE.md)'s dependency table), were established by dated live tests (see the skill's Enforcement section), and can silently change on any Claude Code update — so they are re-established empirically, never assumed.
 
-**Protocol:** `/delegation-steering:canary` in a live session (both gate paths must deny; also performs rule-file install and legacy cutover). The weekly probe in `../scripts/weekly-drift-task.ps1` automates the same two assertions headlessly and logs PASS/FAIL to `drift.log`.
+**Protocol:** `/delegation-steering:canary` in a live session (both gate paths must deny; also performs the rule-file install). The weekly probe in `../scripts/weekly-drift-task.ps1` automates the same two assertions headlessly and logs PASS/FAIL to `drift.log`.
 
 ## Layer 3: scenario evals (`scenarios/`)
 
