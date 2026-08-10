@@ -2,13 +2,26 @@
 
 Explicit model/effort tiering for every delegated agent, enforced — plus a decision guide for where Claude Code behavior should live. Built from two Anthropic articles and the official docs, adapted for supervised delegation.
 
-## What installs
+## Components
 
-- **`skills/delegation-tiering/`** — the tier ladder and selection questions for delegated agents (Agent tool, Workflow `agent()` calls, multi-agent plans). Loads on invocation.
-- **`skills/steering-claude-code/`** — decision tree for CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends, with enforcement mechanics the article doesn't cover.
-- **`hooks/agent-model-gate.js`** — PreToolUse gate (matcher `Agent|Workflow`): denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. `--test` embeds the regression case for the lint's known failure class: an `agent (` call written with a space must not throw off call-span detection and hide a neighboring model-less call.
-- **`hooks/delegation-ledger.js`** — PostToolUse observability: appends one JSONL line per delegation to `~/.claude/delegation-ledger.jsonl` (model, agent type, description; per-workflow model lists) so tier choices are reviewable, not just explicit.
-- **`commands/canary.md`** — `/delegation-steering:canary`: live end-to-end verification of both gate paths, plus rule-file install.
+| Component | What it does | Fires when |
+| --- | --- | --- |
+| `skills/delegation-tiering/` | Tier ladder and selection questions for delegated agents (Agent tool, Workflow `agent()` calls, multi-agent plans). | Claude spawns or configures an agent |
+| `skills/steering-claude-code/` | Decision tree for CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends, with enforcement mechanics the article doesn't cover. | You ask where a behavior should live |
+| `hooks/agent-model-gate.js` | Denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. | Every Agent/Workflow call (PreToolUse, matcher `Agent\|Workflow`) |
+| `hooks/delegation-ledger.js` | Appends one JSONL line per delegation to `~/.claude/delegation-ledger.jsonl` so tier choices are reviewable, not just explicit. | Every delegation (PostToolUse) |
+| `commands/canary.md` | Live end-to-end verification of both gate paths, plus rule-file install. | You run `/delegation-steering:canary` |
+
+Details:
+
+- **delegation-tiering skill** loads on invocation — the judgment layer, not the always-loaded floor (see Three-layer enforcement below).
+- **agent-model-gate** `--test` embeds the regression case for the lint's known failure class: an `agent (` call written with a space must not throw off call-span detection and hide a neighboring model-less call.
+- **delegation-ledger** each line records model, agent type, description. A workflow call records the models named in the script text — a static scan, so it neither counts fan-out (N agents spawned from one `model:` literal appear once) nor excludes non-agent occurrences such as a phase declaration. Verified 2026-08-10 against three runs.
+
+## Configuration
+
+- **`DELEGATION_LEDGER`** — set this environment variable to redirect the ledger to a different path. Unset, it writes to `~/.claude/delegation-ledger.jsonl`.
+- **Off switch:** `/plugin disable delegation-steering` — disabling a plugin deactivates its components ([plugins reference](https://code.claude.com/docs/en/plugins-reference)). Nothing is deleted: `~/.claude/delegation-ledger.jsonl` (or your `DELEGATION_LEDGER` path) and `~/.claude/rules/delegation.md` are files under your `~/.claude/`, and removing them is yours to do.
 
 ## Three-layer enforcement
 
