@@ -16,6 +16,8 @@ flowchart LR
     PRB["behavioral probe<br>weekly, one headless session"] --> PP["gate alive? PASS/FAIL in drift.log"]
 ```
 
+In text: check-drift.js compares the six anchored doc pages and the Claude Code version weekly, logging one line when nothing changed or handing a read-only scoping agent's DRIFT-REPORT to this procedure when something did — routed to an anchors.json refresh if it is noise or to full re-verification if it is claim-affecting — while a separate weekly behavioral probe checks whether the gate is still alive and logs PASS or FAIL to drift.log, as the bullets below describe.
+
 - **check-drift.js**: diffs the 6 anchored doc pages plus the Claude Code version against `anchors.json`. No drift → one log line. Drift → a read-only scoping agent writes a DRIFT-REPORT, then this procedure branches on whether the drift is noise (refresh `anchors.json` via PR, stop) or claim-affecting (continue below).
 - **Behavioral probe**: one headless session, weekly, runs the gate live and logs PASS/FAIL to `drift.log`. A FAIL is the other trigger for this procedure — it's what a `/delegation-steering:canary` failure after a Claude Code update looks like when caught automatically instead of by hand.
 
@@ -56,6 +58,8 @@ flowchart LR
     LGR["ledger summary<br>weekly, free"] --> MIX["7-day delegation mix<br>evidence for deferred hardenings"]
 ```
 
+In text: the weekly ledger summary feeds a 7-day delegation mix that would surface the over-provisioning pattern justifying the deferred rationale gate — the same point the sentence right after it makes.
+
 The ledger summary is what would surface the over-provisioning pattern that triggers the scoped rationale gate above.
 
 ## Failure classes seen so far
@@ -63,3 +67,4 @@ The ledger summary is what would surface the over-provisioning pattern that trig
 | Date | Failure | Fix | Lesson |
 | --- | --- | --- | --- |
 | 2026-08-05 | Lint span-boundary desync — `agent (` written with a space threw off the lint's call-span detection, so a neighboring call with no `model` went unchecked | Caught by review; now guarded by `--test` | Any lint change needs a masking-direction test case |
+| 2026-08-10 | Missing runtime — with `node` unresolvable, the hook command produces no output and the delegation is allowed: no denial, no ledger line, no error | Documented at the install surface; `/delegation-steering:canary` is the detector | A gate that cannot run is indistinguishable from a gate that passed — state the consequence where the dependency is stated |

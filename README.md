@@ -9,7 +9,9 @@ Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), se
 ## Install
 
 > [!IMPORTANT]
-> **Requirements:** Node.js on `PATH`. On Windows, Git for Windows — the hooks declare `"shell": "bash"`.
+> **Requirements:** Node.js on `PATH`. On Windows, Git for Windows — the hooks declare `"shell": "bash"`. Check both with `node --version && git --version`.
+>
+> If `node` does not resolve when a hook runs, the gate **fails open**: no denial, no ledger line, no error. The plugin looks installed and enforces nothing. Step 2 below is how you find out.
 
 ```bash
 claude plugin marketplace add TheRealBillSiegler/claude-plugins
@@ -19,7 +21,7 @@ claude plugin install delegation-steering@siegler-plugins
 Then:
 
 1. Restart or run `/reload-plugins` — no install form takes effect in a running session.
-2. Run `/delegation-steering:canary` to verify the gate end-to-end.
+2. Run `/delegation-steering:canary`. It installs the always-loaded rule file and verifies both deny paths — required, not just a check.
 
 ### Other ways to install
 
@@ -63,12 +65,12 @@ Workflow scripts get the same check at launch. Each denial includes its fix, so 
 
 On your machine:
 
-- **Gates** every `Agent`/`Workflow` call — model-less ones are denied; nothing else is touched
+- **Gates** direct `Agent` calls and `Workflow` launches with readable script text — model-less ones are denied; nothing else is touched. Four delegation paths are documented gaps: see the [coverage matrix](docs/COVERAGE.md)
 - **Logs** one line per delegation to `~/.claude/delegation-ledger.jsonl`
 - **Installs** `~/.claude/rules/delegation.md` (via the canary)
-- **Off switch:** `/plugin disable delegation-steering`
+- **Off switch:** `/plugin disable delegation-steering` — leaves the ledger and rule file in place; delete them yourself for a full uninstall
 
-Components (two skills, two hooks, one command), enforcement layers, escape hatches, known gaps, and the coverage map: [plugins/delegation-steering/](plugins/delegation-steering/).
+Components (two skills, two hooks, one command), enforcement layers, escape hatches, known gaps, and the coverage map: [plugins/delegation-steering/](plugins/delegation-steering/). Claims, tests, and drift watch: [docs/](docs/) and [evals/](evals/).
 
 ## Development
 

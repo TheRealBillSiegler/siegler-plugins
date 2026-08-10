@@ -10,7 +10,7 @@ Every delegation path crossed with every layer. This file is the canonical claim
 | Workflow launch, `scriptPath` | lint if readable; **silent allow if unreadable** | always loaded | models extracted if readable | 2026-08-05, contract test |
 | Workflow launch, predefined name | **none** — reminder only (no script text to lint) | always loaded | name only, no models | 2026-08-05, contract test |
 | `agent()` spawns inside a running workflow | **none** — not hookable (PreToolUse never fires; SubagentStart can't block) | always loaded | covered only via launch lint | 2026-08-05, live |
-| Headless `claude -p` from Bash | **none** | always loaded (wording broadened 2026-08-06 to cover spawned workers) | **none** | 2026-08-06, analysis |
+| Headless `claude -p` spawned from Bash (the spawn itself) | **none** (accepted gap) | always loaded (wording broadened 2026-08-06 to cover spawned workers) | **none** | 2026-08-06, analysis |
 
 The skill layer (judgment, on invocation) applies to all paths equally and is validated by the scenario evals, not per-path — so it is not a column here.
 

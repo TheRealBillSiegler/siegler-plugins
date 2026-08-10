@@ -27,7 +27,9 @@ Details:
 
 1. **Always-loaded rule** (`~/.claude/rules/delegation.md`, installed by the canary command): the standing rule survives compaction and holds without skill invocation — a probabilistic floor: it depends on the model following it, unlike the deterministic hook below.
 2. **Skill** (on invocation): the judgment layer — which tier is lowest-sufficient.
-3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses false positives), predefined workflows and unreadable scriptPaths fail open with a reminder, and headless `claude -p` delegation is covered by no layer.
+3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses false positives), predefined workflows and unreadable scriptPaths fail open with a reminder, and spawning `claude -p` from Bash is not itself gated — that spawn is not a delegation tool call, so nothing checks whether it named a model. Delegations *inside* that child session are gated normally, since it loads the same plugin.
+
+The gate also fails open when its runtime is missing: if `node` does not resolve when the hook runs, the command produces no output, and a hook that produces no output is an allow. No denial, no ledger line, no error — the plugin looks installed and enforces nothing. Verified live 2026-08-10. `/delegation-steering:canary` is what detects it.
 
 The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary (run from the plugin repo) is the evidence base for a deferred hardening — denying top-tier Agent calls that state no rationale — described in the repo's `docs/REMEDIATION.md`.
 
@@ -35,14 +37,16 @@ The ledger sits alongside as the observability layer: the gate can force models 
 
 ```mermaid
 flowchart TD
-    A["Agent tool call"] --> G{"PreToolUse gate<br>agent-model-gate.js"}
+    A["Agent tool call"] --> G{"PreToolUse gate"}
     W["Workflow launch"] --> G
-    G -- "no model / lint fails" --> DENY["denied, with re-issue instructions"]
-    G -- "explicit models" --> RUN["runs, one-line tiering reminder injected"]
-    RUN --> LED["delegation-ledger.js (PostToolUse)<br>appends to ~/.claude/delegation-ledger.jsonl"]
-    IN["agent() spawns inside a running workflow"] -. "not hookable — always-loaded rule + skill discipline only" .-> RUN
-    HP["headless claude -p from Bash"] -. "covered by no layer — manual discipline" .-> HP2["(documented gap)"]
+    G -- "no model / lint fails" --> DENY["denied, with the fix"]
+    G -- "explicit models" --> RUN["runs, reminder injected"]
+    RUN --> LED["ledger line appended"]
+    IN["agent() inside a workflow"] -. "not hookable" .-> RUN
+    HP["claude -p from Bash"] -. "spawn not gated" .-> HP2["documented gap"]
 ```
+
+In text: Agent and Workflow calls hit the PreToolUse gate, which denies a missing model or failing lint and otherwise lets the call run and log to the ledger, while workflow-internal agent() spawns and headless claude -p calls reach neither the gate nor the ledger — the same gaps the paragraphs above describe.
 
 ## Verify
 
