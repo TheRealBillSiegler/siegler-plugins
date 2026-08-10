@@ -57,7 +57,7 @@ Public benchmarks saturate with powerful models; the article's counsel is to dec
 
 Three layers back the standing rule:
 
-- **Agent tool (deterministic):** this plugin's PreToolUse hook (`hooks/agent-model-gate.js`, matcher `Agent|Workflow` registered via the plugin's `hooks/hooks.json`) denies Agent calls without `model` and injects a one-line tiering reminder on calls that have one. Verified live 2026-08-05 (both branches).
+- **Agent tool (deterministic):** this plugin's PreToolUse hook (`hooks/agent-model-gate.js`, matcher `Agent|Workflow` registered via the plugin's `hooks/hooks.json`) denies Agent calls without `model` and injects a one-line tiering reminder on calls that have one. Verified live 2026-08-05 (both branches); re-verified 2026-08-09 under plugin-only registration (deny, allow with reminder injected, ledger entry).
 - **Workflow tool (deterministic, heuristic):** the same hook lints the script text at launch and denies on `agent()` calls with no `model:` in their argument span, quoting the offending snippets.
   - String scan, not a JS parse: a call whose model arrives via a variable or shared options object can false-positive (suppress with a `/* model-gate:allow */` comment inside that call), and stray `model:` text between calls can mask a violation. Mechanics and self-test: header of `hooks/agent-model-gate.js` (`node hooks/agent-model-gate.js --test` from the plugin root).
   - Fail-open paths: named/predefined workflows (no script text to lint) are allowed with only a reminder, and an unreadable `scriptPath` is allowed silently — both fall back to the always-loaded rule alone.
@@ -68,7 +68,7 @@ Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/dele
 
 Uncovered entirely: headless delegation (`claude -p` spawned from Bash) is invisible to the matcher and outside the rule file's literal scope — apply the standing rule manually there.
 
-Maintenance: `Agent` and `Workflow` are documented tool names ([tools-reference](https://code.claude.com/docs/en/tools-reference.md)), but a rename would disable the gate silently — after a Claude Code update, run `/delegation-steering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`). Last verified: 2026-08-05.
+Maintenance: `Agent` and `Workflow` are documented tool names ([tools-reference](https://code.claude.com/docs/en/tools-reference.md)), but a rename would disable the gate silently — after a Claude Code update, run `/delegation-steering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`). Last verified: 2026-08-09.
 
 ## Source
 

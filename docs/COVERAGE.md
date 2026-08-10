@@ -4,9 +4,9 @@ Every delegation path crossed with every layer. This file is the canonical claim
 
 | Delegation path | Gate (deterministic) | Rule (probabilistic) | Ledger (observability) | Last verified |
 | --- | --- | --- | --- | --- |
-| Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-05, live |
+| Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-09, live, plugin-only registration ([record](METHODS.md#2026-08-09--plugin-only-canary-re-verification)) |
 | Nested Agent call inside a subagent | same as Agent tool call — hooks fire for subagent tool calls | always loaded | full entry — verified live | 2026-08-06, live (gate and ledger) |
-| Workflow launch, inline script | launch-time lint; heuristic — bypassable by the literal marker `model-gate:allow` in the script text | always loaded | models extracted from script text | 2026-08-05, live |
+| Workflow launch, inline script | launch-time lint; heuristic — bypassable by the literal marker `model-gate:allow` in the script text | always loaded | models extracted from script text | 2026-08-09, live, plugin-only, deny path ([record](METHODS.md#2026-08-09--plugin-only-canary-re-verification)); ledger extract 2026-08-05 |
 | Workflow launch, `scriptPath` | lint if readable; **silent allow if unreadable** | always loaded | models extracted if readable | 2026-08-05, contract test |
 | Workflow launch, predefined name | **none** — reminder only (no script text to lint) | always loaded | name only, no models | 2026-08-05, contract test |
 | `agent()` spawns inside a running workflow | **none** — not hookable (PreToolUse never fires; SubagentStart can't block) | always loaded | covered only via launch lint | 2026-08-05, live |
