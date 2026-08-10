@@ -1,6 +1,6 @@
 # Study protocol — delegation-stack routing impact
 
-**Status: DRAFT — not yet pre-registered.** On owner approval this file becomes immutable: its content hash is stamped into the report, and any post-approval change voids the registration. Registration is self-registration — the frozen file and its hash in this public repo's history are the witness; no external registry is involved. Owner decisions pending are marked ⬜. Method: self-contained — the decision rules, endpoints, and floors written in this file govern the study; the repo's evidence bar is [../README.md](../README.md) § Ablation protocol. This record lives here because evidence travels with the artifact it judges.
+**Status: DRAFT — not yet pre-registered.** On owner approval this file becomes immutable: its content hash is stamped into the report, and any post-approval change voids the registration. Owner decisions pending are marked ⬜. Method: self-contained — the decision rules, endpoints, and floors written in this file govern the study; the repo's evidence bar is [../README.md](../README.md) § Ablation protocol. This record lives here because evidence travels with the artifact it judges.
 
 ## Question
 
