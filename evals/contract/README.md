@@ -12,6 +12,8 @@ flowchart LR
     ASSERT & ASSERT2 --> EXIT["exit 0 (all pass) / 1"]
 ```
 
+In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js, whose decision and message substrings it asserts, and delegation-ledger.js, whose JSONL round-trip it asserts against a temp ledger, then exits 0 only if every assertion passes — the same runner and exit-code contract the paragraph above and the Files section below describe.
+
 ## Files
 
 - **`run-contract-tests.js`** — the runner. Pipes each fixture into the gate hook and asserts the permission decision and message substrings; also exercises branches no static fixture can hold (a real temp file for `scriptPath` lint, a missing path for the silent-allow branch, a temp ledger for denial counting) and finishes with the hook's own `--test` self-check. Run from the repo root: `node evals/contract/run-contract-tests.js`.

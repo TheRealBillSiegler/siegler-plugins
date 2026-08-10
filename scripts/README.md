@@ -12,6 +12,8 @@ flowchart LR
     SCOPE -.-> PR["human-reviewed PR<br>(never auto-merge)"]
 ```
 
+In text: weekly-drift-task.ps1 runs check-drift.js, which logs one line when clean or hands drift to a read-only scoping agent that writes a dated DRIFT-REPORT bound for a human-reviewed PR, plus a behavioral probe that both gate paths must deny and a ledger summary of the 7-day delegation mix — the same three checks the file list below details.
+
 ## Files
 
 - **`check-drift.js`** — hashes six anchored `code.claude.com/docs` pages and compares `claude --version` against `anchors.json`. Exit 0 = no drift, 1 = drift (lists what changed), 2 = error. `--update` rebaselines the anchors; commit the refreshed file only after the drift has been scoped (see [../docs/REMEDIATION.md](../docs/REMEDIATION.md)).

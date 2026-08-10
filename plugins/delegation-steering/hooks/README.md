@@ -15,6 +15,8 @@ flowchart TD
     ALLOW & ALLOW2 --> RUN["tool runs"] --> LED["delegation-ledger.js (PostToolUse)<br>one JSONL line per delegation"]
 ```
 
+In text: a call reaches the gate, which denies an Agent call missing a model, allows one with an explicit model, lints Workflow script text and denies or allows depending on whether every agent() call names a model, fails open with a reminder when there is no script text to lint, and logs every denial or completed run to the ledger — the same branches the list below spells out.
+
 ## `agent-model-gate.js`
 
 - **Agent branch:** denies any call whose `tool_input` lacks `model`; the denial carries the tier ladder so the orchestrator can re-issue with an explicit choice. Allow responses inject only a one-line reminder.
