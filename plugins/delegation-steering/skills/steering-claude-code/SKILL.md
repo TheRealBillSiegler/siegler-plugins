@@ -41,7 +41,9 @@ Take the first branch that fits:
 - A "never do this" instruction as the only guard — when something absolutely must not happen, an instruction is the wrong tool.
 - Personal preferences in project-level files — every file-based method has a user-level counterpart.
 
-## Verified addenda (2026-08-05 — beyond the article)
+## Verified platform behavior
+
+Mechanics the article does not cover, each established against the docs or by live test (verified 2026-08-05; re-established after Claude Code updates via the repo's drift watch):
 
 - User-level rules `~/.claude/rules/` are documented: always loaded, before project rules (project wins conflicts).
 - PreToolUse structured output (`hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow) is the current JSON control surface; the article's exit-code-2/stderr path is the simpler alternative.
@@ -50,6 +52,6 @@ Take the first branch that fits:
 
 ## Source
 
-- [Steering Claude Code: skills, hooks, rules, subagents, and more](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) — Anthropic, claude.com blog. The core split, mechanism guidance, and anti-patterns are drawn from it; the decision-tree ordering and the addenda section are local adaptations.
+- [Steering Claude Code: skills, hooks, rules, subagents, and more](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) — Anthropic, claude.com blog. The core split, mechanism guidance, and anti-patterns are drawn from it; the decision-tree ordering and the verified-platform-behavior section are local adaptations.
 - [Quote-anchored digest](references/steering-claude-code-2026-08-05.md) — captured 2026-08-05; re-verify against the live URL before relying on an article claim.
-- Doc anchors (mechanics, per addenda claim): hooks events and JSON control — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; CLAUDE.md and rules loading — <https://code.claude.com/docs/en/memory.md>; subagents — <https://code.claude.com/docs/en/sub-agents.md>; workflows — <https://code.claude.com/docs/en/workflows.md>; tool names — <https://code.claude.com/docs/en/tools-reference.md>. Where the article and these docs disagree, the docs win — re-verify mechanics there before relying on them for config that must not silently break. Doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`).
+- Doc anchors (mechanics, per verified-behavior claim): hooks events and JSON control — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; CLAUDE.md and rules loading — <https://code.claude.com/docs/en/memory.md>; subagents — <https://code.claude.com/docs/en/sub-agents.md>; workflows — <https://code.claude.com/docs/en/workflows.md>; tool names — <https://code.claude.com/docs/en/tools-reference.md>. Where the article and these docs disagree, the docs win — re-verify mechanics there before relying on them for config that must not silently break. Doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`).
