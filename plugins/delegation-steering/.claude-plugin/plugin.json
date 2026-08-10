@@ -1,6 +1,6 @@
 {
   "name": "delegation-steering",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Explicit model/effort tiering for every delegated agent — tier-ladder skill, steering-mechanism guide, deterministic PreToolUse gate on Agent and Workflow calls, and a per-delegation ledger.",
   "author": {
     "name": "Bill Siegler",
