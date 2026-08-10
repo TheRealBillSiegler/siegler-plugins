@@ -4,14 +4,12 @@ Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), se
 
 | Plugin | What it does |
 | --- | --- |
-| [**delegation-steering**](plugins/delegation-steering/) | Every delegated agent gets an explicit model at the lowest sufficient tier — enforced by a hook, not convention |
+| [**delegation-steering**](plugins/delegation-steering/) | Explicit model tiering for every delegated agent, hook-enforced |
 
 ## Install
 
-### Requirements
-
-- Node.js on `PATH`
-- Windows only: Git for Windows (hooks declare `"shell": "bash"`)
+> [!IMPORTANT]
+> **Requirements:** Node.js on `PATH`. On Windows, Git for Windows — the hooks declare `"shell": "bash"`.
 
 ```bash
 claude plugin marketplace add TheRealBillSiegler/claude-plugins
@@ -29,11 +27,9 @@ Then:
 
 When Claude spawns a subagent or launches a workflow without naming a model, the subagent silently inherits the session's model — no one asks whether a cheaper one would do. delegation-steering forces the question: a deterministic hook (not a CLAUDE.md line Claude may or may not follow) **denies** any delegation that doesn't name a model:
 
-```text
-Agent call has no explicit model. Apply the delegation-tiering skill: choose the lowest sufficient tier …
-```
+> **Agent call has no explicit model.** Apply the delegation-tiering skill: choose the lowest sufficient tier — the ladder below — and re-issue this exact Agent call with the `model` parameter set.
 
-The denial hands back the ladder to choose from:
+The ladder it hands back:
 
 | Tier | For |
 | --- | --- |
