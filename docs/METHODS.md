@@ -13,6 +13,15 @@ Two parts: the requirements a methods record must satisfy, then the records them
 
 ## Records
 
+## 2026-08-09 — Plugin-only canary re-verification
+
+- **Question:** after PR #1 merged and the legacy loose hook was removed, do the *plugin-registered* hooks (installed as `delegation-steering@siegler-plugins`) produce the denials — not a leftover of the pre-plugin installation?
+- **Shape:** no orchestration — four inline live probes from the interactive session: model-less Agent call (expect deny), model-less Workflow launch (expect lint deny), Agent call at alias `haiku` (expect allow + reminder; resolved ID not captured at run time, inferred claude-haiku-4-5 from that date's platform defaults), plus a rule-file presence check.
+- **Attribution structure:** the legacy gate file was deleted before the run, so a legacy registration cannot emit a deny decision (its command exits nonzero without one); corroborated by ledger forensics — the pre-cleanup canary (02:11 UTC) wrote *doubled* denial lines (two registrations active), this run (02:26 UTC) wrote exactly one per path.
+- **Results:** deny with correct message on both paths; allow path ran with the tiering reminder injected as PreToolUse additional context; full ledger entry for the allow, single denial lines for the denies; rule file present. All three canary steps PASS.
+- **Limitations:** single replicate per path; the nested-subagent path and the workflow ledger model-extraction were not re-run (their cells keep earlier dates); the reminder-injection observation comes from the orchestrating session's own context, unblinded; the doubled-lines reading is inference from registration state — the ledger does not record *which* registration wrote a line.
+- **Landed in:** the two re-verified date cells in [COVERAGE.md](COVERAGE.md) and the Enforcement dates in the delegation-tiering SKILL.md.
+
 ## 2026-08-09 — Instrument-detection critique import
 
 - **Question:** does the parallel "Improve instrument detection of false claims" session (a critique workflow over the A7/A3/A4 citation incident, run in another project) bear on current work?
