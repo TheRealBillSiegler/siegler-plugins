@@ -1,6 +1,8 @@
 # Hooks
 
-The plugin's deterministic layer: one PreToolUse gate that enforces explicit model choice, one PostToolUse ledger that records every delegation. Both are wired by `hooks.json` with matcher `Agent|Workflow` and `"shell": "bash"` (so the `node` command line resolves identically on Windows via Git Bash and on POSIX systems).
+The plugin's deterministic layer: one PreToolUse gate that enforces explicit model choice, one PostToolUse ledger that records every delegation. Both are wired by `hooks.json` with matcher `Agent|Workflow`, in [exec form](https://code.claude.com/docs/en/hooks) — `command` is `node` and the script path is an `args` element, so Claude Code spawns the binary directly with no shell between it and the script. That is what the docs recommend whenever a hook references a path placeholder, and it means no Git Bash is needed on Windows.
+
+The ledger additionally sets `"async": true`. Nothing reads its output and no decision waits on it, so it runs in the background and adds no blocking time to a delegation. The gate cannot: it returns the allow/deny decision.
 
 ```mermaid
 flowchart TD

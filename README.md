@@ -9,7 +9,7 @@ Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), se
 ## Install
 
 > [!IMPORTANT]
-> **Requirements:** Node.js on `PATH`. On Windows, Git for Windows — the hooks declare `"shell": "bash"`. Check both with `node --version && git --version`.
+> **Requirement:** Node.js on `PATH`. Check with `node --version`.
 >
 > If `node` does not resolve when a hook runs, the gate **fails open**: no denial, no ledger line, no error. The plugin looks installed and enforces nothing. Step 2 below is how you find out.
 
