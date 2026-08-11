@@ -50,11 +50,16 @@ if ($probe -match 'GATE-AGENT:\s*DENIED' -and $probe -match 'GATE-WORKFLOW:\s*DE
 }
 
 # --- 3. Ledger summary (7-day delegation mix) ---
-$ledger = Join-Path $env:USERPROFILE ".claude\delegation-ledger.jsonl"
-if (Test-Path $ledger) {
+# The ledger writes to the plugin's data directory. The legacy path is read
+# too, so a window spanning the move is not silently half-counted.
+$ledgers = @(
+    (Join-Path $env:USERPROFILE ".claude\plugins\data\delegation-steering-siegler-plugins\delegation-ledger.jsonl"),
+    (Join-Path $env:USERPROFILE ".claude\delegation-ledger.jsonl")
+) | Where-Object { Test-Path $_ }
+if ($ledgers) {
     $cut = (Get-Date).AddDays(-7)
     $denied = 0
-    $models = foreach ($line in Get-Content $ledger) {
+    $models = foreach ($line in ($ledgers | Get-Content)) {
         try { $e = $line | ConvertFrom-Json } catch { continue }
         try { $ts = [datetime]$e.ts } catch { continue }
         if ($ts -lt $cut) { continue }
