@@ -14,6 +14,8 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 - **The ledger no longer blocks a delegation.** It runs with `"async": true`: it emits no output and no decision waits on it.
 - **The ledger writes to `${CLAUDE_PLUGIN_DATA}`**, not `~/.claude/delegation-ledger.jsonl`. Uninstalling now removes it along with the plugin's data directory, or preserves it with `--keep-data`, instead of leaving a file behind for you to find. Ledger history written before this release stays at the old path and is not migrated.
 - **Breaking, for anyone reading the ledger file:** the workflow entry's `models` field is now `modelLiterals`. The contents are unchanged — model strings scanned out of the script text, one entry per literal rather than per agent spawned — but the name now says so.
+- **The gate checks the tool name instead of inferring it.** Anything the matcher passed that was not a `Workflow` was treated as an `Agent` call and denied for lacking a `model` field. Agent and Workflow calls are unaffected; a tool the gate has no rule for now passes through untouched.
+- **Two documented claims were wrong and are corrected.** `/* model-gate:allow */` suppresses only the `agent()` call whose span it sits in, not the whole script as the hooks README stated — a marker in a file header suppresses nothing. And an unreadable `scriptPath` fails open *silently*, not with a reminder as the plugin README stated. Both now have contract cases.
 
 Documentation, previously unreleased:
 
