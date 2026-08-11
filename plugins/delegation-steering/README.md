@@ -20,8 +20,8 @@ Details:
 
 ## Configuration
 
-- **`DELEGATION_LEDGER`** — set this environment variable to redirect the ledger to a different path. Unset, it writes to `~/.claude/delegation-ledger.jsonl`.
-- **Off switch:** `/plugin disable delegation-steering` — disabling a plugin deactivates its components ([plugins reference](https://code.claude.com/docs/en/plugins-reference)). Nothing is deleted: `~/.claude/delegation-ledger.jsonl` (or your `DELEGATION_LEDGER` path) and `~/.claude/rules/delegation.md` are files under your `~/.claude/`, and removing them is yours to do.
+- **Ledger location** — `${CLAUDE_PLUGIN_DATA}/delegation-ledger.jsonl`, the [per-plugin data directory](https://code.claude.com/docs/en/plugins-reference) Claude Code provisions and exports to hook processes. Set `DELEGATION_LEDGER` to redirect it elsewhere.
+- **Off switch:** `/plugin disable delegation-steering` deactivates the components ([plugins reference](https://code.claude.com/docs/en/plugins-reference)). Uninstalling removes the ledger along with the plugin's data directory — pass `--keep-data` to keep it. The rule file `~/.claude/rules/delegation.md` is left alone: it lives with your personal rules, not with the plugin.
 
 ## Three-layer enforcement
 

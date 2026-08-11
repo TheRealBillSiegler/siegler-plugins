@@ -66,7 +66,7 @@ Workflow scripts get the same check at launch. Each denial includes its fix, so 
 On your machine:
 
 - **Gates** direct `Agent` calls and `Workflow` launches with readable script text — model-less ones are denied; nothing else is touched. Four delegation paths are documented gaps: see the [coverage matrix](docs/COVERAGE.md)
-- **Logs** one line per delegation to `~/.claude/delegation-ledger.jsonl`
+- **Logs** one line per delegation to the plugin's own data directory, so uninstalling takes it with them
 - **Installs** `~/.claude/rules/delegation.md` (via the canary)
 - **Off switch:** `/plugin disable delegation-steering` — leaves the ledger and rule file in place; delete them yourself for a full uninstall
 

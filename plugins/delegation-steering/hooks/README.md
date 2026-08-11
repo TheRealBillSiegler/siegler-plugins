@@ -25,7 +25,7 @@ In text: a call reaches the gate, which denies an Agent call missing a model, al
 - **Workflow branch:** lints the launch-time script text (`tool_input.script`, or the file at `tool_input.scriptPath` when readable) for `agent()` calls without a `model` option, and denies the launch quoting the offending call — the only deterministic contact point for workflow-internal spawns, which no hook event reaches individually. The lint is a string heuristic: `/* model-gate:allow */` anywhere in the script suppresses it (documented false-positive escape), predefined workflow names and unreadable `scriptPath`s fail open.
 - **Failure posture:** unparseable stdin fails open (a broken hook must not block all delegation); every deny appends a `{ts, tool, denied: true, detail}` line to the ledger so gate value is countable.
 - **`--test`:** embedded self-check for the span-boundary regression (see `evals/contract/` in the repo). Any lint change must keep it passing.
-- **Env:** `DELEGATION_LEDGER` overrides the ledger path (used by contract tests); default `~/.claude/delegation-ledger.jsonl`.
+- **Ledger path:** resolved in `ledger.js`, shared with the ledger hook — `DELEGATION_LEDGER` (contract tests use this), else `${CLAUDE_PLUGIN_DATA}/delegation-ledger.jsonl`, else `~/.claude/delegation-ledger.jsonl` for runs outside a plugin context.
 
 ## `delegation-ledger.js`
 

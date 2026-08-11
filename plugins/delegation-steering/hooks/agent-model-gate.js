@@ -11,19 +11,13 @@
 // occurring between two calls can mask a violation. Upgrade path if it
 // misfires in practice: balanced-paren scan of each call's argument list.
 const fs = require('fs');
-const os = require('os');
-const path = require('path');
+const ledger = require('./ledger');
 
 // Denials never reach the PostToolUse ledger (the call is blocked before it
 // runs), so the gate records them itself — each denial is a counted, would-be
 // violation: the evidence that the deterministic layer is load-bearing.
 function logDenial(tool, detail) {
-  try {
-    const file = process.env.DELEGATION_LEDGER || path.join(os.homedir(), '.claude', 'delegation-ledger.jsonl');
-    fs.appendFileSync(file, JSON.stringify({ ts: new Date().toISOString(), tool, denied: true, detail }) + '\n');
-  } catch {
-    // Counting must never block the gate itself.
-  }
+  ledger.append({ tool, denied: true, detail });
 }
 
 const TIERS =

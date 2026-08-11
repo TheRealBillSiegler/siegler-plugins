@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 // PostToolUse ledger: append one JSONL line per delegation (Agent or Workflow
-// call) to ~/.claude/delegation-ledger.jsonl (override path via the
-// DELEGATION_LEDGER env var). This is the observability layer the PreToolUse
-// gate cannot provide: the gate forces models to be EXPLICIT; the ledger makes
-// tier CHOICES reviewable (weekly summary in weekly-drift-task.ps1). If the
-// ledger shows top-tier over-provisioning, the deferred hardening in
-// docs/REMEDIATION.md (scoped rationale gate) has its evidence.
-// ponytail: append-only, no rotation; add rotation if it ever passes ~10 MB.
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+// call). Location and write live in ./ledger.js, shared with the gate. This is
+// the observability layer the PreToolUse gate cannot provide: the gate forces
+// models to be EXPLICIT; the ledger makes tier CHOICES reviewable (weekly
+// summary in weekly-drift-task.ps1). If the ledger shows top-tier
+// over-provisioning, the deferred hardening in docs/REMEDIATION.md (scoped
+// rationale gate) has its evidence.
+//
+// Runs with "async": true — it emits nothing and nothing waits on it.
+// ponytail: append-only, no rotation; at ~175 B/line, 10 MB is years away.
+const ledger = require('./ledger');
 
 let raw = '';
 process.stdin.on('data', (d) => (raw += d));
@@ -21,7 +21,7 @@ process.stdin.on('end', () => {
     return;
   }
   const ti = input.tool_input || {};
-  const entry = { ts: new Date().toISOString(), tool: input.tool_name, cwd: input.cwd || null };
+  const entry = { tool: input.tool_name, cwd: input.cwd || null };
   if (input.tool_name === 'Agent') {
     entry.model = ti.model || null;
     entry.agentType = ti.subagent_type || null;
@@ -33,10 +33,5 @@ process.stdin.on('end', () => {
   } else {
     return;
   }
-  const file = process.env.DELEGATION_LEDGER || path.join(os.homedir(), '.claude', 'delegation-ledger.jsonl');
-  try {
-    fs.appendFileSync(file, JSON.stringify(entry) + '\n');
-  } catch {
-    // The ledger must never break a session; losing one line is acceptable.
-  }
+  ledger.append(entry);
 });
