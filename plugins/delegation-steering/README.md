@@ -27,7 +27,7 @@ Details:
 
 1. **Always-loaded rule** (`~/.claude/rules/delegation.md`, installed by the canary command): the standing rule survives compaction and holds without skill invocation — a probabilistic floor: it depends on the model following it, unlike the deterministic hook below.
 2. **Skill** (on invocation): the judgment layer — which tier is lowest-sufficient.
-3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses false positives), predefined workflows and unreadable scriptPaths fail open with a reminder, and spawning `claude -p` from Bash is not itself gated — that spawn is not a delegation tool call, so nothing checks whether it named a model. Delegations *inside* that child session are gated normally: a headless session loads the same user settings, enabled plugins, and hooks as an interactive one (verified live 2026-08-10 — the child quoted the gate denial verbatim and wrote its ledger line).
+3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses false positives), predefined workflows and unreadable scriptPaths fail open with a reminder, and a `claude -p` spawn is a Bash command rather than a delegation call, so nothing checks the model it starts with (the child session itself gates normally — see [COVERAGE.md](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md)).
 
 The gate also fails open when its runtime is missing: if `node` does not resolve when the hook runs, the command produces no output, and a hook that produces no output is an allow. No denial, no ledger line, no error — the plugin looks installed and enforces nothing. Verified live 2026-08-10. `/delegation-steering:canary` is what detects it.
 
@@ -43,10 +43,9 @@ flowchart TD
     G -- "explicit models" --> RUN["runs, reminder injected"]
     RUN --> LED["ledger line appended"]
     IN["agent() inside a workflow"] -. "not hookable" .-> RUN
-    HP["claude -p from Bash"] -. "spawn not gated" .-> HP2["documented gap"]
 ```
 
-In text: Agent and Workflow calls hit the PreToolUse gate, which denies a missing model or failing lint and otherwise lets the call run and log to the ledger, while workflow-internal agent() spawns and headless claude -p calls reach neither the gate nor the ledger — the same gaps the paragraphs above describe.
+In text: Agent calls and Workflow launches hit the PreToolUse gate, which denies them when no model is named or the lint fails, and otherwise lets them run with a tiering reminder and a ledger line; agent() spawns inside an already-running workflow reach neither the gate nor the ledger — the same paths the paragraphs above describe.
 
 ## Verify
 
