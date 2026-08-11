@@ -52,7 +52,7 @@ When Claude spawns a subagent or launches a workflow without naming a model, the
 
 > **Agent call has no explicit model.**
 
-and hands back the ladder, so the call can be re-issued with a tier named:
+It then hands back the ladder, so the call can be re-issued with a tier named:
 
 | Tier | For |
 | --- | --- |
