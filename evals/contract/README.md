@@ -32,6 +32,7 @@ In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js,
 | scriptPath unreadable | Documented fail-open: unreadable path produces silence, not a crash |
 | ledger round-trip | One JSONL line per delegation; Agent `model` and Workflow `modelLiterals[]` captured |
 | escape-hatch scope | `model-gate:allow` suppresses only the call whose span it sits in — a marker in a file header does not |
+| unknown tool | A tool the gate has no rule for passes through untouched, so widening the matcher cannot hard-block it |
 | denial logging | Every deny appends a counted `denied: true` ledger line; the expected count is tallied as denials happen, not hardcoded |
 | `--test` self-check | The span-boundary regression embedded in the hook itself still passes |
 
