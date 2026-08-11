@@ -127,6 +127,22 @@ for (const c of SCOPE_CASES) {
   }
 }
 
+// A tool the gate has no rule for passes through untouched. Pins the explicit
+// tool_name check: without it, widening the hooks.json matcher would deny every
+// call to the new tool for lacking a `model` field.
+try {
+  const input = JSON.stringify({ tool_name: 'SomeFutureDelegationTool', tool_input: { prompt: 'x' } });
+  const stdout = execFileSync('node', [HOOK], { input, env: gateEnv }).toString().trim();
+  if (stdout === '') console.log('ok   unknown tool passes through');
+  else {
+    failures++;
+    console.error('FAIL unknown tool: expected silence, got ' + stdout);
+  }
+} catch (e) {
+  failures++;
+  console.error('FAIL unknown tool: ' + e.message);
+}
+
 // Denial logging: the deny cases above must each have left a counted line.
 try {
   const denies = fs.readFileSync(tmpGateLedger, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((e) => e.denied === true);

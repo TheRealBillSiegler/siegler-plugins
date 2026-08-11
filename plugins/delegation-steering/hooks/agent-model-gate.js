@@ -94,7 +94,13 @@ process.stdin.on('end', () => {
     return;
   }
 
-  // Agent tool.
+  // Agent tool. Checked explicitly rather than reached by falling through the
+  // Workflow branch: the matcher in hooks.json is the only thing deciding what
+  // arrives here, and widening it to a third delegation surface would otherwise
+  // deny every call to that tool for lacking a `model` field it never had — a
+  // hard block on a working tool, caused by an edit in a different file.
+  if (input.tool_name !== 'Agent') return;
+
   if (ti.model) {
     allow('delegation-tiering: chosen tier ' + ti.model + ' — confirm it is the lowest sufficient for this task; consult the delegation-tiering skill if unsure.');
   } else {
