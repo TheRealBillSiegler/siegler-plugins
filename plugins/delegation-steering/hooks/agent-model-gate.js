@@ -20,8 +20,7 @@ function logDenial(tool, detail) {
   ledger.append({ tool, denied: true, detail });
 }
 
-const TIERS =
-  'haiku=mechanical scouting/extraction; sonnet=anchored implementation/doc research; opus=reasoning beyond sonnet; top tier=adversarial review gates/open-ended design/security reads, where top tier is the most capable model available in the session — fable, else opus, else sonnet';
+const TIERS = require('./tiers');
 
 function lintScript(src) {
   const missing = [];

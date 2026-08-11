@@ -10,12 +10,15 @@ const path = require('path');
 
 const HOOK = path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 'hooks', 'agent-model-gate.js');
 const FIXTURES = path.join(__dirname, 'fixtures');
+// The ladder itself, not a substring of it: an assertion pinned to the first
+// few words survives any rewording and silently stops testing anything.
+const TIERS = require(path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 'hooks', 'tiers.js'));
 
 const CASES = [
-  { fixture: 'agent-no-model.json', expect: { decision: 'deny', contains: ['no explicit model', 'lowest sufficient tier'] } },
-  { fixture: 'agent-with-model.json', expect: { decision: 'allow', contains: ['chosen tier sonnet'], absent: ['haiku=mechanical'] } },
+  { fixture: 'agent-no-model.json', expect: { decision: 'deny', contains: ['no explicit model', 'lowest sufficient tier', TIERS] } },
+  { fixture: 'agent-with-model.json', expect: { decision: 'allow', contains: ['chosen tier sonnet'], absent: [TIERS] } },
   { fixture: 'wf-masking.json', expect: { decision: 'deny', contains: ['1 agent() call(s) without an explicit model', "agent('do x')"] } },
-  { fixture: 'wf-clean.json', expect: { decision: 'allow', contains: ['lints clean'], absent: ['haiku=mechanical'] } },
+  { fixture: 'wf-clean.json', expect: { decision: 'allow', contains: ['lints clean'], absent: [TIERS] } },
   { fixture: 'wf-predefined.json', expect: { decision: 'allow', contains: ['cannot be linted'] } },
 ];
 
