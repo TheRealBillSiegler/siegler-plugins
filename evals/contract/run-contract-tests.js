@@ -52,7 +52,7 @@ try {
   execFileSync('node', [LEDGER_HOOK], { input: fs.readFileSync(path.join(FIXTURES, 'agent-with-model.json')), env });
   execFileSync('node', [LEDGER_HOOK], { input: fs.readFileSync(path.join(FIXTURES, 'wf-clean.json')), env });
   const lines = fs.readFileSync(tmpLedger, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
-  if (lines.length === 2 && lines[0].model === 'sonnet' && Array.isArray(lines[1].models) && lines[1].models.join(',') === 'haiku,sonnet') {
+  if (lines.length === 2 && lines[0].model === 'sonnet' && Array.isArray(lines[1].modelLiterals) && lines[1].modelLiterals.join(',') === 'haiku,sonnet') {
     console.log('ok   ledger (agent + workflow entries)');
   } else {
     failures++;

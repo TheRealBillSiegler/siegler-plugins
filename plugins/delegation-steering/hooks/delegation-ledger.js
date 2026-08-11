@@ -28,7 +28,10 @@ process.stdin.on('end', () => {
     entry.description = ti.description || null;
   } else if (input.tool_name === 'Workflow') {
     const src = ti.script || '';
-    entry.models = [...src.matchAll(/model\s*:\s*['"]([\w.-]+)['"]/g)].map((m) => m[1]);
+    // Named for what it is: model strings scanned out of the script text. One
+    // entry per literal, not per agent spawned — a `model:` reused across a
+    // fan-out appears once, and a non-agent occurrence still counts.
+    entry.modelLiterals = [...src.matchAll(/model\s*:\s*['"]([\w.-]+)['"]/g)].map((m) => m[1]);
     entry.name = ti.name || null;
   } else {
     return;

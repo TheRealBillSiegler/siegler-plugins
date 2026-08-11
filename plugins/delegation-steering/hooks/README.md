@@ -29,6 +29,6 @@ In text: a call reaches the gate, which denies an Agent call missing a model, al
 
 ## `delegation-ledger.js`
 
-PostToolUse observability. Agent calls log `{ts, tool, model, agentType, description}`; Workflow launches log the model list extracted from the script text. The gate makes models *explicit*; the ledger makes tier choices *reviewable* — its 7-day summary (run by the repo's weekly task) is the evidence base for the deferred rationale-gate hardening.
+PostToolUse observability, running async. Agent calls log `{ts, tool, cwd, model, agentType, description}`; Workflow launches log `modelLiterals`, the model strings scanned out of the script text — one entry per literal, not per agent spawned. The gate makes models *explicit*; the ledger makes tier choices *reviewable* — its 7-day summary (run by the repo's weekly task) is the evidence base for the deferred rationale-gate hardening.
 
 Contract tests for both hooks live in the repo, not the installed payload: [`evals/contract/`](https://github.com/TheRealBillSiegler/claude-plugins/tree/main/evals/contract).

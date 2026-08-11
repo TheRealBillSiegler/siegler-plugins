@@ -61,8 +61,8 @@ if (Test-Path $ledger) {
         if ($e.denied) { $denied++; continue }
         if ($e.tool -eq 'Agent') {
             if ($null -eq $e.model) { 'NONE' } else { $e.model }
-        } elseif ($e.models) {
-            $e.models
+        } elseif ($e.modelLiterals) {
+            $e.modelLiterals
         }
     }
     Add-Content $log "$stamp gate denials (7-day): $denied"
