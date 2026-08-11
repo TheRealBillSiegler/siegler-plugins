@@ -25,11 +25,16 @@ const tmpGateLedger = path.join(osMod.tmpdir(), 'gate-deny-ledger-test-' + proce
 const gateEnv = { ...process.env, DELEGATION_LEDGER: tmpGateLedger };
 
 let failures = 0;
+// Counted as denials happen rather than hardcoded, so adding a deny case above
+// cannot silently break the denial-logging assertion below — or worse, be
+// "fixed" by bumping a number until it matches.
+let deniesObserved = 0;
 for (const c of CASES) {
   const input = fs.readFileSync(path.join(FIXTURES, c.fixture));
   const stdout = execFileSync('node', [HOOK], { input, env: gateEnv }).toString();
   const out = JSON.parse(stdout).hookSpecificOutput;
   const decision = out.permissionDecision === 'deny' ? 'deny' : 'allow';
+  if (decision === 'deny') deniesObserved++;
   const text = out.permissionDecisionReason || out.additionalContext || '';
   const problems = [];
   if (decision !== c.expect.decision) problems.push(`decision ${decision} != ${c.expect.decision}`);
@@ -72,6 +77,7 @@ try {
   const input = JSON.stringify({ tool_name: 'Workflow', tool_input: { scriptPath: tmpScript } });
   const out = JSON.parse(execFileSync('node', [HOOK], { input, env: gateEnv }).toString()).hookSpecificOutput;
   if (out.permissionDecision === 'deny' && (out.permissionDecisionReason || '').includes('1 agent() call(s)')) {
+    deniesObserved++;
     console.log('ok   scriptPath lint (deny)');
   } else {
     failures++;
@@ -96,13 +102,38 @@ try {
   console.error('FAIL scriptPath unreadable: ' + e.message);
 }
 
-// Denial logging: the three deny cases above must each have left a counted line.
+// Escape-hatch scope: the marker suppresses only the call whose span it sits
+// in. Documented in hooks/README.md; pinned here because the docs previously
+// claimed it worked anywhere in the script, which would have been a real
+// bypass and read as one to anyone following them.
+const SCOPE_CASES = [
+  { name: 'marker in header does not suppress', script: "/* model-gate:allow */\nawait agent('no model');", expect: 'deny' },
+  { name: 'marker inside the call suppresses it', script: "await agent('x' /* model-gate:allow */);", expect: 'allow' },
+];
+for (const c of SCOPE_CASES) {
+  try {
+    const input = JSON.stringify({ tool_name: 'Workflow', tool_input: { script: c.script } });
+    const out = JSON.parse(execFileSync('node', [HOOK], { input, env: gateEnv }).toString()).hookSpecificOutput;
+    const got = out.permissionDecision === 'deny' ? 'deny' : 'allow';
+    if (got === 'deny') deniesObserved++;
+    if (got === c.expect) console.log(`ok   ${c.name}`);
+    else {
+      failures++;
+      console.error(`FAIL ${c.name}: got ${got}, expected ${c.expect}`);
+    }
+  } catch (e) {
+    failures++;
+    console.error(`FAIL ${c.name}: ${e.message}`);
+  }
+}
+
+// Denial logging: the deny cases above must each have left a counted line.
 try {
   const denies = fs.readFileSync(tmpGateLedger, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((e) => e.denied === true);
-  if (denies.length === 3) console.log('ok   denial logging (3 denies counted)');
+  if (denies.length === deniesObserved) console.log(`ok   denial logging (${deniesObserved} denies, all counted)`);
   else {
     failures++;
-    console.error('FAIL denial logging: expected 3, got ' + denies.length);
+    console.error(`FAIL denial logging: ${deniesObserved} denials issued, ${denies.length} written to the ledger`);
   }
 } catch (e) {
   failures++;

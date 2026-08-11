@@ -19,7 +19,7 @@ In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js,
 - **`run-contract-tests.js`** — the runner. Pipes each fixture into the gate hook and asserts the permission decision and message substrings; also exercises branches no static fixture can hold (a real temp file for `scriptPath` lint, a missing path for the silent-allow branch, a temp ledger for denial counting) and finishes with the hook's own `--test` self-check. Run from the repo root: `node evals/contract/run-contract-tests.js`.
 - **`fixtures/`** — one JSON PreToolUse payload per exercised branch. Each file carries a `_purpose` field (ignored by the hooks) stating which branch it pins and why it exists.
 
-## The ten cases
+## The cases
 
 | Case | Verifies |
 | --- | --- |
@@ -30,8 +30,9 @@ In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js,
 | `wf-predefined.json` | Fail-open branch: predefined workflow name, no script text to lint |
 | scriptPath lint (deny) | Lint reads the script file from disk and denies a model-less call |
 | scriptPath unreadable | Documented fail-open: unreadable path produces silence, not a crash |
-| ledger round-trip | One JSONL line per delegation; Agent `model` and Workflow `models[]` captured |
-| denial logging | Every deny appends a counted `denied: true` ledger line |
+| ledger round-trip | One JSONL line per delegation; Agent `model` and Workflow `modelLiterals[]` captured |
+| escape-hatch scope | `model-gate:allow` suppresses only the call whose span it sits in — a marker in a file header does not |
+| denial logging | Every deny appends a counted `denied: true` ledger line; the expected count is tallied as denials happen, not hardcoded |
 | `--test` self-check | The span-boundary regression embedded in the hook itself still passes |
 
 ## Growth rule
