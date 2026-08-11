@@ -13,7 +13,7 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 - **Windows no longer needs Git for Windows.** The hooks declared `"shell": "bash"` so a shell could expand `${CLAUDE_PLUGIN_ROOT}`. They now spawn in exec form — `"command": "node"` with the script path as an `args` element — which the hooks reference recommends whenever a hook references a path placeholder. Node.js on `PATH` is the only remaining requirement.
 - **The ledger no longer blocks a delegation.** It runs with `"async": true`: it emits no output and no decision waits on it.
 - **The ledger writes to `${CLAUDE_PLUGIN_DATA}`**, not `~/.claude/delegation-ledger.jsonl`. Uninstalling now removes it along with the plugin's data directory, or preserves it with `--keep-data`, instead of leaving a file behind for you to find. Ledger history written before this release stays at the old path and is not migrated.
-- **Breaking, for anyone reading the ledger file:** the workflow entry's `models` field is now `modelLiterals`. The contents are unchanged — model strings scanned out of the script text, one entry per literal rather than per agent spawned — but the name now says so. Versioned MINOR rather than MAJOR because the plugin is pre-1.0 and the only known consumer, the repo's weekly summary, ships updated in the same change.
+- **Breaking, for anyone reading the ledger file:** the workflow entry's `models` field is now `modelLiterals`. The contents are unchanged — model strings scanned out of the script text, one entry per literal rather than per agent spawned — but the name now says so.
 
 Documentation, previously unreleased:
 

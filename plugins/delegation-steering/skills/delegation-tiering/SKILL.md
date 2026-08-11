@@ -64,7 +64,7 @@ Three layers back the standing rule:
   - Per-spawn events inside a running workflow are not hookable (checked 2026-08-05: PreToolUse never fires for them — confirmed live — and SubagentStart cannot block), so launch-time linting is the only deterministic contact point for this path.
 - **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-steering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
 
-Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to `~/.claude/delegation-ledger.jsonl` — the gate makes models explicit; the ledger makes tier choices reviewable (a 7-day mix summary runs in the plugin repo's weekly task, TheRealBillSiegler/claude-plugins `scripts/weekly-drift-task.ps1`).
+Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable (a 7-day mix summary runs in the plugin repo's weekly task, TheRealBillSiegler/claude-plugins `scripts/weekly-drift-task.ps1`).
 
 Not covered: the `claude -p` spawn itself, which is a Bash command rather than a delegation call — choose that session's model deliberately. The child session then gates its own delegations normally, since it loads the same plugins and hooks (verified live 2026-08-10).
 
