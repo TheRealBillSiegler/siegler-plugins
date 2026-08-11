@@ -59,7 +59,7 @@ $ledgers = @(
 if ($ledgers) {
     $cut = (Get-Date).AddDays(-7)
     $denied = 0
-    $models = foreach ($line in ($ledgers | Get-Content)) {
+    $models = foreach ($line in (Get-Content -Path $ledgers)) {
         try { $e = $line | ConvertFrom-Json } catch { continue }
         try { $ts = [datetime]$e.ts } catch { continue }
         if ($ts -lt $cut) { continue }
@@ -68,6 +68,10 @@ if ($ledgers) {
             if ($null -eq $e.model) { 'NONE' } else { $e.model }
         } elseif ($e.modelLiterals) {
             $e.modelLiterals
+        } elseif ($e.models) {
+            # Workflow lines written before the field was renamed. Drop this
+            # branch when the legacy ledger path above is dropped.
+            $e.models
         }
     }
     Add-Content $log "$stamp gate denials (7-day): $denied"
