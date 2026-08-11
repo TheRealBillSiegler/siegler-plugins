@@ -2,7 +2,7 @@
 
 Versions here are the `version` field in each plugin's `plugin.json`, which Claude Code uses as the update cache key — an installed plugin only updates when that field rises. Repo-level changes that ship to nobody (docs/, evals/, scripts/, the root README, CI) are not versioned and are not listed.
 
-This project follows [semantic versioning](https://semver.org): MAJOR for breaking changes, MINOR for new capability, PATCH for corrections that change no behaviour.
+Versioning is [semantic](https://semver.org) with one deliberate exception: **pre-1.0, breaking changes ship as MINOR**, not MAJOR — reserving 1.0.0 for a stability commitment this plugin has not made. Otherwise MINOR for new capability, PATCH for corrections that change no behaviour. Anything breaking is called out in its entry.
 
 ## delegation-steering
 

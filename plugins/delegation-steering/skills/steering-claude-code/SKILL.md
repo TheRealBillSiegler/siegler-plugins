@@ -43,7 +43,7 @@ Take the first branch that fits:
 
 ## Building enforcement (hooks)
 
-When branch 1 lands on a hook: PreToolUse controls via structured JSON — `hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow; the exit-code-2/stderr path is the simpler alternative. Matchers use bare tool names, and `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable (PreToolUse never fires for them; SubagentStart exists but cannot block) — to enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Worked example: this plugin's `hooks/agent-model-gate.js`.
+When branch 1 lands on a hook: PreToolUse controls via structured JSON — `hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow; the exit-code-2/stderr path is the simpler alternative. Matchers use bare tool names, and `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable — to enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Which events fire where, with dated evidence, is one cell in the plugin repo's `docs/COVERAGE.md`. Worked example: this plugin's `hooks/agent-model-gate.js`.
 
 ## Pattern: a rule that must hold everywhere
 

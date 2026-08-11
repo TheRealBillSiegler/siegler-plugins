@@ -48,11 +48,11 @@ claude --plugin-dir ./plugins/delegation-steering
 
 ## delegation-steering
 
-When Claude spawns a subagent or launches a workflow without naming a model, the subagent silently inherits the session's model — no one asks whether a cheaper one would do. delegation-steering forces the question: a deterministic hook (not a CLAUDE.md line Claude may or may not follow) **denies** any delegation that doesn't name a model:
+When Claude spawns a subagent or launches a workflow without naming a model, the subagent silently inherits the session's model — no one asks whether a cheaper one would do. delegation-steering forces the question: a deterministic hook (not a CLAUDE.md line Claude may or may not follow) **denies** any delegation that doesn't name a model. The refusal opens:
 
-> **Agent call has no explicit model.** Apply the delegation-tiering skill: choose the lowest sufficient tier — the ladder below — and re-issue this exact Agent call with the `model` parameter set.
+> **Agent call has no explicit model.**
 
-The ladder it hands back:
+and hands back the ladder, so the call can be re-issued with a tier named:
 
 | Tier | For |
 | --- | --- |
@@ -65,7 +65,7 @@ Workflow scripts get the same check at launch. Each denial includes its fix, so 
 
 On your machine:
 
-- **Gates** direct `Agent` calls and `Workflow` launches with readable script text — model-less ones are denied; nothing else is touched. Four delegation paths are documented gaps: see the [coverage matrix](docs/COVERAGE.md)
+- **Gates** direct `Agent` calls and `Workflow` launches with readable script text — model-less ones are denied; nothing else is touched. The paths it does not reach are named in the [coverage matrix](docs/COVERAGE.md)
 - **Logs** one line per delegation to the plugin's own data directory, so uninstalling takes it with them
 - **Installs** `~/.claude/rules/delegation.md` (via the canary)
 - **Off switch:** `/plugin disable delegation-steering` — leaves the rule file in place; uninstalling takes the ledger with the plugin's data directory

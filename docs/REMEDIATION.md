@@ -16,7 +16,7 @@ flowchart LR
     PRB["behavioral probe<br>weekly, one headless session"] --> PP["gate alive? PASS/FAIL in drift.log"]
 ```
 
-In text: check-drift.js compares the six anchored doc pages and the Claude Code version weekly, logging one line when nothing changed or handing a read-only scoping agent's DRIFT-REPORT to this procedure when something did — routed to an anchors.json refresh if it is noise or to full re-verification if it is claim-affecting — while a separate weekly behavioral probe checks whether the gate is still alive and logs PASS or FAIL to drift.log, as the bullets below describe.
+In text: check-drift.js compares the anchored doc pages and the Claude Code version weekly, logging one line when nothing changed or handing a read-only scoping agent's DRIFT-REPORT to this procedure when something did — routed to an anchors.json refresh if it is noise or to full re-verification if it is claim-affecting — while a separate weekly behavioral probe checks whether the gate is still alive and logs PASS or FAIL to drift.log, as the bullets below describe.
 
 - **check-drift.js**: diffs the 6 anchored doc pages plus the Claude Code version against `anchors.json`. No drift → one log line. Drift → a read-only scoping agent writes a DRIFT-REPORT, then this procedure branches on whether the drift is noise (refresh `anchors.json` via PR, stop) or claim-affecting (continue below).
 - **Behavioral probe**: one headless session, weekly, runs the gate live and logs PASS/FAIL to `drift.log`. A FAIL is the other trigger for this procedure — it's what a `/delegation-steering:canary` failure after a Claude Code update looks like when caught automatically instead of by hand.
@@ -38,7 +38,7 @@ Which anchor a claim needs — dated quote digest, doc page, or dated live test 
 
 4. **Re-run everything**: contract tests, `--test`, canary, and the scenario evals (`evals/scenarios/*.md`) if skill prose changed.
 
-5. **Ship**: branch → conventional commits → PR with a body stating which doc pages drifted, which claims were affected, and the verification evidence. Bump the plugin version in `.claude-plugin/plugin.json` (SemVer: message/prose = patch; lint semantics or new enforcement = minor). Include `node scripts/check-drift.js --update` output so `anchors.json` lands in the same PR.
+5. **Ship**: branch → conventional commits → PR with a body stating which doc pages drifted, which claims were affected, and the verification evidence. Bump the plugin version in `.claude-plugin/plugin.json` under the versioning policy stated in [../CHANGELOG.md](../CHANGELOG.md) — for this procedure, message and prose changes are a patch, lint semantics and new enforcement a minor. Include `node scripts/check-drift.js --update` output so `anchors.json` lands in the same PR.
 
 6. **After merge**: update the installed plugin (marketplace pull), restart the session, run `/delegation-steering:canary` once more against the installed copy.
 

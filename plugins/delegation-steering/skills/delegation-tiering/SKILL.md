@@ -55,13 +55,13 @@ Public benchmarks saturate with powerful models; the article's counsel is to dec
 
 ## Enforcement
 
-Three layers back the standing rule:
+What backs the standing rule:
 
 - **Agent tool (deterministic):** this plugin's PreToolUse hook (`hooks/agent-model-gate.js`, matcher `Agent|Workflow` registered via the plugin's `hooks/hooks.json`) denies Agent calls without `model` and injects a one-line tiering reminder on calls that have one. Verified live 2026-08-05 (both branches); re-verified 2026-08-09 under plugin-only registration (deny, allow with reminder injected, ledger entry).
 - **Workflow tool (deterministic, heuristic):** the same hook lints the script text at launch and denies on `agent()` calls with no `model:` in their argument span, quoting the offending snippets.
   - String scan, not a JS parse: a call whose model arrives via a variable or shared options object can false-positive (suppress with a `/* model-gate:allow */` comment inside that call), and stray `model:` text between calls can mask a violation. Mechanics and self-test: header of `hooks/agent-model-gate.js` (`node hooks/agent-model-gate.js --test` from the plugin root).
   - Fail-open paths: named/predefined workflows (no script text to lint) are allowed with only a reminder, and an unreadable `scriptPath` is allowed silently — both fall back to the always-loaded rule alone.
-  - Per-spawn events inside a running workflow are not hookable (checked 2026-08-05: PreToolUse never fires for them — confirmed live — and SubagentStart cannot block), so launch-time linting is the only deterministic contact point for this path.
+  - Per-spawn events inside a running workflow are not hookable, so launch-time linting is the only deterministic contact point for this path. The mechanism and the dated evidence are one cell in the plugin repo's `docs/COVERAGE.md`.
 - **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-steering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
 
 Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable (a 7-day mix summary runs in the plugin repo's weekly task, TheRealBillSiegler/claude-plugins `scripts/weekly-drift-task.ps1`).
