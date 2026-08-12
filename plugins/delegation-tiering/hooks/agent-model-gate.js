@@ -11,23 +11,16 @@
 // occurring between two calls can mask a violation. Upgrade path if it
 // misfires in practice: balanced-paren scan of each call's argument list.
 const fs = require('fs');
-const os = require('os');
-const path = require('path');
+const ledger = require('./ledger');
 
 // Denials never reach the PostToolUse ledger (the call is blocked before it
 // runs), so the gate records them itself — each denial is a counted, would-be
 // violation: the evidence that the deterministic layer is load-bearing.
 function logDenial(tool, detail) {
-  try {
-    const file = process.env.DELEGATION_LEDGER || path.join(os.homedir(), '.claude', 'delegation-ledger.jsonl');
-    fs.appendFileSync(file, JSON.stringify({ ts: new Date().toISOString(), tool, denied: true, detail }) + '\n');
-  } catch {
-    // Counting must never block the gate itself.
-  }
+  ledger.append({ tool, denied: true, detail });
 }
 
-const TIERS =
-  'haiku=mechanical scouting/extraction; sonnet=anchored implementation/doc research; opus=reasoning beyond sonnet; top tier=adversarial review gates/open-ended design/security reads, where top tier is the most capable model available in the session — fable, else opus, else sonnet';
+const TIERS = require('./tiers').LADDER;
 
 function lintScript(src) {
   const missing = [];
@@ -100,7 +93,13 @@ process.stdin.on('end', () => {
     return;
   }
 
-  // Agent tool.
+  // Agent tool. Checked explicitly rather than reached by falling through the
+  // Workflow branch: the matcher in hooks.json is the only thing deciding what
+  // arrives here, and widening it to a third delegation surface would otherwise
+  // deny every call to that tool for lacking a `model` field it never had — a
+  // hard block on a working tool, caused by an edit in a different file.
+  if (input.tool_name !== 'Agent') return;
+
   if (ti.model) {
     allow('delegation-tiering: chosen tier ' + ti.model + ' — confirm it is the lowest sufficient for this task; consult the delegation-tiering skill if unsure.');
   } else {

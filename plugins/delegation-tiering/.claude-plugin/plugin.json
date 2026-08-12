@@ -1,0 +1,10 @@
+{
+  "name": "delegation-tiering",
+  "version": "0.1.0",
+  "description": "Explicit model/effort tiering for every delegated agent — tier-ladder skill, deterministic PreToolUse gate on Agent and Workflow calls, per-delegation ledger, and a live canary.",
+  "author": {
+    "name": "Bill Siegler",
+    "url": "https://github.com/TheRealBillSiegler"
+  },
+  "hooks": "./hooks/hooks.json"
+}

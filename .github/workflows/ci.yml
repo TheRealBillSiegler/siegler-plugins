@@ -9,7 +9,7 @@ name: CI
 # is involved, and forked PRs run with no secrets. What CI cannot prove is that
 # Claude Code still routes Agent and Workflow calls into the hook — a matcher
 # rename upstream would leave every assertion here green while the gate silently
-# stopped firing. That is what /delegation-steering:canary and the weekly
+# stopped firing. That is what /delegation-tiering:canary and the weekly
 # behavioural probe are for, and why they stay out of CI.
 
 on:
@@ -45,9 +45,18 @@ jobs:
       # fs/os/path, so there is no version-sensitive surface to pin.
       - run: node --version
       - name: Contract suite
-        run: node evals/contract/run-contract-tests.js
+        run: node evals/delegation-tiering/contract/run-contract-tests.js
       - name: Lint span-boundary self-test
-        run: node plugins/delegation-steering/hooks/agent-model-gate.js --test
+        run: node plugins/delegation-tiering/hooks/agent-model-gate.js --test
+      # plugins/ is the shipping boundary: everything under it reaches every
+      # installer, so eval and test files must stay outside it (evals/<plugin>/
+      # is their home). Turns the convention into a checked invariant.
+      - name: Links resolve and plugin payloads are self-contained
+        run: node scripts/check-links.js
+      - name: No eval or test files inside the shipped payload
+        run: |
+          hits=$(find plugins \( -type d \( -name 'evals' -o -name 'test' -o -name 'tests' -o -name '__tests__' \) \) -o \( -type f \( -name '*.test.*' -o -name '*.spec.*' -o -name '*eval*' \) \))
+          if [ -n "$hits" ]; then echo "eval/test files inside plugins/:"; echo "$hits"; exit 1; fi
 
   version-bump:
     name: Plugin version raised when the plugin changes

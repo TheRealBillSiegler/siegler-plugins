@@ -20,7 +20,9 @@ if (!base) {
   process.exit(2);
 }
 
-const git = (args) => execFileSync('git', args, { encoding: 'utf8' });
+// stderr ignored: probing refs that legitimately lack a path (new or removed
+// plugins) makes git print "fatal:" noise the catch already handles.
+const git = (args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
 
 // A base we cannot read means we cannot compare. Warn rather than block: this
 // job only runs on pull_request, where base.sha is present, so the realistic
@@ -64,7 +66,12 @@ for (const plugin of touched) {
   const after = versionAt(head, plugin);
   const files = changed.filter((f) => f.startsWith('plugins/' + plugin + '/'));
 
-  if (after == null) {
+  const dirAtHead = git(['ls-tree', '--name-only', head, 'plugins/' + plugin]).trim() !== '';
+  if (after == null && !dirAtHead) {
+    // The whole plugin is gone at head: a removal or rename, not an unbumped
+    // change. Nothing ships, so nothing needs a version.
+    console.log('ok   ' + plugin + ': removed at head — no version required');
+  } else if (after == null) {
     failures++;
     console.error('FAIL ' + plugin + ': plugins/' + plugin + '/.claude-plugin/plugin.json is missing or unreadable');
   } else if (before == null) {

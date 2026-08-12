@@ -1,0 +1,9 @@
+{
+  "name": "steering-claude-code",
+  "version": "0.1.0",
+  "description": "Decision guide for where a Claude Code behavior should live — CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends — with the enforcement mechanics the source article doesn't cover.",
+  "author": {
+    "name": "Bill Siegler",
+    "url": "https://github.com/TheRealBillSiegler"
+  }
+}

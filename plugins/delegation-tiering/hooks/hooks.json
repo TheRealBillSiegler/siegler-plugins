@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/agent-model-gate.js\"",
-            "shell": "bash",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/agent-model-gate.js"],
             "timeout": 10
           }
         ]
@@ -19,8 +19,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/delegation-ledger.js\"",
-            "shell": "bash",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/delegation-ledger.js"],
+            "async": true,
             "timeout": 10
           }
         ]

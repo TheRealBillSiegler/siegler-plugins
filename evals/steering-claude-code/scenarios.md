@@ -12,4 +12,4 @@ Run each scenario against a fresh subagent given ONLY `skills/steering-claude-co
 | 6 | New teammate needs monorepo layout and build commands | Root CLAUDE.md — branch 5 |
 | 7 | Guarantee every Workflow-spawned agent has an explicit model; why can't a per-spawn hook do it? | Lint script text at Workflow launch (PreToolUse on `Workflow`); per-spawn events aren't hookable and SubagentStart can't block — from the skill's building-enforcement guidance, not its decision tree |
 
-Grading notes: #7 tests retrieval of the building-enforcement guidance, not just the decision tree. If a model at or below sonnet scores <7/7, the skill's guidance is insufficient — fix the skill, don't blame the model.
+Grading notes: the workflow-spawn scenario tests retrieval of the building-enforcement guidance, not just the decision tree. If a model at or below sonnet misses any scenario, the skill's guidance is insufficient — fix the skill, don't blame the model.

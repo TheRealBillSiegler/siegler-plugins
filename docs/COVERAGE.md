@@ -2,19 +2,21 @@
 
 Every delegation path crossed with every layer. This file is the canonical claim set for what the plugin enforces where — the coverage map diagram in the README visualizes flow; this matrix tracks completeness and freshness. When a cell's behavior is re-verified (canary, probe, or drift remediation), update its date; when Claude Code changes a cell's truth, this file changes in the same PR as the fix. Every cell's truth rests on the platform dependencies tabled at the bottom, each tied to its Anthropic doc basis or explicitly marked docs-silent.
 
+Every gate and ledger cell additionally assumes the hook runtime resolves (dependency A9). When `node` is not on `PATH`, the gate fails open — no denial, no ledger line, no error — and every deterministic cell below is void at once. `/delegation-tiering:canary` is the detector.
+
 | Delegation path | Gate (deterministic) | Rule (probabilistic) | Ledger (observability) | Last verified |
 | --- | --- | --- | --- | --- |
-| Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-09, live, plugin-only registration ([record](METHODS.md#2026-08-09--plugin-only-canary-re-verification)) |
+| Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-12, live probe (`scripts/live-probe.js --dev`): deny path and allow path with async ledger entry, exec-form hooks, post-rename |
 | Nested Agent call inside a subagent | same as Agent tool call — hooks fire for subagent tool calls | always loaded | full entry — verified live | 2026-08-06, live (gate and ledger) |
-| Workflow launch, inline script | launch-time lint; heuristic — bypassable by the literal marker `model-gate:allow` in the script text | always loaded | models extracted from script text | 2026-08-09, live, plugin-only, deny path ([record](METHODS.md#2026-08-09--plugin-only-canary-re-verification)); ledger extract 2026-08-05 |
+| Workflow launch, inline script | launch-time lint; heuristic — bypassable by the literal marker `model-gate:allow` in the script text | always loaded | models extracted from script text | 2026-08-12, live probe, deny path (exec-form hooks, post-rename); ledger extract 2026-08-05 |
 | Workflow launch, `scriptPath` | lint if readable; **silent allow if unreadable** | always loaded | models extracted if readable | 2026-08-05, contract test |
-| Workflow launch, predefined name | **none** — reminder only (no script text to lint) | always loaded | name only, no models | 2026-08-05, contract test |
-| `agent()` spawns inside a running workflow | **none** — not hookable (PreToolUse never fires; SubagentStart can't block) | always loaded | covered only via launch lint | 2026-08-05, live |
-| Headless `claude -p` from Bash | **none** | always loaded (wording broadened 2026-08-06 to cover spawned workers) | **none** | 2026-08-06, analysis |
+| Workflow launch, predefined name | **none** (accepted gap) — reminder only (no script text to lint) | always loaded | name only, no models | 2026-08-05, contract test |
+| `agent()` spawns inside a running workflow | **none** (accepted gap) — not hookable (PreToolUse never fires; SubagentStart can't block) | always loaded | covered only via launch lint | 2026-08-05, live |
+| Headless `claude -p` spawned from Bash (the spawn itself) | **none** (accepted gap) — the child's own delegations are gated, since it loads the same plugins and hooks | always loaded (wording broadened 2026-08-06 to cover spawned workers) | **none** for the spawn; normal inside the child | 2026-08-10, live |
 
 The skill layer (judgment, on invocation) applies to all paths equally and is validated by the scenario evals, not per-path — so it is not a column here.
 
-Reading the gaps: bold cells are the accepted holes, each documented in the skill's Enforcement section with its mitigation. The last row is covered by no layer at all — manual discipline, flagged in the skill. If any bold cell becomes closable (e.g. a future hook event reaches workflow-internal spawns), close it and record the evidence here.
+Reading the gaps: bold cells are the accepted holes, each documented in the delegation-tiering skill's Enforcement section with its mitigation. The last row is covered by no layer at all — manual discipline, flagged in the skill. If any bold cell becomes closable (e.g. a future hook event reaches workflow-internal spawns), close it and record the evidence here.
 
 ## Load-bearing platform dependencies
 
@@ -30,3 +32,5 @@ Every assumption the matrix rests on, tied back to the Anthropic documentation t
 | A6 | `~/.claude/rules/*.md` load at session start and persist | <https://code.claude.com/docs/en/memory.md> | drift anchor only — probabilistic layer, no behavioral assertion |
 | A7 | Hooks fire for tool calls made *inside* subagents | <https://code.claude.com/docs/en/hooks.md> ("When a subagent calls a tool, tool events such as `PreToolUse` and `PostToolUse` fire the same configured hooks as in the main conversation"). Correction 2026-08-09: originally recorded docs-silent — wrong; the statement predates our 2026-08-06 live test (Wayback snapshot 2026-08-04) and our verification missed it | drift anchor on hooks.md; live test 2026-08-06 confirms behavior matches; candidate probe extension still open |
 | A8 | PreToolUse does **not** fire for `agent()` spawns inside a running workflow — the gap the launch lint exists for | **docs silent** — empirical, live-tested 2026-08-05 | monthly changelog review; if a future hook event closes it, close the matrix cell above |
+| A9 | A hook whose command cannot run allows the action, so a missing runtime (`node` not on `PATH`) fails open: no denial, no ledger line, no error | <https://code.claude.com/docs/en/hooks.md> (non-blocking exit-code semantics); the missing-`node` consequence verified live 2026-08-10 | `/delegation-tiering:canary` after install and after runtime changes; weekly probe FAIL |
+| A10 | `${CLAUDE_PLUGIN_DATA}` is provisioned per plugin, exported to hook processes, survives updates, and is deleted on uninstall unless `--keep-data` — the ledger's location and lifecycle rest on it, as does the version-as-update-cache-key premise behind the repo's version guard | <https://code.claude.com/docs/en/plugins-reference.md> | live probe (allow-path ledger entry lands in the redirected path); this row is what puts the page under the drift watch |
