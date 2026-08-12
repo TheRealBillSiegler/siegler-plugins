@@ -7,9 +7,9 @@ Feature branch → PR into `develop`; releases merge `develop` → `main` by PR 
 Run from the repo root:
 
 ```bash
-node evals/contract/run-contract-tests.js                        # hook contract suite
-node plugins/delegation-steering/hooks/agent-model-gate.js --test # lint self-check
-node scripts/check-version-bump.js                               # fails if plugins/** changed without a version bump
+node evals/contract/run-contract-tests.js                          # hook contract suite
+node plugins/delegation-steering/hooks/agent-model-gate.js --test   # lint self-check
+node scripts/check-version-bump.js origin/develop HEAD              # fails if plugins/** changed without a version bump
 ```
 
 CI runs the same three. Versioning policy is stated at the top of [CHANGELOG.md](CHANGELOG.md); any change to lint semantics follows the growth rule in [evals/contract/README.md](evals/contract/README.md#growth-rule) — no fix without its regression case.

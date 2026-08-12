@@ -14,6 +14,15 @@ Two parts: the requirements a methods record must satisfy, then the records them
 
 ## Records
 
+### 2026-08-11 — Restructure verification gate
+
+- **Question:** did the prose-architecture restructure (record below) lose any fact, break any cold read, or weaken the shipped skill — and is the branch production-ready for a public repo?
+- **Shape:** one workflow, four agents. Three parallel checkers (alias `sonnet`, effort high): fact preservation over every deleted diff line, cold-read coherence over ten files in visitor order, and skill fidelity comparing the restructured SKILL.md against `origin/develop`. One adversarial gate (alias `fable`, effort high) instructed to refute "production-ready," to independently re-verify any checker claim it relied on, and to probe the classes checkers miss by construction (cross-file contradictions introduced by dedup, conventions the repo itself violates, changelog claims the diff does not deliver).
+- **Verdict:** `production_ready: false` — 4 blocking, 4 non-blocking issues survived the gate's own verification. Blocking: CONTRIBUTING.md documented a version-guard command that exits 2 unconditionally (missing required base argument); the docs map called component-necessity ablation "pre-registered" while the repo's only registration-track document says "DRAFT — not yet pre-registered"; the measurement-map tracker link was deleted with no surviving copy; "the execution instrument" and "the calibration ticket" were asserted where nothing defined or linked them. The gate also rejected 2 checker claims on independent re-verification (a provenance-loss claim downgraded against the matrix's stated latest-date convention, and a checker's report of an untracked temp file that does not exist).
+- **Model IDs:** aliases as captured in the delegation ledger; resolved IDs for this date, stated as **inference** from platform defaults: `claude-sonnet-5` ×3, `claude-fable-5`.
+- **Limitations:** the gate verifies checker claims but its own probes are one pass at n=1; "production-ready" here means no blocking defect found, not absence of defects. The fixes landed after the gate ran and were re-verified deterministically (suite, link check, guard) but not re-gated.
+- **Landed in:** PR #20 — the fix commit following the restructure series; all four blocking issues closed as stated there.
+
 ### 2026-08-11 — Prose-architecture audit and restructure
 
 - **Question:** applying software-engineering first principles (one home per fact, one job per file, progressive disclosure, data separated from prose) to every markdown file in the repo — where does the same statement live twice, which files serve two audiences or four jobs, and what structure should replace it?

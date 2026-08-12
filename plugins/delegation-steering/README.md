@@ -37,7 +37,7 @@ It installs the always-loaded rule file and proves both deny paths live. Run it 
 
 1. **Always-loaded rule** (`~/.claude/rules/delegation.md`, installed by the canary command): the standing rule survives compaction and holds without skill invocation — a probabilistic floor: it depends on the model following it, unlike the deterministic hook below.
 2. **Skill** (on invocation): the judgment layer — which tier is lowest-sufficient.
-3. **Hook** (every Agent/Workflow call): the deterministic gate. It has documented limits and one escape hatch — the skill's Enforcement section states them operationally, and the repo's [coverage matrix](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md) is the canonical, dated claim set for every path and gap.
+3. **Hook** (every Agent/Workflow call): the deterministic gate. It has documented limits and one escape hatch — the delegation-tiering skill's Enforcement section states them operationally, and the repo's [coverage matrix](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md) is the canonical, dated claim set for every path and gap.
 
 The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary (run from the plugin repo) is the evidence base for a deferred hardening — denying top-tier Agent calls that state no rationale — described in the repo's `docs/ROADMAP.md`.
 

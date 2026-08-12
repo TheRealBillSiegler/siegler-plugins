@@ -70,7 +70,7 @@ On your machine:
 - **Installs** `~/.claude/rules/delegation.md` (via the canary)
 - **Off switch:** `/plugin disable delegation-steering` — leaves the rule file in place; uninstalling takes the ledger with the plugin's data directory
 
-Components (two skills, two hooks, one command), enforcement layers, escape hatches, known gaps, and the coverage map: [plugins/delegation-steering/](plugins/delegation-steering/). Claims, tests, and drift watch: [docs/](docs/) and [evals/](evals/).
+Components, enforcement layers, escape hatches, known gaps, and the coverage map: [plugins/delegation-steering/](plugins/delegation-steering/). Claims, tests, and drift watch: [docs/](docs/) and [evals/](evals/).
 
 ## Development
 

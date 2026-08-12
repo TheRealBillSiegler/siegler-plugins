@@ -2,7 +2,7 @@
 
 What the evals verify, where each layer's cases come from, and how the set grows. The layers are ordered by what they can prove: deterministic contract → live behavior → skill application quality.
 
-Directory map: [contract/](contract/) — offline hook contract tests and fixtures (layer 1; own README); [scenarios/](scenarios/) — skill application evals with recorded baselines (layer 3); [routing-impact-study/](routing-impact-study/) — the draft pre-registered protocol for the tier-policy outcome study.
+Directory map: [contract/](contract/) — offline hook contract tests and fixtures (layer 1; own README); [scenarios/](scenarios/) — skill application evals with recorded baselines (layer 3); [routing-impact-study/](routing-impact-study/) — the protocol for the tier-policy outcome study, written for pre-registration but still a draft: not yet registered, by its own status line.
 
 ```mermaid
 flowchart TD
@@ -51,11 +51,11 @@ Everything above proves the components *work*; ablation asks whether each still 
 
 **Method precedents:** the design instantiates the published controlled-ablation methodology for agent steering artifacts — matched-arm context-file ablation with mechanical grading ([arXiv:2607.27250](https://arxiv.org/abs/2607.27250)) and paired with/without-skill evaluation over deterministic verifiers ([arXiv:2603.15401](https://arxiv.org/abs/2603.15401)), whose base rate (39 of 49 public skills: no effect; 3: harmful) sets the prior for these verdicts. Blind, mechanical grading is required because LLM judges carry documented position, verbosity, and self-preference biases ([arXiv:2306.05685](https://arxiv.org/abs/2306.05685)) and rankings reversible by answer order alone ([arXiv:2305.17926](https://arxiv.org/abs/2305.17926)). Both precedent studies ran on pre-Claude-5 models — they justify the *method* here; their *results* are priors, not conclusions, for current models.
 
-**Verdict bounds** (ported 2026-08-09 from the execution instrument's own limits):
+**Verdict bounds** (ported 2026-08-09 from the stated limits of the ablation harness that will run these studies):
 
 - A fourth verdict, **UNRESOLVED**, exists for runs whose floors (replicates, worker-failure limits) were violated — it is never rounded into the other three.
 - Verdicts at this scale are screening signals, not population claims; **ceremony** means "no delta detected at this n" and never authorizes deleting a component with a violation history — raise replicates and re-run instead.
-- No component verdict is valid until the instrument records a positive control (a known load-bearing component recovered as load-bearing) and a placebo (an irrelevant component returning ceremony) — the calibration ticket blocks verdicts for exactly this reason.
+- No component verdict is valid until the harness records a positive control (a known load-bearing component recovered as load-bearing) and a placebo (an irrelevant component returning ceremony) — the calibration ticket ([#13](https://github.com/TheRealBillSiegler/claude-plugins/issues/13)) blocks verdicts for exactly this reason.
 - Blinding is label-level only: grading criteria must be phrased as observable outcome properties, never paraphrases of the component's wording (paraphrase leakage un-blinds through content); prefer a grader from a different model family or tier than the workers, and hand spot-check one probe's outputs before any ceremony verdict authorizes deletion.
 
 Current status, stamped claude-fable-5 / 2026-08-06 (static-read assertions — no probe-arm evidence yet — except where noted):

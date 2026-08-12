@@ -16,7 +16,7 @@ Every gate and ledger cell additionally assumes the hook runtime resolves (depen
 
 The skill layer (judgment, on invocation) applies to all paths equally and is validated by the scenario evals, not per-path — so it is not a column here.
 
-Reading the gaps: bold cells are the accepted holes, each documented in the skill's Enforcement section with its mitigation. The last row is covered by no layer at all — manual discipline, flagged in the skill. If any bold cell becomes closable (e.g. a future hook event reaches workflow-internal spawns), close it and record the evidence here.
+Reading the gaps: bold cells are the accepted holes, each documented in the delegation-tiering skill's Enforcement section with its mitigation. The last row is covered by no layer at all — manual discipline, flagged in the skill. If any bold cell becomes closable (e.g. a future hook event reaches workflow-internal spawns), close it and record the evidence here.
 
 ## Load-bearing platform dependencies
 

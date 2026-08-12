@@ -20,7 +20,7 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 Structure, from a repo-wide prose-architecture pass:
 
 - **The tiering skill leads with the ladder.** The design justification that opened the file moves to a rationale section at the bottom; the scope condition inside it (supervised delegation only) moves up beside the standing rule. Scattered verification dates collapse into one staleness stamp pointing at the repo's coverage matrix.
-- **The ladder is data.** `hooks/tiers.js` holds the rungs and top-tier preference order and derives the denial string from them (byte-identical to the previous literal); the contract suite now fails if the repo README's ladder table disagrees with the tiers the hook names.
+- **The ladder is data.** `hooks/tiers.js` holds the rungs and top-tier preference order and derives the denial string from them — byte-identical to the previous literal, so no user-visible change.
 - **The plugin README states the missing-runtime fail-open right under Components**, in a Verify section framed as required — it previously sat below Configuration and two enforcement layers.
 
 Documentation, previously unreleased:
