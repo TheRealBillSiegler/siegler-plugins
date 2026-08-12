@@ -22,7 +22,7 @@ The owner's prior ("the model does not do this better natively") is the hypothes
 - **Scenarios:** the 12 existing tier-eval scenarios + ~15 elicited from real session history (actual tasks that led to Agent/Workflow spawns), spanning trivial lookups → mechanical edits → research → hard judgment. ⬜ final count set by the power derivation.
 - **Mechanical primary endpoint — no LLM judge:** workers emit their delegation plan; the chosen (model, effort) is extracted by code. The entire judge-bias caveat class exits the design.
 - **Blind gold labels:** before any arm runs, the owner labels the optimal (model, effort) per scenario, seeing only scenarios — never the skill text during labeling, never any arm output. **Recorded limitation — rater contamination:** the owner authored the skill and knows its ladder; blind labels are independent of the *run*, not of the *doctrine*. Mitigation: an outcome-anchored subset — run selected tasks at both candidate tiers and let measured success/cost adjudicate — carries extra weight exactly where owner labels and unsteered choices disagree.
-- **Isolation:** workers sandboxed in isolated per-arm configuration (prepared config directories; see [../../docs/research/arm-isolation.md](../../docs/research/arm-isolation.md)).
+- **Isolation:** workers sandboxed in isolated per-arm configuration (prepared config directories; see [../../docs/research/arm-isolation-2026-08-09.md](../../docs/research/arm-isolation-2026-08-09.md)).
 
 ## Endpoints and verdict rules (mechanical)
 
