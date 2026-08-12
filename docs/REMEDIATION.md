@@ -8,7 +8,7 @@ Two weekly automated checks can land you here — `check-drift.js` is determinis
 
 ```mermaid
 flowchart LR
-    SRC["anchored sources<br>(6 doc pages + CC version)"] --> CHK["check-drift.js<br>weekly, deterministic, free"]
+    SRC["anchored sources<br>(cited doc pages + CC version)"] --> CHK["check-drift.js<br>weekly, deterministic, free"]
     CHK -- "no drift" --> LOG["one log line, done"]
     CHK -- "drift" --> SCOPE["read-only scoping agent<br>writes DRIFT-REPORT"]
     SCOPE -- "noise" --> UPD["refresh anchors.json via PR"]
@@ -18,12 +18,16 @@ flowchart LR
 
 In text: check-drift.js compares the anchored doc pages and the Claude Code version weekly, logging one line when nothing changed or handing a read-only scoping agent's DRIFT-REPORT to this procedure when something did — routed to an anchors.json refresh if it is noise or to full re-verification if it is claim-affecting — while a separate weekly behavioral probe checks whether the gate is still alive and logs PASS or FAIL to drift.log, as the bullets below describe.
 
-- **check-drift.js**: diffs the 6 anchored doc pages plus the Claude Code version against `anchors.json`. No drift → one log line. Drift → a read-only scoping agent writes a DRIFT-REPORT, then this procedure branches on whether the drift is noise (refresh `anchors.json` via PR, stop) or claim-affecting (continue below).
+- **check-drift.js**: diffs the anchored doc pages (derived from the pages the shipped skills and COVERAGE.md cite — a description of the rule, not a count that can stale) plus the Claude Code version against `anchors.json`. No drift → one log line. Drift → a read-only scoping agent writes a DRIFT-REPORT, then this procedure branches on whether the drift is noise (refresh `anchors.json` via PR, stop) or claim-affecting (continue below).
 - **Behavioral probe**: one headless session, weekly, runs the gate live and logs PASS/FAIL to `drift.log`. A FAIL is the other trigger for this procedure — it's what a `/delegation-steering:canary` failure after a Claude Code update looks like when caught automatically instead of by hand.
 
 ## Anchoring policy
 
-Which anchor a claim needs — dated quote digest, doc page, or dated live test — is defined once in the plugin README's [Source fidelity tiers](../plugins/delegation-steering/README.md#source-fidelity-tiers). Step 2 below re-verifies against whichever tier the drifted claim belongs to.
+Which anchor a claim needs depends on which of three fidelity tiers it belongs to. Step 2 below re-verifies against whichever tier the drifted claim belongs to.
+
+- **Article-only claims** (advisor figure, start-smart posture): dated quote digests in each skill's `references/` — the blogs are the primary source; digests are the ceiling.
+- **Mechanics**: specific `code.claude.com/docs` pages, listed per claim in each SKILL.md's Doc anchors; docs win over articles.
+- **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — largely undocumented; where a doc page does state a boundary, [COVERAGE.md](COVERAGE.md)'s dependency table cites it, and the canary and weekly probe re-establish the behavior after Claude Code updates either way.
 
 ## Procedure
 
@@ -45,22 +49,6 @@ Which anchor a claim needs — dated quote digest, doc page, or dated live test 
 ## Known blindness: drift detection is preservation-only
 
 The drift check answers "did what we rely on change?" — it cannot answer "did something new appear that we should use?" A new Claude Code capability fires nothing unless it happens to alter an anchored claim (the 2026-08-06 catch — a new `effort` field documented in agent-definition frontmatter — was that lucky case), and features landing on unwatched pages or in release notes are fully invisible. Opportunity detection is a separate, judgment-based review: periodically (monthly is proportionate) read the Claude Code changelog/release notes with the question "does anything new bear on delegation, spawn surfaces, hook events, or effort control?" — as a deliberate session, not an always-on agent. Findings route through the normal PR path.
-
-## Deferred hardenings
-
-- **Scoped rationale gate** — deny top-tier Agent calls (`fable`, or `opus` when it is the session's top tier) whose input carries no rationale marker.
-  - **Why deferred:** deliberately not built — rationale strings demanded on every call degrade into gate-passing boilerplate.
-  - **Trigger to build:** the weekly ledger summary shows top-tier over-provisioning actually happening (e.g. a sustained top-tier share on mechanical-sounding delegations).
-  - **Scope:** top-tier calls only.
-
-```mermaid
-flowchart LR
-    LGR["ledger summary<br>weekly, free"] --> MIX["7-day delegation mix<br>evidence for deferred hardenings"]
-```
-
-In text: the weekly ledger summary feeds a 7-day delegation mix that would surface the over-provisioning pattern justifying the deferred rationale gate — the same point the sentence right after it makes.
-
-The ledger summary is what would surface the over-provisioning pattern that triggers the scoped rationale gate above.
 
 ## Failure classes seen so far
 

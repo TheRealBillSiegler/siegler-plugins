@@ -77,4 +77,4 @@ Every eval or verdict run records its methodology in [../docs/METHODS.md](../doc
 
 ## What the evals cannot show
 
-Tier *optimality*. The layers prove models are explicit (gate), the gate is alive (probe), and the skills' guidance is retrievable and applicable (scenarios). Whether a specific real-world delegation used the cheapest sufficient tier is a judgment call — the ledger makes those calls reviewable, and REMEDIATION.md's deferred hardenings state what evidence would justify enforcing more.
+Tier *optimality*. The layers prove models are explicit (gate), the gate is alive (probe), and the skills' guidance is retrievable and applicable (scenarios). Whether a specific real-world delegation used the cheapest sufficient tier is a judgment call — the ledger makes those calls reviewable, and [ROADMAP.md](../docs/ROADMAP.md) states what evidence would justify enforcing more.

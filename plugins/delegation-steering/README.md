@@ -31,7 +31,7 @@ Details:
 
 The gate also fails open when its runtime is missing: if `node` does not resolve when the hook runs, the command produces no output, and a hook that produces no output is an allow. No denial, no ledger line, no error — the plugin looks installed and enforces nothing. Verified live 2026-08-10. `/delegation-steering:canary` is what detects it.
 
-The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary (run from the plugin repo) is the evidence base for a deferred hardening — denying top-tier Agent calls that state no rationale — described in the repo's `docs/REMEDIATION.md`.
+The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary (run from the plugin repo) is the evidence base for a deferred hardening — denying top-tier Agent calls that state no rationale — described in the repo's `docs/ROADMAP.md`.
 
 ### Coverage map
 
@@ -61,8 +61,6 @@ Everything used to *build and measure* this plugin — hook contract tests and f
 
 This plugin is a stopgap for a missing platform feature, not a product to defend. If Claude Code ships native per-delegation model routing (demand is tracked upstream in anthropics/claude-code#27665, #44976, #67898), verify parity against the repo's [docs/COVERAGE.md](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md) — every delegation path, deterministically enforced — and archive this plugin. The repo's drift pipeline exists to notice that day, not to outlive it.
 
-## Source fidelity tiers
+## Source fidelity
 
-- **Article-only claims** (advisor figure, start-smart posture): dated quote digests in each skill's `references/` — the blogs are the primary source; digests are the ceiling.
-- **Mechanics**: specific `code.claude.com/docs` pages, listed per claim in each SKILL.md's Doc anchors; docs win over articles.
-- **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — largely undocumented; where a doc page does state a boundary, the repo's COVERAGE.md dependency table cites it, and the canary and the repo's weekly probe re-establish the behavior after Claude Code updates either way.
+Every claim in this plugin carries one of three provenance tiers — article digest, doc page, or dated live test — defined in the repo's [Anchoring policy](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/REMEDIATION.md#anchoring-policy). The skills' Doc anchors sections name the page behind each mechanic; where the docs are silent, the claim says so.

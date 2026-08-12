@@ -4,7 +4,7 @@
 // the observability layer the PreToolUse gate cannot provide: the gate forces
 // models to be EXPLICIT; the ledger makes tier CHOICES reviewable (weekly
 // summary in weekly-drift-task.ps1). If the ledger shows top-tier
-// over-provisioning, the deferred hardening in docs/REMEDIATION.md (scoped
+// over-provisioning, the deferred hardening in docs/ROADMAP.md (scoped
 // rationale gate) has its evidence.
 //
 // Runs with "async": true — it emits nothing and nothing waits on it.
