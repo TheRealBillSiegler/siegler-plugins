@@ -20,7 +20,7 @@ function logDenial(tool, detail) {
   ledger.append({ tool, denied: true, detail });
 }
 
-const TIERS = require('./tiers');
+const TIERS = require('./tiers').LADDER;
 
 function lintScript(src) {
   const missing = [];

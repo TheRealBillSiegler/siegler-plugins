@@ -12,7 +12,7 @@ const HOOK = path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 
 const FIXTURES = path.join(__dirname, 'fixtures');
 // The ladder itself, not a substring of it: an assertion pinned to the first
 // few words survives any rewording and silently stops testing anything.
-const TIERS = require(path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 'hooks', 'tiers.js'));
+const { LADDER: TIERS, MODELS } = require(path.join(__dirname, '..', '..', 'plugins', 'delegation-steering', 'hooks', 'tiers.js'));
 
 const CASES = [
   { fixture: 'agent-no-model.json', expect: { decision: 'deny', contains: ['no explicit model', 'lowest sufficient tier', TIERS] } },
@@ -128,6 +128,23 @@ for (const c of SCOPE_CASES) {
     failures++;
     console.error(`FAIL ${c.name}: ${e.message}`);
   }
+}
+
+// The root README's ladder table is a human restatement of tiers.js — kept for
+// the landing page, guarded here so the two cannot disagree about which tiers
+// exist. MODELS comes from the same data the denial string is built from, so a
+// renamed or added tier fails here until the README follows.
+try {
+  const readme = fs.readFileSync(path.join(__dirname, '..', '..', 'README.md'), 'utf8');
+  const absent = MODELS.filter((t) => !readme.includes(t));
+  if (absent.length === 0) console.log(`ok   README ladder names every tier (${MODELS.join(', ')})`);
+  else {
+    failures++;
+    console.error('FAIL README ladder: tiers.js names tiers the README never mentions: ' + absent.join(', '));
+  }
+} catch (e) {
+  failures++;
+  console.error('FAIL README ladder: ' + e.message);
 }
 
 // A tool the gate has no rule for passes through untouched. Pins the explicit
