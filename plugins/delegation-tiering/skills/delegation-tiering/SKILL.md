@@ -43,6 +43,7 @@ Questions 1–3 adapt three of the article's four (task difficulty, latency, uni
 
 - **Workflow scripts:** omitting `model` on an `agent()` call inherits the *session* model — often the top tier. Set `model` (and `effort`) explicitly on every `agent()` call; if inheriting genuinely is the lowest sufficient choice, still write the model explicitly so the choice is visible. The launch-time script lint (see Enforcement) backstops this path, but only heuristically — keep the discipline regardless.
 - **Verify/review stages deserve the tier the finding warrants**, not the tier the finder ran at: cheap finders feeding an un-reviewed conclusion is a silent quality ceiling.
+- **A named checklist is not a gate.** Top tier is for *open-ended* adversarial review — finding what nobody enumerated. Once a gate has named the findings and each has an expected evidence check, re-verifying the fixes is anchored verification: `sonnet`. The gate earns top tier once per claim, not once per retry — calling the follow-up a "re-gate" does not re-earn the tier.
 
 ## Advisor pattern
 
