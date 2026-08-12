@@ -6,7 +6,7 @@ Method: primary sources only — code.claude.com/docs pages, fetched directly, q
 
 ## 1. Does `CLAUDE_CONFIG_DIR` redirect the entire user config for a headless `claude -p` run?
 
-Yes, for the disk-backed part of it. Primary source, quoted verbatim from `code.claude.com/docs/en/claude-directory`: "On Windows, `~/.claude` resolves to `%USERPROFILE%\.claude`. If you set [`CLAUDE_CONFIG_DIR`](/docs/en/env-vars), every `~/.claude` path on this page lives under that directory instead." That page's file tree covers CLAUDE.md, settings.json, hooks, skills, commands, subagents, workflows, rules, and auto memory — so the redirect is total for everything Claude Code reads from `~/.claude`, not just settings.json.
+Yes, for the disk-backed part of it. Primary source, quoted verbatim from `code.claude.com/docs/en/claude-directory`: "On Windows, `~/.claude` resolves to `%USERPROFILE%\.claude`. If you set [`CLAUDE_CONFIG_DIR`](https://code.claude.com/docs/en/env-vars), every `~/.claude` path on this page lives under that directory instead." That page's file tree covers CLAUDE.md, settings.json, hooks, skills, commands, subagents, workflows, rules, and auto memory — so the redirect is total for everything Claude Code reads from `~/.claude`, not just settings.json.
 
 Caveat verified via the Agent SDK docs (`code.claude.com/docs/en/agent-sdk/claude-code-features`, "What settingSources does not control" table): the global `~/.claude.json` file (distinct from the `~/.claude/` directory) is "Always read" regardless of `settingSources`, and the documented way "To disable" it is "Relocate with `CLAUDE_CONFIG_DIR` in `env`" — confirming `CLAUDE_CONFIG_DIR` also relocates that file, not only the `~/.claude/` tree.
 
