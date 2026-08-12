@@ -51,6 +51,8 @@ jobs:
       # plugins/ is the shipping boundary: everything under it reaches every
       # installer, so eval and test files must stay outside it (evals/<plugin>/
       # is their home). Turns the convention into a checked invariant.
+      - name: Links resolve and plugin payloads are self-contained
+        run: node scripts/check-links.js
       - name: No eval or test files inside the shipped payload
         run: |
           hits=$(find plugins \( -type d \( -name 'evals' -o -name 'test' -o -name 'tests' -o -name '__tests__' \) \) -o \( -type f \( -name '*.test.*' -o -name '*.spec.*' -o -name '*eval*' \) \))

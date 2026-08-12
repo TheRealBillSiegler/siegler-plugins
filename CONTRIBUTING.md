@@ -10,9 +10,10 @@ Run from the repo root:
 node evals/delegation-tiering/contract/run-contract-tests.js                          # hook contract suite
 node plugins/delegation-tiering/hooks/agent-model-gate.js --test   # lint self-check
 node scripts/check-version-bump.js origin/develop HEAD              # fails if plugins/** changed without a version bump
+node scripts/check-links.js                                         # links resolve; plugin payloads self-contained
 ```
 
-CI runs the same three. Versioning policy is stated at the top of [CHANGELOG.md](CHANGELOG.md); any change to lint semantics follows the growth rule in [evals/delegation-tiering/contract/README.md](evals/delegation-tiering/contract/README.md#growth-rule) — no fix without its regression case.
+CI runs the same four. Versioning policy is stated at the top of [CHANGELOG.md](CHANGELOG.md); any change to lint semantics follows the growth rule in [evals/delegation-tiering/contract/README.md](evals/delegation-tiering/contract/README.md#growth-rule) — no fix without its regression case.
 
 ## Live verification
 
