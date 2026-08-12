@@ -6,9 +6,9 @@ Every gate and ledger cell additionally assumes the hook runtime resolves (depen
 
 | Delegation path | Gate (deterministic) | Rule (probabilistic) | Ledger (observability) | Last verified |
 | --- | --- | --- | --- | --- |
-| Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-09, live, plugin-only registration ([record](METHODS.md#2026-08-09--plugin-only-canary-re-verification)) |
+| Agent tool call | deny without `model`; tiering reminder with one | always loaded | full entry (model, agent type, description) | 2026-08-12, live probe (`scripts/live-probe.js --dev`): deny path and allow path with async ledger entry, exec-form hooks, post-rename |
 | Nested Agent call inside a subagent | same as Agent tool call — hooks fire for subagent tool calls | always loaded | full entry — verified live | 2026-08-06, live (gate and ledger) |
-| Workflow launch, inline script | launch-time lint; heuristic — bypassable by the literal marker `model-gate:allow` in the script text | always loaded | models extracted from script text | 2026-08-09, live, plugin-only, deny path ([record](METHODS.md#2026-08-09--plugin-only-canary-re-verification)); ledger extract 2026-08-05 |
+| Workflow launch, inline script | launch-time lint; heuristic — bypassable by the literal marker `model-gate:allow` in the script text | always loaded | models extracted from script text | 2026-08-12, live probe, deny path (exec-form hooks, post-rename); ledger extract 2026-08-05 |
 | Workflow launch, `scriptPath` | lint if readable; **silent allow if unreadable** | always loaded | models extracted if readable | 2026-08-05, contract test |
 | Workflow launch, predefined name | **none** (accepted gap) — reminder only (no script text to lint) | always loaded | name only, no models | 2026-08-05, contract test |
 | `agent()` spawns inside a running workflow | **none** (accepted gap) — not hookable (PreToolUse never fires; SubagentStart can't block) | always loaded | covered only via launch lint | 2026-08-05, live |

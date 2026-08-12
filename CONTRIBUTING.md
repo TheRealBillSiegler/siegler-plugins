@@ -14,6 +14,14 @@ node scripts/check-version-bump.js origin/develop HEAD              # fails if p
 
 CI runs the same three. Versioning policy is stated at the top of [CHANGELOG.md](CHANGELOG.md); any change to lint semantics follows the growth rule in [evals/contract/README.md](evals/contract/README.md#growth-rule) — no fix without its regression case.
 
+## Live verification
+
+The contract suite proves the hooks as implemented, not that Claude Code wires them up. Three ways to see them live, in cost order:
+
+- **Watch it happen (free):** hook denials render in the transcript natively, with the reason; `claude --debug` additionally logs each hook execution with exit code and output; `/hooks` shows what is registered and from which source.
+- **`node scripts/live-probe.js --dev` (one small metered session):** headless end-to-end proof against the working tree — both deny paths and one allowed call, every assertion read from a temp-redirected ledger rather than the model's self-report. Run it before merging any change to `hooks/`.
+- **`/delegation-tiering:canary` (in-session):** the installed-user form — both deny paths plus the rule-file install.
+
 ## Authoring conventions
 
 This repo treats prose with the same discipline as code. Files have exactly one of three audiences, and the rules differ by audience — the file's job determines its standard, so know which kind you are editing.

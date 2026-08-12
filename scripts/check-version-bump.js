@@ -20,7 +20,9 @@ if (!base) {
   process.exit(2);
 }
 
-const git = (args) => execFileSync('git', args, { encoding: 'utf8' });
+// stderr ignored: probing refs that legitimately lack a path (new or removed
+// plugins) makes git print "fatal:" noise the catch already handles.
+const git = (args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
 
 // A base we cannot read means we cannot compare. Warn rather than block: this
 // job only runs on pull_request, where base.sha is present, so the realistic
