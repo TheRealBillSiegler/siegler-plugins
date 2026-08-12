@@ -12,7 +12,7 @@ flowchart LR
     ASSERT & ASSERT2 --> EXIT["exit 0 (all pass) / 1"]
 ```
 
-In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js, whose decision and message substrings it asserts, and delegation-ledger.js, whose JSONL round-trip it asserts against a temp ledger, then exits 0 only if every assertion passes — the same runner and exit-code contract the paragraph above and the Files section below describe.
+In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js, whose decision and message substrings it asserts, and delegation-ledger.js, whose JSONL round-trip it asserts against a temp ledger, then exits 0 only if every assertion passes.
 
 ## Files
 
