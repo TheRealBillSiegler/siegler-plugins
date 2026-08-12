@@ -61,14 +61,20 @@ const check = (name, ok, detail) => {
 // redirected ledger prove the hook was spawned (exec form, live), ran its
 // logic on both paths, and wrote its record — independent of anything the
 // model chose to say.
-let entries = [];
-try {
-  entries = fs
-    .readFileSync(ledger, 'utf8')
-    .trim()
-    .split('\n')
-    .map((l) => { try { return JSON.parse(l); } catch { return {}; } });
-} catch {}
+// The PostToolUse ledger runs async, and whether the CLI waits for
+// outstanding async hooks before exiting is docs-silent — so the read polls
+// briefly rather than racing a background write into a spurious FAIL.
+const readLedger = () => {
+  try {
+    return fs.readFileSync(ledger, 'utf8').trim().split('\n')
+      .map((l) => { try { return JSON.parse(l); } catch { return {}; } });
+  } catch { return []; }
+};
+let entries = readLedger();
+for (let i = 0; i < 10 && !entries.some((e) => e.tool === 'Agent' && !e.denied); i++) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 300); // sync sleep, no shell
+  entries = readLedger();
+}
 const denies = entries.filter((e) => e.denied === true);
 check('fired + recorded (denied:true ledger lines)', denies.length >= 2, denies.length + ' lines');
 check('both paths denied (Agent and Workflow in ledger)',

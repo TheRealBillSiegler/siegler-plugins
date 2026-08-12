@@ -23,6 +23,7 @@ Stop at the first tier that is sufficient:
 
 Durable rules about the table:
 
+- **Bands are sweet spots, not fences.** Below-band is fine for easy instances. Wanting effort *above* a tier's band is the tell that the task has left the tier: a `haiku` file-inventory whose prompt keeps growing judgment calls — "skip vendored code", "decide whether each TODO is stale" — until you're reaching for `effort: high` isn't a hard inventory anymore; the judgment is the work, so it's `sonnet` at medium, not `haiku` at high.
 - **"Top tier" means the most capable model available in the session** — not last generation's flagship by habit, and not a fixed name. In a fable session, top tier is fable; in fable-less sessions (opus- or sonnet-topped plans, fast mode), the most capable available model takes the top-tier categories. When the ladder compresses — e.g. a sonnet-topped session where sonnet is both worker and gate — the gate stage still earns its place through independence (fresh context, adversarial framing), not extra capability. When the model lineup changes, remap tiers by position (fastest/cheapest ↔ most capable), not by name — the names in parentheses reflect the Claude 5 generation.
 - **When fable is available, top-tier categories stay on fable.** The article notes larger models "tend to have more wisdom, creativity, and writing skills despite having similar benchmark scores" — exactly the margin adversarial gates and open-ended design pay for. Opus substitutes as top tier; it does not co-equal fable when fable is present.
 - **Both directions fail the rule.** Over-provisioning (top tier for scouting) and under-provisioning (balanced tier for the final adversarial review of production config) are equally wrong.
@@ -49,7 +50,9 @@ For fan-outs, prefer cheap workers plus a top-tier gate over top tier everywhere
 
 ## Evaluation
 
-Public benchmarks saturate with powerful models; the article's counsel is to decide with custom evaluations drawn from real workloads. Applied to delegation: when unsure whether the balanced tier suffices for a recurring task, try it once and inspect the output — upgrade the tier on evidence, not on vibes. Before concluding the tier was insufficient, rule out a setup failure first (under-specified prompt, missing anchors, broken tool wiring): the article cautions that starting small makes model failures hard to distinguish from setup failures, and a mis-specified delegation fails identically at every tier.
+Lowest-sufficient is a hypothesis and the output is its test: review every delegated result at the tier the claim warrants; on failure, rule out setup first (under-specified prompt, missing anchors, broken wiring) before re-dispatching one rung up — a saved rung that produces a redo saved nothing.
+
+The same loop at slower cadence for recurring tasks: public benchmarks saturate with powerful models, so the article's counsel is custom evaluations drawn from real workloads — when unsure whether the balanced tier suffices, try it once, inspect, and upgrade on evidence, not vibes. The article cautions that starting small makes model failures hard to distinguish from setup failures: a mis-specified delegation fails identically at every tier.
 
 ## Enforcement
 

@@ -14,7 +14,7 @@ Invoke it: ask "where should a never-push-to-main rule live?" in a session with 
 
 ## Relation to delegation-tiering
 
-Split from the former `delegation-steering` plugin: this guide answers *where behavior lives*; its sibling [`delegation-tiering`](../delegation-tiering/) answers *which model a delegated agent gets* and enforces it with hooks. The skill cites that plugin's gate as its worked enforcement example; neither requires the other.
+Split from the former `delegation-steering` plugin: this guide answers *where behavior lives*; its sibling [`delegation-tiering`](https://github.com/TheRealBillSiegler/claude-plugins/tree/main/plugins/delegation-tiering) answers *which model a delegated agent gets* and enforces it with hooks. The skill cites that plugin's gate as its worked enforcement example; neither requires the other.
 
 ## Source fidelity
 

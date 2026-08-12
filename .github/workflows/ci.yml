@@ -53,8 +53,8 @@ jobs:
       # is their home). Turns the convention into a checked invariant.
       - name: No eval or test files inside the shipped payload
         run: |
-          hits=$(find plugins -type d \( -name 'evals' -o -name 'test' -o -name 'tests' -o -name '__tests__' \))
-          if [ -n "$hits" ]; then echo "eval/test directories inside plugins/:"; echo "$hits"; exit 1; fi
+          hits=$(find plugins \( -type d \( -name 'evals' -o -name 'test' -o -name 'tests' -o -name '__tests__' \) \) -o \( -type f \( -name '*.test.*' -o -name '*.spec.*' -o -name '*eval*' \) \))
+          if [ -n "$hits" ]; then echo "eval/test files inside plugins/:"; echo "$hits"; exit 1; fi
 
   version-bump:
     name: Plugin version raised when the plugin changes
