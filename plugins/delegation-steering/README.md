@@ -16,7 +16,17 @@ Details:
 
 - **delegation-tiering skill** loads on invocation — the judgment layer, not the always-loaded floor (see Three-layer enforcement below).
 - **agent-model-gate** `--test` embeds the regression case for the lint's known failure class: an `agent (` call written with a space must not throw off call-span detection and hide a neighboring model-less call.
-- **delegation-ledger** each line records model, agent type, description. A workflow call records `modelLiterals` — named for what it holds: the model strings scanned out of the script text. One entry per literal, not per agent, so a `model:` reused across a fan-out appears once and a non-agent occurrence still counts. Verified 2026-08-10 against three runs.
+- **delegation-ledger** each line records model, agent type, description. A workflow call records `modelLiterals` — named for what it holds: the model strings scanned out of the script text. One entry per literal, not per agent, so a `model:` reused across a fan-out appears once and a non-agent occurrence still counts.
+
+## Verify — required, not optional
+
+In a live session with the plugin enabled:
+
+```text
+/delegation-steering:canary
+```
+
+It installs the always-loaded rule file and proves both deny paths live. Run it because the gate's worst failure is silent: if `node` does not resolve when the hook runs, the hook produces no output, and a hook with no output is an allow — no denial, no ledger line, no error. The plugin looks installed and enforces nothing. The canary is the detector; the dated claim lives in the repo's [coverage matrix](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md) (dependency A9).
 
 ## Configuration
 
@@ -27,9 +37,7 @@ Details:
 
 1. **Always-loaded rule** (`~/.claude/rules/delegation.md`, installed by the canary command): the standing rule survives compaction and holds without skill invocation — a probabilistic floor: it depends on the model following it, unlike the deterministic hook below.
 2. **Skill** (on invocation): the judgment layer — which tier is lowest-sufficient.
-3. **Hook** (every Agent/Workflow call): the deterministic gate. Known limits are documented in the skill's Enforcement section: the workflow lint is a string heuristic (`/* model-gate:allow */` suppresses the call it sits inside), predefined workflows fail open with a reminder while an unreadable scriptPath fails open silently, and a `claude -p` spawn is a Bash command rather than a delegation call, so nothing checks the model it starts with (the child session itself gates normally — see [COVERAGE.md](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md)).
-
-The gate also fails open when its runtime is missing: if `node` does not resolve when the hook runs, the command produces no output, and a hook that produces no output is an allow. No denial, no ledger line, no error — the plugin looks installed and enforces nothing. Verified live 2026-08-10. `/delegation-steering:canary` is what detects it.
+3. **Hook** (every Agent/Workflow call): the deterministic gate. It has documented limits and one escape hatch — the skill's Enforcement section states them operationally, and the repo's [coverage matrix](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md) is the canonical, dated claim set for every path and gap.
 
 The ledger sits alongside as the observability layer: the gate can force models to be *explicit*, but only review of actual choices can show whether tiering judgment held. Its weekly summary (run from the plugin repo) is the evidence base for a deferred hardening — denying top-tier Agent calls that state no rationale — described in the repo's `docs/ROADMAP.md`.
 
@@ -45,17 +53,7 @@ flowchart TD
     IN["agent() inside a workflow"] -. "not hookable" .-> RUN
 ```
 
-In text: Agent calls and Workflow launches hit the PreToolUse gate, which denies them when no model is named or the lint fails, and otherwise lets them run with a tiering reminder and a ledger line; agent() spawns inside an already-running workflow reach neither the gate nor the ledger — the same paths the paragraphs above describe.
-
-## Verify
-
-In a live session with the plugin enabled:
-
-```text
-/delegation-steering:canary
-```
-
-Everything used to *build and measure* this plugin — hook contract tests and fixtures, skill scenario evals with baselines, the enforcement coverage matrix, doc-drift detection, and methodology records — lives in the [plugin repo](https://github.com/TheRealBillSiegler/claude-plugins) (`evals/`, `docs/`, `scripts/`), not in the installed payload.
+In text: Agent calls and Workflow launches hit the PreToolUse gate, which denies them when no model is named or the lint fails, and otherwise lets them run with a tiering reminder and a ledger line; agent() spawns inside an already-running workflow reach neither the gate nor the ledger.
 
 ## Sunset criterion
 
@@ -63,4 +61,4 @@ This plugin is a stopgap for a missing platform feature, not a product to defend
 
 ## Source fidelity
 
-Every claim in this plugin carries one of three provenance tiers — article digest, doc page, or dated live test — defined in the repo's [Anchoring policy](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/REMEDIATION.md#anchoring-policy). The skills' Doc anchors sections name the page behind each mechanic; where the docs are silent, the claim says so.
+Every claim in this plugin carries one of three provenance tiers — article digest, doc page, or dated live test — defined in the repo's [Anchoring policy](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/REMEDIATION.md#anchoring-policy). The skills' Doc anchors sections name the page behind each mechanic; where the docs are silent, the claim says so. Everything used to *build and measure* the plugin lives in the [plugin repo](https://github.com/TheRealBillSiegler/claude-plugins) — the [docs map](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/README.md) is the index — not in the installed payload.
