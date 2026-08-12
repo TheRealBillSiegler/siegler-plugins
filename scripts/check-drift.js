@@ -21,9 +21,13 @@ const { execSync } = require('child_process');
 const ANCHORS = path.join(__dirname, 'anchors.json');
 const REPO = path.join(__dirname, '..');
 // Where claims cite their doc basis. Not every markdown file in the repo: a
-// link in a README is orientation, not a claim under watch.
+// link in a README is orientation, not a claim under watch. Every shipped
+// plugin's skills are claim-bearing, so the set is enumerated, not named.
 const CITING = [
-  path.join(REPO, 'plugins', 'delegation-steering', 'skills'),
+  ...fs
+    .readdirSync(path.join(REPO, 'plugins'))
+    .map((p) => path.join(REPO, 'plugins', p, 'skills'))
+    .filter((p) => fs.existsSync(p)),
   path.join(REPO, 'docs', 'COVERAGE.md'),
 ];
 

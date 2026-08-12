@@ -1,4 +1,4 @@
-# Weekly validation for delegation-steering (Windows Task Scheduler wrapper).
+# Weekly validation for delegation-tiering (Windows Task Scheduler wrapper).
 # Register with a trigger of your choice, e.g.:
 #   $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"<path-to-this-script>`""
 #   $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 09:17
@@ -53,6 +53,8 @@ if ($probe -match 'GATE-AGENT:\s*DENIED' -and $probe -match 'GATE-WORKFLOW:\s*DE
 # The ledger writes to the plugin's data directory. The legacy path is read
 # too, so a window spanning the move is not silently half-counted.
 $ledgers = @(
+    (Join-Path $env:USERPROFILE ".claude\plugins\data\delegation-tiering-siegler-plugins\delegation-ledger.jsonl"),
+    # Legacy locations, read so a window spanning the rename or the pre-data-dir move stays whole.
     (Join-Path $env:USERPROFILE ".claude\plugins\data\delegation-steering-siegler-plugins\delegation-ledger.jsonl"),
     (Join-Path $env:USERPROFILE ".claude\delegation-ledger.jsonl")
 ) | Where-Object { Test-Path $_ }

@@ -60,13 +60,13 @@ What backs the standing rule:
   - String scan, not a JS parse: a call whose model arrives via a variable or shared options object can false-positive (suppress with a `/* model-gate:allow */` comment inside that call), and stray `model:` text between calls can mask a violation. Self-test: `node hooks/agent-model-gate.js --test` from the plugin root.
   - Fail-open paths: named/predefined workflows (no script text to lint) are allowed with only a reminder, and an unreadable `scriptPath` is allowed silently — both fall back to the always-loaded rule alone.
   - Per-spawn events inside a running workflow are not hookable, so launch-time linting is the only deterministic contact point for this path.
-- **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-steering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
+- **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-tiering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
 
 Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable (a weekly mix summary runs in the plugin repo).
 
 Not covered: the `claude -p` spawn itself, which is a Bash command rather than a delegation call — choose that session's model deliberately. The child session then gates its own delegations normally, since it loads the same plugins and hooks.
 
-Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-steering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Enforcement mechanics last verified 2026-08-09; the per-path dates, gaps, and platform dependencies are the plugin repo's `docs/COVERAGE.md`, and doc drift is watched there weekly.
+Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-tiering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Enforcement mechanics last verified 2026-08-09; the per-path dates, gaps, and platform dependencies are the plugin repo's `docs/COVERAGE.md`, and doc drift is watched there weekly.
 
 ## Design rationale
 

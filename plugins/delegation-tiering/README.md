@@ -1,16 +1,15 @@
-# delegation-steering
+# delegation-tiering
 
-Explicit model/effort tiering for every delegated agent, enforced — plus a decision guide for where Claude Code behavior should live. Built from two Anthropic articles and the official docs, adapted for supervised delegation.
+Explicit model/effort tiering for every delegated agent, enforced. Built from an Anthropic article and the official docs, adapted for supervised delegation. Formerly half of `delegation-steering`; its sibling, the [steering-claude-code](../steering-claude-code/) decision guide, is now its own skills-only plugin.
 
 ## Components
 
 | Component | What it does | Fires when |
 | --- | --- | --- |
 | `skills/delegation-tiering/` | Tier ladder and selection questions for delegated agents (Agent tool, Workflow `agent()` calls, multi-agent plans). | Claude spawns or configures an agent |
-| `skills/steering-claude-code/` | Decision tree for CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles vs system-prompt appends, with enforcement mechanics the article doesn't cover. | You ask where a behavior should live |
 | `hooks/agent-model-gate.js` | Denies Agent calls without `model`; lints Workflow script text at launch and denies model-less `agent()` calls. | Every Agent/Workflow call (PreToolUse, matcher `Agent\|Workflow`) |
 | `hooks/delegation-ledger.js` | Appends one JSONL line per delegation so tier choices are reviewable, not just explicit. | Every delegation (PostToolUse) |
-| `commands/canary.md` | Live end-to-end verification of both gate paths, plus rule-file install. | You run `/delegation-steering:canary` |
+| `commands/canary.md` | Live end-to-end verification of both gate paths, plus rule-file install. | You run `/delegation-tiering:canary` |
 
 Details:
 
@@ -23,7 +22,7 @@ Details:
 In a live session with the plugin enabled:
 
 ```text
-/delegation-steering:canary
+/delegation-tiering:canary
 ```
 
 It installs the always-loaded rule file and proves both deny paths live. Run it because the gate's worst failure is silent: if `node` does not resolve when the hook runs, the hook produces no output, and a hook with no output is an allow — no denial, no ledger line, no error. The plugin looks installed and enforces nothing. The canary is the detector; the dated claim lives in the repo's [coverage matrix](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/COVERAGE.md) (dependency A9).
@@ -31,7 +30,7 @@ It installs the always-loaded rule file and proves both deny paths live. Run it 
 ## Configuration
 
 - **Ledger location** — `${CLAUDE_PLUGIN_DATA}/delegation-ledger.jsonl`, the [per-plugin data directory](https://code.claude.com/docs/en/plugins-reference) Claude Code provisions and exports to hook processes. Set `DELEGATION_LEDGER` to redirect it elsewhere.
-- **Off switch:** `/plugin disable delegation-steering` deactivates the components ([plugins reference](https://code.claude.com/docs/en/plugins-reference)). Uninstalling removes the ledger along with the plugin's data directory — pass `--keep-data` to keep it. The rule file `~/.claude/rules/delegation.md` is left alone: it lives with your personal rules, not with the plugin.
+- **Off switch:** `/plugin disable delegation-tiering` deactivates the components ([plugins reference](https://code.claude.com/docs/en/plugins-reference)). Uninstalling removes the ledger along with the plugin's data directory — pass `--keep-data` to keep it. The rule file `~/.claude/rules/delegation.md` is left alone: it lives with your personal rules, not with the plugin.
 
 ## Three-layer enforcement
 

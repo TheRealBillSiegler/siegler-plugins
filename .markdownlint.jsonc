@@ -1,0 +1,5 @@
+{
+  // Duplicate headings are fine when they live under different parents —
+  // every plugin section in CHANGELOG.md has its own "### 0.1.0".
+  "MD024": { "siblings_only": true }
+}

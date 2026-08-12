@@ -64,7 +64,12 @@ for (const plugin of touched) {
   const after = versionAt(head, plugin);
   const files = changed.filter((f) => f.startsWith('plugins/' + plugin + '/'));
 
-  if (after == null) {
+  const dirAtHead = git(['ls-tree', '--name-only', head, 'plugins/' + plugin]).trim() !== '';
+  if (after == null && !dirAtHead) {
+    // The whole plugin is gone at head: a removal or rename, not an unbumped
+    // change. Nothing ships, so nothing needs a version.
+    console.log('ok   ' + plugin + ': removed at head — no version required');
+  } else if (after == null) {
     failures++;
     console.error('FAIL ' + plugin + ': plugins/' + plugin + '/.claude-plugin/plugin.json is missing or unreadable');
   } else if (before == null) {

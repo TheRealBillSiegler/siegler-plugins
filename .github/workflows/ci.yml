@@ -9,7 +9,7 @@ name: CI
 # is involved, and forked PRs run with no secrets. What CI cannot prove is that
 # Claude Code still routes Agent and Workflow calls into the hook — a matcher
 # rename upstream would leave every assertion here green while the gate silently
-# stopped firing. That is what /delegation-steering:canary and the weekly
+# stopped firing. That is what /delegation-tiering:canary and the weekly
 # behavioural probe are for, and why they stay out of CI.
 
 on:
@@ -47,7 +47,7 @@ jobs:
       - name: Contract suite
         run: node evals/contract/run-contract-tests.js
       - name: Lint span-boundary self-test
-        run: node plugins/delegation-steering/hooks/agent-model-gate.js --test
+        run: node plugins/delegation-tiering/hooks/agent-model-gate.js --test
 
   version-bump:
     name: Plugin version raised when the plugin changes

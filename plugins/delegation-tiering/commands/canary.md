@@ -4,14 +4,14 @@ description: Verify the delegation gate end-to-end in a live session (Agent and 
 
 # Delegation gate canary
 
-Run the delegation-steering verification canary. Execute the steps in order; do not skip a step because an earlier one "probably" covers it.
+Run the delegation-tiering verification canary. Execute the steps in order; do not skip a step because an earlier one "probably" covers it.
 
 1. **Rule file — the probabilistic layer** (holds only if the model follows it, unlike the deterministic hook verified in steps 2–3). If `~/.claude/rules/delegation.md` does not exist, create it with exactly:
 
    ```markdown
    # Delegated-agent model rule
 
-   Every delegated agent — an Agent tool call, a Workflow `agent()` call, or any other worker this session spawns (nested subagents, headless `claude -p` children, scheduled runs) — gets an explicit `model` (and `effort` where supported) at the lowest tier sufficient for its task. Never inherit the session model silently; if inheritance genuinely is the lowest sufficient choice, write that model out explicitly. Tier ladder and rationale: the delegation-tiering skill (delegation-steering plugin).
+   Every delegated agent — an Agent tool call, a Workflow `agent()` call, or any other worker this session spawns (nested subagents, headless `claude -p` children, scheduled runs) — gets an explicit `model` (and `effort` where supported) at the lowest tier sufficient for its task. Never inherit the session model silently; if inheritance genuinely is the lowest sufficient choice, write that model out explicitly. Tier ladder and rationale: the delegation-tiering skill (delegation-tiering plugin).
    ```
 
 2. **Live canary A — Agent path.** Issue one Agent tool call with a trivial prompt ("Reply with exactly: OK") and NO `model` parameter. Expected: the call is DENIED with a reason mentioning "no explicit model". If it runs instead, the gate is not firing — report and stop.

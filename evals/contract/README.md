@@ -1,6 +1,6 @@
 # Contract tests (`evals/contract/`)
 
-Offline, deterministic verification of the two shipped hooks' input/output contracts — the strongest evidence layer in this repo because it requires no trust and no model: run it and read the exit code. It verifies the hooks *as implemented*, not whether Claude Code still routes calls to them (that is the `/delegation-steering:canary` command's job).
+Offline, deterministic verification of the two shipped hooks' input/output contracts — the strongest evidence layer in this repo because it requires no trust and no model: run it and read the exit code. It verifies the hooks *as implemented*, not whether Claude Code still routes calls to them (that is the `/delegation-tiering:canary` command's job).
 
 ```mermaid
 flowchart LR

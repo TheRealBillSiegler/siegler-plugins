@@ -8,9 +8,15 @@
   },
   "plugins": [
     {
-      "name": "delegation-steering",
-      "description": "Model/effort tiering for every delegated agent (skill + deterministic PreToolUse gate) and a steering-mechanism decision guide, with evals and doc-drift detection.",
-      "source": "./plugins/delegation-steering",
+      "name": "delegation-tiering",
+      "description": "Model/effort tiering for every delegated agent: tier-ladder skill, deterministic PreToolUse gate, per-delegation ledger, live canary.",
+      "source": "./plugins/delegation-tiering",
+      "category": "productivity"
+    },
+    {
+      "name": "steering-claude-code",
+      "description": "Skills-only decision guide for where a Claude Code behavior should live, with enforcement mechanics per option.",
+      "source": "./plugins/steering-claude-code",
       "category": "productivity"
     }
   ]

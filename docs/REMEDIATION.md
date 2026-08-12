@@ -1,6 +1,6 @@
 # Drift remediation procedure
 
-Follow this when `scripts/check-drift.js` exits 1 (doc-page or Claude Code version drift), or when `/delegation-steering:canary` fails after a Claude Code update. Detection is deterministic; everything below is judgment — run it as an agent session in the plugin repo, and land changes via PR, never by committing directly to `main`. Auto-merging changes to live enforcement config is prohibited: a misread doc diff must not be able to rewrite the guardrails unreviewed.
+Follow this when `scripts/check-drift.js` exits 1 (doc-page or Claude Code version drift), or when `/delegation-tiering:canary` fails after a Claude Code update. Detection is deterministic; everything below is judgment — run it as an agent session in the plugin repo, and land changes via PR, never by committing directly to `main`. Auto-merging changes to live enforcement config is prohibited: a misread doc diff must not be able to rewrite the guardrails unreviewed.
 
 ## Detection
 
@@ -19,7 +19,7 @@ flowchart LR
 In text: check-drift.js compares the anchored doc pages and the Claude Code version weekly, logging one line when nothing changed or handing a read-only scoping agent's DRIFT-REPORT to this procedure when something did — routed to an anchors.json refresh if it is noise or to full re-verification if it is claim-affecting — while a separate weekly behavioral probe checks whether the gate is still alive and logs PASS or FAIL to drift.log, as the bullets below describe.
 
 - **check-drift.js**: diffs the anchored doc pages (derived from the pages the shipped skills and COVERAGE.md cite — a description of the rule, not a count that can stale) plus the Claude Code version against `anchors.json`. No drift → one log line. Drift → a read-only scoping agent writes a DRIFT-REPORT, then this procedure branches on whether the drift is noise (refresh `anchors.json` via PR, stop) or claim-affecting (continue below).
-- **Behavioral probe**: one headless session, weekly, runs the gate live and logs PASS/FAIL to `drift.log`. A FAIL is the other trigger for this procedure — it's what a `/delegation-steering:canary` failure after a Claude Code update looks like when caught automatically instead of by hand.
+- **Behavioral probe**: one headless session, weekly, runs the gate live and logs PASS/FAIL to `drift.log`. A FAIL is the other trigger for this procedure — it's what a `/delegation-tiering:canary` failure after a Claude Code update looks like when caught automatically instead of by hand.
 
 ## Anchoring policy
 
@@ -35,7 +35,7 @@ Which anchor a claim needs depends on which of three fidelity tiers it belongs t
 
 2. **If an anchored claim is affected**, re-verify the mechanic empirically before editing prose:
    - Run `node evals/contract/run-contract-tests.js` (offline contract).
-   - Run `/delegation-steering:canary` in a live session (Agent deny, Workflow launch-lint deny).
+   - Run `/delegation-tiering:canary` in a live session (Agent deny, Workflow launch-lint deny).
    - If a canary fails, diagnose against the changed doc page: renamed tool (matcher dead), changed hook JSON contract, changed Workflow tool_input shape are the known failure classes.
 
 3. **Edit at the right layer.** Hook behavior changes go in `hooks/agent-model-gate.js` (keep `--test` passing; extend it if the fix changes lint semantics). Claim changes go in the affected SKILL.md section AND its dated reference digest if the source moved. Update "Last verified" dates only for claims actually re-verified — including the affected cells of [COVERAGE.md](COVERAGE.md), which must change in the same PR as any fix that changes what a cell claims.
@@ -44,7 +44,7 @@ Which anchor a claim needs depends on which of three fidelity tiers it belongs t
 
 5. **Ship**: branch → conventional commits → PR with a body stating which doc pages drifted, which claims were affected, and the verification evidence. Bump the plugin version in `.claude-plugin/plugin.json` under the versioning policy stated in [../CHANGELOG.md](../CHANGELOG.md) — for this procedure, message and prose changes are a patch, lint semantics and new enforcement a minor. Include `node scripts/check-drift.js --update` output so `anchors.json` lands in the same PR.
 
-6. **After merge**: update the installed plugin (marketplace pull), restart the session, run `/delegation-steering:canary` once more against the installed copy.
+6. **After merge**: update the installed plugin (marketplace pull), restart the session, run `/delegation-tiering:canary` once more against the installed copy.
 
 ## Known blindness: drift detection is preservation-only
 
@@ -55,4 +55,4 @@ The drift check answers "did what we rely on change?" — it cannot answer "did 
 | Date | Failure | Fix | Lesson |
 | --- | --- | --- | --- |
 | 2026-08-05 | Lint span-boundary desync — `agent (` written with a space threw off the lint's call-span detection, so a neighboring call with no `model` went unchecked | Caught by review; now guarded by `--test` | Any lint change needs a masking-direction test case |
-| 2026-08-10 | Missing runtime — with `node` unresolvable, the hook command produces no output and the delegation is allowed: no denial, no ledger line, no error | Documented at the install surface; `/delegation-steering:canary` is the detector | A gate that cannot run is indistinguishable from a gate that passed — state the consequence where the dependency is stated |
+| 2026-08-10 | Missing runtime — with `node` unresolvable, the hook command produces no output and the delegation is allowed: no denial, no ledger line, no error | Documented at the install surface; `/delegation-tiering:canary` is the detector | A gate that cannot run is indistinguishable from a gate that passed — state the consequence where the dependency is stated |
