@@ -74,8 +74,6 @@ Components (two skills, two hooks, one command), enforcement layers, escape hatc
 
 ## Development
 
-- Feature branch → PR into `develop`; releases merge `develop` → `main` by PR. No direct pushes. Conventional commits.
-- Changes to hook lint semantics must keep `node plugins/delegation-steering/hooks/agent-model-gate.js --test` passing and add a case for the failure class fixed.
-- Multi-agent runs that produce conclusions record their methodology in [METHODS.md](docs/METHODS.md).
+Branch flow, test commands, versioning, and the repo's authoring conventions: [CONTRIBUTING.md](CONTRIBUTING.md). The claim set, procedures, and records behind the plugin: [docs/](docs/).
 
 [MIT licensed](LICENSE).

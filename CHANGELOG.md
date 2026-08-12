@@ -17,6 +17,12 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 - **The gate checks the tool name instead of inferring it.** Anything the matcher passed that was not a `Workflow` was treated as an `Agent` call and denied for lacking a `model` field. Agent and Workflow calls are unaffected; a tool the gate has no rule for now passes through untouched.
 - **Two documented claims were wrong and are corrected.** `/* model-gate:allow */` suppresses only the `agent()` call whose span it sits in, not the whole script as the hooks README stated — a marker in a file header suppresses nothing. And an unreadable `scriptPath` fails open *silently*, not with a reminder as the plugin README stated. Both now have contract cases.
 
+Structure, from a repo-wide prose-architecture pass:
+
+- **The tiering skill leads with the ladder.** The design justification that opened the file moves to a rationale section at the bottom; the scope condition inside it (supervised delegation only) moves up beside the standing rule. Scattered verification dates collapse into one staleness stamp pointing at the repo's coverage matrix.
+- **The ladder is data.** `hooks/tiers.js` holds the rungs and top-tier preference order and derives the denial string from them (byte-identical to the previous literal); the contract suite now fails if the repo README's ladder table disagrees with the tiers the hook names.
+- **The plugin README states the missing-runtime fail-open right under Components**, in a Verify section framed as required — it previously sat below Configuration and two enforcement layers.
+
 Documentation, previously unreleased:
 
 - States the missing-runtime fail-open where the requirement is stated: if `node` does not resolve when a hook runs, the gate allows the delegation with no denial, no ledger line, and no error. Verified live 2026-08-10.
