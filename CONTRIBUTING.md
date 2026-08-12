@@ -7,12 +7,12 @@ Feature branch → PR into `develop`; releases merge `develop` → `main` by PR 
 Run from the repo root:
 
 ```bash
-node evals/contract/run-contract-tests.js                          # hook contract suite
+node evals/delegation-tiering/contract/run-contract-tests.js                          # hook contract suite
 node plugins/delegation-tiering/hooks/agent-model-gate.js --test   # lint self-check
 node scripts/check-version-bump.js origin/develop HEAD              # fails if plugins/** changed without a version bump
 ```
 
-CI runs the same three. Versioning policy is stated at the top of [CHANGELOG.md](CHANGELOG.md); any change to lint semantics follows the growth rule in [evals/contract/README.md](evals/contract/README.md#growth-rule) — no fix without its regression case.
+CI runs the same three. Versioning policy is stated at the top of [CHANGELOG.md](CHANGELOG.md); any change to lint semantics follows the growth rule in [evals/delegation-tiering/contract/README.md](evals/delegation-tiering/contract/README.md#growth-rule) — no fix without its regression case.
 
 ## Live verification
 
@@ -50,7 +50,7 @@ READMEs and `docs/` prose.
 
 ### Files that are data
 
-`docs/COVERAGE.md`, `docs/METHODS.md`, `docs/drift/`, `evals/scenarios/` — matrices, registers, and answer keys that happen to render as markdown.
+`docs/COVERAGE.md`, `docs/METHODS.md`, `docs/drift/`, `evals/*/scenarios.md` — matrices, registers, and answer keys that happen to render as markdown.
 
 - **The register is append-only.** A wrong record is corrected by a new dated entry that names it, never edited in place ([METHODS.md requirements](docs/METHODS.md)).
 - **Dates live in cells, not prose.** The matrix owns verification dates; prose that needs one links the cell.

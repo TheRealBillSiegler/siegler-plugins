@@ -2,7 +2,7 @@
 
 What the evals verify, where each layer's cases come from, and how the set grows. The layers are ordered by what they can prove: deterministic contract → live behavior → skill application quality.
 
-Directory map: [contract/](contract/) — offline hook contract tests and fixtures (layer 1; own README); [scenarios/](scenarios/) — skill application evals with recorded baselines (layer 3); [routing-impact-study/](routing-impact-study/) — the protocol for the tier-policy outcome study, written for pre-registration but still a draft: not yet registered, by its own status line.
+Directory map — one directory per plugin, so what ships and what tests it are named alike: [delegation-tiering/](delegation-tiering/) — contract tests and fixtures (layer 1; own README), tier-assignment scenarios (layer 3), and the routing-impact study protocol for the tier-policy outcome study, written for pre-registration but still a draft: not yet registered, by its own status line; [steering-claude-code/](steering-claude-code/) — application scenarios for the steering skill (layer 3).
 
 ```mermaid
 flowchart TD
@@ -16,13 +16,13 @@ flowchart TD
 
 The four evaluation layers chain from proving the hooks' contract as implemented, through proving Claude Code still routes calls to them, to proving the skills' guidance is retrievable, up to proving each component is still necessary, with mis-tiered delegations from the production ledger feeding new Layer 3 scenarios along the way.
 
-## Layer 1: contract tests (`contract/`)
+## Layer 1: contract tests (`delegation-tiering/contract/`)
 
 **Based on:** observed hook behavior and found bugs — one fixture per exercised branch, plus a regression fixture for every fixed bug. `wf-masking.json` is the archetype: it encodes the 2026-08-05 span-boundary bug — the first row of [the failure-class ledger](../docs/REMEDIATION.md#failure-classes-seen-so-far), which owns the description — and the same case is embedded in the hook as `node hooks/agent-model-gate.js --test`.
 
-**Protocol:** `node evals/contract/run-contract-tests.js` — pipes each fixture to the hook, asserts decision and message substrings. Pure, offline, free. Verifies the hook's contract *as implemented*, not whether Claude Code still routes calls to it.
+**Protocol:** `node evals/delegation-tiering/contract/run-contract-tests.js` — pipes each fixture to the hook, asserts decision and message substrings. Pure, offline, free. Verifies the hook's contract *as implemented*, not whether Claude Code still routes calls to it.
 
-**Growth rule:** stated once in [contract/README.md](contract/README.md#growth-rule) — no fix without its regression case.
+**Growth rule:** stated once in [the contract README](delegation-tiering/contract/README.md#growth-rule) — no fix without its regression case.
 
 ## Layer 2: live verification (canary + weekly probe)
 
@@ -30,12 +30,12 @@ The four evaluation layers chain from proving the hooks' contract as implemented
 
 **Protocol:** `/delegation-tiering:canary` in a live session (both gate paths must deny; also performs the rule-file install). The weekly probe in `../scripts/weekly-drift-task.ps1` automates the same two assertions headlessly and logs PASS/FAIL to `drift.log`.
 
-## Layer 3: scenario evals (`scenarios/`)
+## Layer 3: scenario evals (`*/scenarios.md`)
 
 **Based on:**
 
-- `steering-claude-code-scenarios.md` — six scenarios converted from the source article's own when-to-use examples and anti-patterns (Zod rule, never-push-to-main, release checklist, personal preferences, noisy dependency audit, monorepo orientation), plus one probing the skill's building-enforcement guidance (workflow-spawn enforcement), which exists in no article.
-- `delegation-tiering-scenarios.md` — one probe per ladder rung or durable rule in the skill's own contract, including the rule that "top tier" means the most capable model in the current session rather than a fixed name, and the rule that a model is written explicitly even when it matches the session default.
+- `steering-claude-code/scenarios.md` — six scenarios converted from the source article's own when-to-use examples and anti-patterns (Zod rule, never-push-to-main, release checklist, personal preferences, noisy dependency audit, monorepo orientation), plus one probing the skill's building-enforcement guidance (workflow-spawn enforcement), which exists in no article.
+- `delegation-tiering/scenarios.md` — one probe per ladder rung or durable rule in the skill's own contract, including the rule that "top tier" means the most capable model in the current session rather than a fixed name, and the rule that a model is written explicitly even when it matches the session default.
 
 **Protocol:** fresh-context subagent given ONLY the skill file ("Read the skill and answer from it alone"), run at the weakest tier the skill should serve *before* stronger ones. Baselines are recorded in each scenario file with dates and **full model IDs captured at run time, never aliases** — an alias ("sonnet") goes ambiguous the moment a new generation ships, which is exactly when a stamp needs to say what it was measured on. Grading rule: if a model at or below sonnet misses a scenario, the skill's guidance is insufficient — fix the skill, not the model.
 
@@ -65,7 +65,7 @@ Current status, stamped claude-fable-5 / 2026-08-06 (static-read assertions — 
 | Gate (deny branches) | load-bearing | violation history: 2026-08-01, three model-less calls silently inherited the top tier, pre-gate; denial counting added 2026-08-06 | count real denials (`denied: true` ledger lines; weekly summary reports them) |
 | Allow-branch reminder | ceremony-candidate | none either way — rule + skill may already suffice | probe arms: matched delegations with/without the reminder |
 | Rule file (floor) | untested, confounded | clean sessions can't be attributed between rule, skill, and reminder | ablate alone, not as a cluster |
-| Skill bodies | capability-verified, necessity untested | the [scenario baselines](scenarios/) prove guidance is retrievable, not that tier choices differ without it | judgment probes with/without skill access |
+| Skill bodies | capability-verified, necessity untested | the scenario baselines ([delegation-tiering/scenarios.md](delegation-tiering/scenarios.md), [steering-claude-code/scenarios.md](steering-claude-code/scenarios.md)) prove guidance is retrievable, not that tier choices differ without it | judgment probes with/without skill access |
 | Tier policy (lowest-sufficient) | article-claimed, locally unmeasured | no local outcome comparison exists | outcome ablation: same real task at prescribed vs top tier, blind-graded; the ledger accumulates candidate tasks |
 | Drift pipeline | one real catch (n=1) | 2026-08-06: claim-affecting doc change caught in week one | track catch/noise ratio across runs |
 

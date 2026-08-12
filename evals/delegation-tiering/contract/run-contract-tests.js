@@ -3,16 +3,16 @@
 // and assert the decision and message substrings. Pure and offline — verifies
 // the hook's contract as implemented, NOT whether Claude Code still routes
 // Agent/Workflow calls to it (that's the /delegation-tiering:canary command).
-// Run from the repo root: node evals/contract/run-contract-tests.js
+// Run from the repo root: node evals/delegation-tiering/contract/run-contract-tests.js
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const HOOK = path.join(__dirname, '..', '..', 'plugins', 'delegation-tiering', 'hooks', 'agent-model-gate.js');
+const HOOK = path.join(__dirname, '..', '..', '..', 'plugins', 'delegation-tiering', 'hooks', 'agent-model-gate.js');
 const FIXTURES = path.join(__dirname, 'fixtures');
 // The ladder itself, not a substring of it: an assertion pinned to the first
 // few words survives any rewording and silently stops testing anything.
-const { LADDER: TIERS, MODELS } = require(path.join(__dirname, '..', '..', 'plugins', 'delegation-tiering', 'hooks', 'tiers.js'));
+const { LADDER: TIERS, MODELS } = require(path.join(__dirname, '..', '..', '..', 'plugins', 'delegation-tiering', 'hooks', 'tiers.js'));
 
 const CASES = [
   { fixture: 'agent-no-model.json', expect: { decision: 'deny', contains: ['no explicit model', 'lowest sufficient tier', TIERS] } },
@@ -53,7 +53,7 @@ for (const c of CASES) {
 
 // Ledger contract: one JSONL line per delegation, models captured.
 const os = require('os');
-const LEDGER_HOOK = path.join(__dirname, '..', '..', 'plugins', 'delegation-tiering', 'hooks', 'delegation-ledger.js');
+const LEDGER_HOOK = path.join(__dirname, '..', '..', '..', 'plugins', 'delegation-tiering', 'hooks', 'delegation-ledger.js');
 const tmpLedger = path.join(os.tmpdir(), 'delegation-ledger-test-' + process.pid + '.jsonl');
 try {
   const env = { ...process.env, DELEGATION_LEDGER: tmpLedger };
@@ -135,7 +135,7 @@ for (const c of SCOPE_CASES) {
 // exist. MODELS comes from the same data the denial string is built from, so a
 // renamed or added tier fails here until the README follows.
 try {
-  const readme = fs.readFileSync(path.join(__dirname, '..', '..', 'README.md'), 'utf8');
+  const readme = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'README.md'), 'utf8');
   const absent = MODELS.filter((t) => !readme.includes(t));
   if (absent.length === 0) console.log(`ok   README ladder names every tier (${MODELS.join(', ')})`);
   else {

@@ -1,6 +1,6 @@
 # Study protocol — delegation-stack routing impact
 
-**Status: DRAFT — not yet pre-registered.** On owner approval this file becomes immutable: its content hash is stamped into the report, and any post-approval change voids the registration. Owner decisions pending are marked ⬜. Method: self-contained — the decision rules, endpoints, and floors written in this file govern the study; the repo's evidence bar is [../README.md](../README.md) § Ablation protocol. This record lives here because evidence travels with the artifact it judges.
+**Status: DRAFT — not yet pre-registered.** On owner approval this file becomes immutable: its content hash is stamped into the report, and any post-approval change voids the registration. Owner decisions pending are marked ⬜. Method: self-contained — the decision rules, endpoints, and floors written in this file govern the study; the repo's evidence bar is [../../README.md](../../README.md) § Ablation protocol. This record lives here because evidence travels with the artifact it judges.
 
 ## Question
 
@@ -14,7 +14,7 @@ The owner's prior ("the model does not do this better natively") is the hypothes
 
 ## Relation to the existing eval
 
-[../scenarios/delegation-tiering-scenarios.md](../scenarios/delegation-tiering-scenarios.md) (baseline 2026-08-06: haiku 12/12, sonnet 12/12) measures **compliance**: workers given the skill match the skill's expectations. This study measures **impact**: whether skill-steered routing beats unsteered routing against *independent* gold. The existing scenarios seed the probe set; their Expected column is skill-derived and is therefore **excluded from gold** — using it would grade the skill with itself.
+[../scenarios.md](../scenarios.md) (baseline 2026-08-06: haiku 12/12, sonnet 12/12) measures **compliance**: workers given the skill match the skill's expectations. This study measures **impact**: whether skill-steered routing beats unsteered routing against *independent* gold. The existing scenarios seed the probe set; their Expected column is skill-derived and is therefore **excluded from gold** — using it would grade the skill with itself.
 
 ## Design
 
@@ -22,7 +22,7 @@ The owner's prior ("the model does not do this better natively") is the hypothes
 - **Scenarios:** the 12 existing tier-eval scenarios + ~15 elicited from real session history (actual tasks that led to Agent/Workflow spawns), spanning trivial lookups → mechanical edits → research → hard judgment. ⬜ final count set by the power derivation.
 - **Mechanical primary endpoint — no LLM judge:** workers emit their delegation plan; the chosen (model, effort) is extracted by code. The entire judge-bias caveat class exits the design.
 - **Blind gold labels:** before any arm runs, the owner labels the optimal (model, effort) per scenario, seeing only scenarios — never the skill text during labeling, never any arm output. **Recorded limitation — rater contamination:** the owner authored the skill and knows its ladder; blind labels are independent of the *run*, not of the *doctrine*. Mitigation: an outcome-anchored subset — run selected tasks at both candidate tiers and let measured success/cost adjudicate — carries extra weight exactly where owner labels and unsteered choices disagree.
-- **Isolation:** workers sandboxed in isolated per-arm configuration (prepared config directories; see [../../docs/research/arm-isolation-2026-08-09.md](../../docs/research/arm-isolation-2026-08-09.md)).
+- **Isolation:** workers sandboxed in isolated per-arm configuration (prepared config directories; see [../../../docs/research/arm-isolation-2026-08-09.md](../../../docs/research/arm-isolation-2026-08-09.md)).
 
 ## Endpoints and verdict rules (mechanical)
 

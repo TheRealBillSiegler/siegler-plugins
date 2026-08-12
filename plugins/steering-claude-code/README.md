@@ -10,7 +10,7 @@ Skills-only: one skill, no hooks, nothing always-on beyond its listing descripti
 
 ## Verify
 
-Invoke it: ask "where should a never-push-to-main rule live?" in a session with the plugin enabled — the answer should route to a hook or permission rule, not CLAUDE.md prose. The skill's application eval and its recorded baseline live in the [plugin repo](https://github.com/TheRealBillSiegler/claude-plugins) (`evals/scenarios/steering-claude-code-scenarios.md`).
+Invoke it: ask "where should a never-push-to-main rule live?" in a session with the plugin enabled — the answer should route to a hook or permission rule, not CLAUDE.md prose. The skill's application eval and its recorded baseline live in the [plugin repo](https://github.com/TheRealBillSiegler/claude-plugins) (`evals/steering-claude-code/scenarios.md`).
 
 ## Relation to delegation-tiering
 

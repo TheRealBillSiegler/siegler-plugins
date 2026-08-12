@@ -24,11 +24,11 @@ In text: a call reaches the gate, which denies an Agent call missing a model, al
 - **Agent branch:** denies any call whose `tool_input` lacks `model`; the denial carries the tier ladder so the orchestrator can re-issue with an explicit choice. Allow responses inject only a one-line reminder.
 - **Workflow branch:** lints the launch-time script text (`tool_input.script`, or the file at `tool_input.scriptPath` when readable) for `agent()` calls without a `model` option, and denies the launch quoting the offending call — the only deterministic contact point for workflow-internal spawns, which no hook event reaches individually. The lint is a string heuristic: `/* model-gate:allow */` suppresses only the call whose span it sits in — the span runs from that `agent(` to the next one, so a marker in a file header suppresses nothing. Predefined workflow names fail open with a reminder; an unreadable `scriptPath` fails open silently.
 - **Failure posture:** unparseable stdin fails open (a broken hook must not block all delegation); every deny appends a `{ts, tool, denied: true, detail}` line to the ledger so gate value is countable.
-- **`--test`:** embedded self-check for the span-boundary regression (see `evals/contract/` in the repo). Any lint change must keep it passing.
+- **`--test`:** embedded self-check for the span-boundary regression (see `evals/delegation-tiering/contract/` in the repo). Any lint change must keep it passing.
 - **Ledger path:** resolved in `ledger.js`, shared with the ledger hook — `DELEGATION_LEDGER` (contract tests use this), else `${CLAUDE_PLUGIN_DATA}/delegation-ledger.jsonl`, else `~/.claude/delegation-ledger.jsonl` for runs outside a plugin context.
 
 ## `delegation-ledger.js`
 
 PostToolUse observability, running async. Agent calls log `{ts, tool, cwd, model, agentType, description}`; Workflow launches log `modelLiterals`, the model strings scanned out of the script text — one entry per literal, not per agent spawned. The gate makes models *explicit*; the ledger makes tier choices *reviewable* — its 7-day summary (run by the repo's weekly task) is the evidence base for the deferred rationale-gate hardening.
 
-Contract tests for both hooks live in the repo, not the installed payload: [`evals/contract/`](https://github.com/TheRealBillSiegler/claude-plugins/tree/main/evals/contract).
+Contract tests for both hooks live in the repo, not the installed payload: [`evals/delegation-tiering/contract/`](https://github.com/TheRealBillSiegler/claude-plugins/tree/main/evals/delegation-tiering/contract).

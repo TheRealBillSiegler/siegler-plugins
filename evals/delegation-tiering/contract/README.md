@@ -1,4 +1,4 @@
-# Contract tests (`evals/contract/`)
+# Contract tests (`evals/delegation-tiering/contract/`)
 
 Offline, deterministic verification of the two shipped hooks' input/output contracts — the strongest evidence layer in this repo because it requires no trust and no model: run it and read the exit code. It verifies the hooks *as implemented*, not whether Claude Code still routes calls to them (that is the `/delegation-tiering:canary` command's job).
 
@@ -16,7 +16,7 @@ In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js,
 
 ## Files
 
-- **`run-contract-tests.js`** — the runner. Pipes each fixture into the gate hook and asserts the permission decision and message substrings; also exercises branches no static fixture can hold (a real temp file for `scriptPath` lint, a missing path for the silent-allow branch, a temp ledger for denial counting) and finishes with the hook's own `--test` self-check. Run from the repo root: `node evals/contract/run-contract-tests.js`.
+- **`run-contract-tests.js`** — the runner. Pipes each fixture into the gate hook and asserts the permission decision and message substrings; also exercises branches no static fixture can hold (a real temp file for `scriptPath` lint, a missing path for the silent-allow branch, a temp ledger for denial counting) and finishes with the hook's own `--test` self-check. Run from the repo root: `node evals/delegation-tiering/contract/run-contract-tests.js`.
 - **`fixtures/`** — one JSON PreToolUse payload per exercised branch. Each file carries a `_purpose` field (ignored by the hooks) stating which branch it pins and why it exists.
 
 ## The cases
@@ -38,4 +38,4 @@ In text: run-contract-tests.js pipes each fixture into both agent-model-gate.js,
 
 ## Growth rule
 
-Any change to lint semantics must keep `--test` passing and add a fixture (with `_purpose`) for the failure class it fixes — no fix without its regression case. Provenance and the full eval-layer methodology: [../README.md](../README.md).
+Any change to lint semantics must keep `--test` passing and add a fixture (with `_purpose`) for the failure class it fixes — no fix without its regression case. Provenance and the full eval-layer methodology: [../../README.md](../../README.md).
