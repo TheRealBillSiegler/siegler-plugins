@@ -10,10 +10,28 @@ Two parts: the requirements a methods record must satisfy, then the records them
 4. **Provenance honesty.** Anything reconstructed after the fact is labeled as inference; anything not verified from a primary source is labeled UNVERIFIED. Records are append-only — a wrong record is corrected by a new dated entry that names it, never by silent edit.
 5. **What a record can and cannot promise.** Agent runs are stochastic: a record makes a run *re-executable and auditable* (same structure, prompts, tiers, adjudication rules), never bit-identical.
 6. **Cross-referencing.** Any baseline, verdict, or finding cited elsewhere in the repo must link the record that produced it.
+7. **Stable names, not positions.** Records cite code by symbol (`TIERS`, `logDenial`, the `deny(...)` call in the Agent branch), never by line number, and cite work by tracker artifact, never by session-local run ID — a record outlives every refactor and every session, so a positional pointer in one is stale the day it lands.
 
 ## Records
 
-## 2026-08-11 — Information-leakage audit of the repository
+### 2026-08-11 — Prose-architecture audit and restructure
+
+- **Question:** applying software-engineering first principles (one home per fact, one job per file, progressive disclosure, data separated from prose) to every markdown file in the repo — where does the same statement live twice, which files serve two audiences or four jobs, and what structure should replace it?
+- **Shape:** four delegated agents plus inline orchestrator verification. Structural prose audit over all 23 markdown files (`general-purpose` type, alias `opus`, session-inherited effort; read-only by instruction; returned 24 ranked findings plus a considered-and-rejected list). Two docs-research agents (`claude-code-guide` type, alias `sonnet`) establishing platform load mechanics from code.claude.com — what loads at session start vs on invocation, the skill content lifecycle, and the compaction re-attachment budget — quoted verbatim and re-verified by the orchestrator against the live pages before use. One audience-typing agent (`general-purpose`, alias `opus`) failed twice on API errors and was not recovered; the orchestrator performed that classification inline from the verified load mechanics.
+- **Verification structure:** no adjudicating agent. The orchestrator re-verified the highest-consequence audit findings against source before editing (grep over cited lines; the COVERAGE omission, the stale line-number cites, and the hardcoded page counts each confirmed directly), re-fetched the two load-bearing platform quotes, and mutation-tested the new ladder-drift guard — the first version passed on a renamed tier and was rewritten before landing.
+- **Counts:** 24 findings reported (5 rated HIGH by the auditor); all HIGH and most MEDIUM acted on; explicitly not acted on: the two-row catalog table and one-plugin CHANGELOG heading (deliberate structure for the next plugin, owner preference), the diagram-plus-text accessibility pairs (deliberate), the SKILL/digest quote duplication (managed, per the anchoring policy).
+- **Model IDs:** aliases as captured in the delegation ledger (`opus`, `sonnet`); resolved IDs for this date, stated as **inference** from platform defaults: `claude-opus-5`, `claude-sonnet-5`.
+- **Limitations:** the structural audit was a single agent, single pass, unadjudicated — the previous entry's measured false-positive rate for that design (1 of 13 at HIGH/MEDIUM) applies; findings not re-verified by the orchestrator were acted on at lower confidence. The audience classification lost its independent agent to API failures and is orchestrator judgment against documented load mechanics, not a second opinion. Whether the restructured skill steers as well as the original is not established by this run — the scenario baselines predate the restructure and the re-baseline is scheduled, not done.
+- **Landed in:** PR #20 — the docs-restructure commit series (COVERAGE precondition A9, ROADMAP extraction, docs map slim, README restructures, dedup series, tiers.js data derivation, this file's requirement 7).
+
+### 2026-08-11 — Correction: line-number citations in earlier records
+
+- **Corrects:** the `2026-08-10 — Landing-page redesign panel` record below, and the convention it relied on. Its verification claims stand; three of its code citations no longer resolve.
+- **What went stale:** `agent-model-gate.js:108` (deny-transcript wording), `agent-model-gate.js:29-30` (tier-ladder text), and `delegation-ledger.js:36` (the `DELEGATION_LEDGER` env var) were correct when written; the 0.2.0 refactors moved the ladder to `hooks/tiers.js`, the ledger path rule to `hooks/ledger.js`, and renumbered the gate. The verified content is unchanged — only the positional pointers died.
+- **Stable citations for the same facts:** the denial text is built in the `deny(...)` call of the gate's Agent branch; the ladder is `LADDER` in `hooks/tiers.js`; the env-var precedence is `ledgerFile()` in `hooks/ledger.js`.
+- **Convention going forward:** requirement 7 above — symbols and tracker artifacts, never line numbers or run IDs.
+
+### 2026-08-11 — Information-leakage audit of the repository
 
 - **Question:** after the 0.2.0 hook and ledger changes, does the same design decision live in more than one module anywhere in the repo — such that changing it requires editing several places, and missing one leaves the system inconsistent? (Information leakage in Ousterhout's sense, *A Philosophy of Software Design*.)
 - **Shape:** one delegated agent, `general-purpose` type, model alias `opus`, session-inherited effort (the Agent tool exposes no per-call effort parameter). Read-only by instruction. Given the definition, seven named decisions to investigate, an explicit instruction to look past duplicated strings for near-duplicates encoding the same decision in different words, and a requirement to state for each finding whether the copies agree or have already drifted, with severity and the smallest fix. Also required to list cases considered and rejected as legitimate restatement, with reasons.
@@ -24,14 +42,14 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** single agent, single pass, no independent adjudication — a second lens might rank differently or find more, and a false negative here is invisible. The agent did not execute the contract suite or the canary, so its "copies agree" verdicts are read against source, not observed behavior. One MEDIUM finding proved false on re-verification, which is the measured false-positive rate of an unadjudicated run at this severity: 1 of 13. The seven decisions to investigate were supplied by the orchestrator, so anything outside that list depended on the agent's own sweep. Severity ranking is the agent's judgment, not measured impact.
 - **Landed in:** PR #20 — commits `a20604b`, `c9c15b6`, `0ea5bee`, `d6e8078`, `18deb93`. Four of the six fixes are now pinned by contract cases, so a future edit that reintroduces them fails the suite rather than shipping.
 
-## 2026-08-10 — Correction to "Landing-page redesign panel"
+### 2026-08-10 — Correction to "Landing-page redesign panel"
 
 - **Corrects:** the `2026-08-10 — Landing-page redesign panel` record below. Its orchestration shape, tiers, counts, and limitations stand; two reference defects are corrected here.
 - **Landed in:** PR #15 (landing page and linked pages) and PR #16 (defects found by rendering the page). The original record said "merge pending" and named an unmerged draft rather than a tracker artifact.
 - **Identifiers:** that record cites workflow run IDs and an agent id that exist only in a machine-local session transcript and cannot be resolved by any reader. Disregard them; the orchestration is reproducible from the structure, tiers, and adjudication rules the record already states.
 - **Convention going forward:** methods records name tracker artifacts for where work landed, and describe orchestration by structure rather than by session-local run identifiers.
 
-## 2026-08-10 — Landing-page redesign panel
+### 2026-08-10 — Landing-page redesign panel
 
 - **Question:** how should the claude-plugins repo landing page (README.md) be restructured — minimal, visual (trees/tables/diagrams), CLI-first install — informed by popular marketplace landing pages and a six-expert panel?
 - **Shape:** 2 workflows + 1 direct recovery agent call, 19 delegated agents total. Workflow `wf_dab8f90d-b98` (15 agents): Research phase — discover-marketplaces (sonnet, medium), 6 inventory agents (haiku, medium — 5 over the marketplaces discover returned, 1 over GrillerGeek/idd-framework; 3 failed), cli-install-docs (sonnet, medium). Panel phase — 6 expert lenses (frontend-design, github-conventions, oss-maintainer, ai-native-dev, claude-code-user, learning-expert; all opus, high). Synthesis — 1 agent (fable, high). Workflow `wf_9177151d-b0b`: 3 recovery agents (sonnet, medium) re-running the 3 failed inventories. Direct recovery: `inventory:obra/superpowers` re-run via a direct Agent call (general-purpose type, sonnet, session-inherited effort — the Agent tool has no per-call effort parameter; agent id `aaa6121f151d702b2`).
@@ -42,7 +60,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** the panel and synthesis ran with only 2 of 5 detailed marketplace inventories available — the other 3 arrived after synthesis and were delta-checked by the orchestrator, not re-adjudicated by the panel itself. Landing-page patterns from popular repos are correlational, not causal, evidence of what works.
 - **Landed in:** the approved landing-page redesign draft (superseding README.md; merge pending).
 
-## 2026-08-09 — Plugin-only canary re-verification
+### 2026-08-09 — Plugin-only canary re-verification
 
 - **Question:** after PR #1 merged and the legacy loose hook was removed, do the *plugin-registered* hooks (installed as `delegation-steering@siegler-plugins`) produce the denials — not a leftover of the pre-plugin installation?
 - **Shape:** no orchestration — four inline live probes from the interactive session: model-less Agent call (expect deny), model-less Workflow launch (expect lint deny), Agent call at alias `haiku` (expect allow + reminder; resolved ID not captured at run time, inferred claude-haiku-4-5 from that date's platform defaults), plus a rule-file presence check.
@@ -51,7 +69,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** single replicate per path; the nested-subagent path and the workflow ledger model-extraction were not re-run (their cells keep earlier dates); the reminder-injection observation comes from the orchestrating session's own context, unblinded; the doubled-lines reading is inference from registration state — the ledger does not record *which* registration wrote a line.
 - **Landed in:** the two re-verified date cells in [COVERAGE.md](COVERAGE.md) and the Enforcement dates in the delegation-tiering SKILL.md.
 
-## 2026-08-09 — Instrument-detection critique import
+### 2026-08-09 — Instrument-detection critique import
 
 - **Question:** does the parallel "Improve instrument detection of false claims" session (a critique workflow over the A7/A3/A4 citation incident, run in another project) bear on current work?
 - **Shape:** 1 transcript-investigation agent (general-purpose type, sonnet) over that session's file and workflow record; the source run itself was 3 parallel critics (opus, sonnet, sonnet — high effort) plus an adversarial gate (fable, high), recorded in that workflow's own output.
@@ -59,7 +77,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** the investigator read the source session selectively (tail-weighted); the source run's verdicts were analytical and were not independently re-executed here.
 - **Landed in:** issue #13 (defect-class addition section).
 
-## 2026-08-09 — Cryptic-wording sweep (pre-public readability)
+### 2026-08-09 — Cryptic-wording sweep (pre-public readability)
 
 - **Question:** which passages in the fifteen public-facing files stall a cold reader — undefined coined terms, compressed grammar, insider references, or sentences depending on conversation context the repo does not contain?
 - **Shape:** 1 workflow, 7 parallel readers (general-purpose type, sonnet, effort medium), one per file group, precision-biased rubric (false flag costs more than a miss).
@@ -67,7 +85,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** single reader per file group; acceptance adjudicated unblinded by the authoring session.
 - **Landed in:** the cryptic-wording commit across 11 files.
 
-## 2026-08-09 — Prior-art and eval-methodology research
+### 2026-08-09 — Prior-art and eval-methodology research
 
 - **Question:** (1) prior art for this plugin's components; (2) empirical (non-judge-only) assessment of model selection and steering config in the literature; (3) what the strongest primary sources prescribe for eval methodology.
 - **Shape:** 4 read-only web-research agents (general-purpose type, sonnet, session effort), 3 launched in parallel (prior-art sweep; empirical/routing literature; Pocock primary sources) + 1 supplemental (definitive methodology sources, replacing tweet-grade citations where stronger sources exist).
@@ -76,7 +94,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** one agent per axis (no cross-agent replication); WebFetch summarization is unreliable for PDFs (all PDF-derived quotes flagged); two tweets retrieved via a mirror API after x.com blocked direct fetch (provenance disclosed in the record); awesome-list sweeps were title-level, not line-by-line — the prior-art sweep is non-exhaustive by construction.
 - **Landed in:** [research/prior-art-and-eval-methodology-2026-08-09.md](research/prior-art-and-eval-methodology-2026-08-09.md), the ablation-protocol precedent citations in [../evals/README.md](../evals/README.md), and the sunset criterion in the plugin README.
 
-## 2026-08-06 — Full verification sweep
+### 2026-08-06 — Full verification sweep
 
 - **Question:** verify everything not yet verified (user directive).
 - **Shape:** mixed — deterministic inline tests (contract suite extension, drift corrupt/restore) + three agents (haiku eval, sonnet eval, sonnet nested-ledger probe, all explicit-tier) + the complete weekly pipeline executed under `powershell.exe` 5.1 against *real* upstream doc drift, whose scoping stage (headless session) spawned two sonnet page-verifiers and adjudicated noise-vs-claim-affecting itself.
@@ -84,13 +102,13 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** hash-only anchors meant the scoping agent verified claims against live pages rather than diffing; n=1 on drift-pipeline value.
 - **Landed in:** effort-frontmatter skill fix, anchors rebaseline, [drift/DRIFT-REPORT-2026-08-06.md](drift/DRIFT-REPORT-2026-08-06.md), encoding fix, denial-counting instrumentation.
 
-## 2026-08-05/06 — Scenario eval baselines
+### 2026-08-05/06 — Scenario eval baselines
 
 - **Protocol:** per [../evals/README.md](../evals/README.md) — fresh-context subagent, skill file only, weakest deployable tier first.
 - **Runs:** steering-claude-code: 7 scenarios, haiku 7/7 and sonnet 7/7 (2026-08-05; two gaps found by the eval itself — `paths:` format, hook-vs-permission criterion — fixed same day). delegation-tiering: 12 scenarios, haiku 12/12 and sonnet 12/12 (2026-08-06).
 - **Limitations:** single rep per tier (no variance estimate); grader = the same session that orchestrated the eval, not an independent blinded rater — an unblinded LLM comparison against the scenario files' Expected column, i.e. weak-signal by this repo's own grading standards (the endpoint is categorical, so the fix is mechanical extraction, not a better judge); models recorded as aliases at run time — resolved IDs inferred afterward (2026-08-09) from run-date platform defaults as claude-haiku-4-5 and claude-sonnet-5, an inference, not a capture. Later records stamp full model IDs (now requirement 2).
 
-## 2026-08-05 — Multi-authority design review of the plugin artifacts
+### 2026-08-05 — Multi-authority design review of the plugin artifacts
 
 - **Question:** do SKILL.md, digest, hook, rule file, and wiring follow skill/plugin design best practices across all local authorities plus official blog guidance?
 - **Shape:** 2 phases. Phase 1: four parallel streams — blog sweep (sonnet, medium), plugin-dev skill-reviewer agent type (sonnet), local-authorities audit across four best-practice sources (sonnet, high), mechanical quote/coherence fidelity (haiku, medium). Phase 2: adjudication gate (fable, high) verifying each finding against artifact text, ruling on authority conflicts explicitly.
@@ -98,7 +116,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Limitations:** authority conflicts ruled by one gate, not a panel; the one correctness bug was found by review, not by any eval — recorded as a failure-class lesson in REMEDIATION.md.
 - **Landed in:** the span-boundary fix + `--test` guard, context-tax reduction, coverage-gap docs, effort-token fix.
 
-## 2026-08-05 — Conformance assessment: skill + hook vs the two source articles
+### 2026-08-05 — Conformance assessment: skill + hook vs the two source articles
 
 - **Question:** how well do the (pre-plugin) model-selection skill and agent-model-gate hook conform to the models-explained and steering-Claude-Code articles?
 - **Shape:** 2 phases. Phase 1: four parallel finders — quote fidelity (sonnet, medium), coverage/omission (sonnet, high), steering-architecture fit (sonnet, high), hook-API check (claude-code-guide agent type, sonnet, medium). Phase 2: one adversarial gate (fable, high) instructed to refute each finding by re-fetching sources, merge duplicates, and re-rank.
