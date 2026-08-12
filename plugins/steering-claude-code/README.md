@@ -2,7 +2,7 @@
 
 A decision guide for where a Claude Code behavior should live — CLAUDE.md, a rules file, a skill, a subagent, a hook, an output style, or a system-prompt append. Built from an Anthropic engineering article plus the enforcement mechanics the article doesn't cover, anchored to the official docs.
 
-Skills-only: one skill, no hooks, nothing always-on beyond its listing description.
+One skill, no hooks — nothing always-on beyond its listing description.
 
 | Component | What it does | Fires when |
 | --- | --- | --- |

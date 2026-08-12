@@ -26,7 +26,7 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 
 ### 0.1.0
 
-First release under this name — the steering-mechanism decision guide split out of `delegation-steering` (retired section below) as a skills-only plugin: one skill, its dated reference digest, no hooks. The skill's content is the restructured `delegation-steering` version; its worked enforcement example now cites the sibling `delegation-tiering` plugin's gate.
+First release under this name — the steering-mechanism decision guide split out of `delegation-steering` (retired section below) as a single-skill plugin: the skill, its dated reference digest, no hooks. The skill's content is the restructured `delegation-steering` version; its worked enforcement example now cites the sibling `delegation-tiering` plugin's gate.
 
 ## delegation-steering (retired)
 

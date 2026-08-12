@@ -5,7 +5,7 @@ Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), se
 | Plugin | What it does |
 | --- | --- |
 | [**delegation-tiering**](plugins/delegation-tiering/) | Explicit model tiering for every delegated agent, hook-enforced |
-| [**steering-claude-code**](plugins/steering-claude-code/) | Decision guide for where a Claude Code behavior should live — skills-only |
+| [**steering-claude-code**](plugins/steering-claude-code/) | Decision guide for where a Claude Code behavior should live — a single skill |
 
 ## Install
 
@@ -75,7 +75,7 @@ Components, enforcement layers, escape hatches, known gaps, and the coverage map
 
 ## steering-claude-code
 
-The other half of the question: not *which model*, but *where should a behavior live at all* — CLAUDE.md, a rules file, a skill, a subagent, a hook, an output style, or a system-prompt append. A skills-only plugin: one decision tree with per-option enforcement mechanics, no hooks, nothing always-on beyond its listing.
+The other half of the question: not *which model*, but *where should a behavior live at all* — CLAUDE.md, a rules file, a skill, a subagent, a hook, an output style, or a system-prompt append. A single-skill plugin: one decision tree with per-option enforcement mechanics, no hooks, nothing always-on beyond its listing.
 
 ```bash
 claude plugin install steering-claude-code@siegler-plugins

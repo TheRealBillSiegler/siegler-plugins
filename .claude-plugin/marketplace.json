@@ -15,7 +15,7 @@
     },
     {
       "name": "steering-claude-code",
-      "description": "Skills-only decision guide for where a Claude Code behavior should live, with enforcement mechanics per option.",
+      "description": "A single skill: the decision guide for where a Claude Code behavior should live, with enforcement mechanics per option.",
       "source": "./plugins/steering-claude-code",
       "category": "productivity"
     }
