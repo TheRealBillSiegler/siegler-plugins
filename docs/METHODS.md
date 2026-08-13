@@ -22,7 +22,7 @@ Two parts: the requirements a methods record must satisfy, then the records them
 - **Verification:** none beyond source-quoting — examiners were instructed to answer strictly from fetched content and quote it; no independent adjudication pass ran.
 - **Counts:** 7 repos examined → 4 qualified as multi-plugin marketplaces (3 excluded as single-product repos); survey, not gated review, so no raw→surviving findings figure.
 - **Limitations:** one spot-check per repo, so every per-repo claim is n=1; three of the seven repos turned out not to be multi-plugin marketplaces (kept as context, excluded from the convention count); repo selection mixes hand-picked seeds with a single discovery agent's popularity judgment, and star counts mostly failed to resolve; absence of a convention in four repos is weak evidence against it existing elsewhere.
-- **Landed in:** the root README install restructure — single generic Install section covering both plugins, requirement scoped to one line pointing at the plugin's own README.
+- **Landed in:** PR #22 — the root README install restructure: single generic Install section covering both plugins, requirement scoped to one line pointing at the plugin's own README.
 
 ### 2026-08-12 — PR #20 merge review
 
