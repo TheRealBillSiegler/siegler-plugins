@@ -1,6 +1,6 @@
 # Prior art and eval methodology — research record, 2026-08-09
 
-Three questions, researched 2026-08-09 by four parallel read-only agents (method and limitations in [../METHODS.md](../METHODS.md), entry 2026-08-09): (1) does anyone ship a delegation-steering artifact like this plugin; (2) has model selection or steering config been assessed empirically — controlled comparison, not judge-only; (3) what do the strongest primary sources actually prescribe for eval methodology. Confidence labels are preserved from the agents' reports; **UNVERIFIED** means no primary source was successfully read for that claim.
+Three questions, researched 2026-08-09 by four parallel read-only agents — one agent per axis, no cross-agent replication; the §1 prior-art sweep is title-level across awesome-lists, not line-by-line, so it is non-exhaustive by construction: (1) does anyone ship a delegation-steering artifact like this plugin; (2) has model selection or steering config been assessed empirically — controlled comparison, not judge-only; (3) what do the strongest primary sources actually prescribe for eval methodology. Confidence labels are preserved from the agents' reports; **UNVERIFIED** means no primary source was successfully read for that claim.
 
 ## 1. Prior art — verdict: partially novel
 
