@@ -9,26 +9,26 @@ Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), se
 
 ## Install
 
-> [!IMPORTANT]
-> **Requirement (delegation-tiering):** Node.js on `PATH`. Check with `node --version`.
->
-> If `node` does not resolve when a hook runs, the gate **fails open**: no denial, no ledger line, no error. The plugin looks installed and enforces nothing. Step 2 below is how you find out.
+The plugins are independent — install either or both:
 
 ```bash
 claude plugin marketplace add TheRealBillSiegler/claude-plugins
 claude plugin install delegation-tiering@siegler-plugins
+claude plugin install steering-claude-code@siegler-plugins
 ```
+
+**Requirement:** delegation-tiering's hooks run on Node.js, so `node` must resolve on `PATH` (check with `node --version`). Without it the gate [fails open — silently](plugins/delegation-tiering/README.md#verify--required-not-optional); step 2 below is the detector. steering-claude-code needs nothing beyond Claude Code.
 
 Then:
 
 1. Restart or run `/reload-plugins` — no install form takes effect in a running session.
-2. Run `/delegation-tiering:canary`. It installs the always-loaded rule file and verifies both deny paths — required, not just a check.
+2. delegation-tiering only: run `/delegation-tiering:canary`. It installs the always-loaded rule file and verifies both deny paths — required, not just a check.
 
 ### Other ways to install
 
-**In a session** — `/plugin marketplace add TheRealBillSiegler/claude-plugins`, then `/plugin install delegation-tiering@siegler-plugins`.
+**In a session** — `/plugin marketplace add TheRealBillSiegler/claude-plugins`, then `/plugin install <plugin>@siegler-plugins`.
 
-**By hand**, for dotfiles or config you version yourself — merge these keys into `~/.claude/settings.json` ([settings reference](https://code.claude.com/docs/en/settings#plugin-settings)):
+**By hand**, for dotfiles or config you version yourself — merge these keys into `~/.claude/settings.json` ([settings reference](https://code.claude.com/docs/en/settings#plugin-settings)), keeping only the plugins you want:
 
 ```json
 {
@@ -37,14 +37,18 @@ Then:
       "source": { "source": "github", "repo": "TheRealBillSiegler/claude-plugins" }
     }
   },
-  "enabledPlugins": { "delegation-tiering@siegler-plugins": true }
+  "enabledPlugins": {
+    "delegation-tiering@siegler-plugins": true,
+    "steering-claude-code@siegler-plugins": true
+  }
 }
 ```
 
-**Without installing**, to try it or test a local change — clone the repo and load the plugin for one session only:
+**Without installing**, to try one or test a local change — clone the repo and load a plugin for one session only:
 
 ```bash
 claude --plugin-dir ./plugins/delegation-tiering
+# or: claude --plugin-dir ./plugins/steering-claude-code
 ```
 
 ## delegation-tiering
@@ -76,10 +80,6 @@ Components, enforcement layers, escape hatches, known gaps, and the coverage map
 ## steering-claude-code
 
 The other half of the question: not *which model*, but *where should a behavior live at all* — CLAUDE.md, a rules file, a skill, a subagent, a hook, an output style, or a system-prompt append. A single-skill plugin: one decision tree with per-option enforcement mechanics, no hooks, nothing always-on beyond its listing.
-
-```bash
-claude plugin install steering-claude-code@siegler-plugins
-```
 
 Details: [plugins/steering-claude-code/](plugins/steering-claude-code/).
 
