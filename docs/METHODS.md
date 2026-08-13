@@ -14,16 +14,6 @@ Two parts: the requirements a methods record must satisfy, then the records them
 
 ## Records
 
-### 2026-08-12 — Marketplace README install-conventions survey
-
-- **Question:** how do popular Claude Code plugin marketplaces structure install instructions and per-plugin runtime requirements in their root README — and do the official docs bless a convention?
-- **Shape:** one workflow, nine agents, all default workflow subagent type, `claude-sonnet-5` at effort low (captured at run time by the workflow harness): one discovery agent (identify popular marketplace repos beyond three known seeds), seven repo examiners (one per repo — fetch the root README, spot-check one plugin's own README or manifest, report install location, per-plugin install commands, requirements surfacing, and catalog-table headers, quoting fetched text), one docs agent over the official `plugins`, `plugin-marketplaces`, and `plugins-reference` pages.
-- **Findings:** the docs state one line ("Include a README.md with installation and usage instructions") and define no manifest field for system requirements — the `dependencies` field is plugin-to-plugin only, and the docs' own external-dependency case (LSP server binaries) is handled in prose. Of the seven repos examined, four are true multi-plugin marketplaces (anthropics/claude-plugins-official, wshobson/agents, jeremylongshore/claude-code-plugins-plus-skills, athola/claude-night-market); none surfaces per-plugin requirements in its root README; the dominant shape is one generic install flow at root with plugin detail in each plugin's own README; install-command-in-table-cell exists (wshobson/agents) but in a separate catalog doc at ~60-plugin scale; the only requirements section found anywhere is repo-wide (athola/claude-night-market).
-- **Verification:** none beyond source-quoting — examiners were instructed to answer strictly from fetched content and quote it; no independent adjudication pass ran.
-- **Counts:** 7 repos examined → 4 qualified as multi-plugin marketplaces (3 excluded as single-product repos); survey, not gated review, so no raw→surviving findings figure.
-- **Limitations:** one spot-check per repo, so every per-repo claim is n=1; three of the seven repos turned out not to be multi-plugin marketplaces (kept as context, excluded from the convention count); repo selection mixes hand-picked seeds with a single discovery agent's popularity judgment, and star counts mostly failed to resolve; absence of a convention in four repos is weak evidence against it existing elsewhere.
-- **Landed in:** PR #22 — the root README install restructure: single generic Install section covering both plugins, requirement scoped to one line pointing at the plugin's own README.
-
 ### 2026-08-12 — PR #20 merge review
 
 - **Question:** is PR #20 — the delegation-steering split/rename, exec-form hooks, docs restructure, per-plugin evals, live probe — ready to merge and take public?
