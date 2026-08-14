@@ -47,7 +47,7 @@ const mainRef = (() => {
     return null;
   }
 })();
-if (!mainRef) console.warn('WARN origin/main unreachable — comparing against the PR base instead of the released baseline');
+if (!mainRef) console.warn('WARN origin/main unreachable — comparing against the PR base instead of the released baseline (fetch it with: git fetch origin main)');
 
 const changed = git(['diff', '--name-only', base, head]).split('\n').filter(Boolean);
 const touched = [...new Set(changed.map((f) => /^plugins\/([^/]+)\//.exec(f)?.[1]).filter(Boolean))];
