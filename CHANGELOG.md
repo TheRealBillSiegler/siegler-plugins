@@ -6,6 +6,14 @@ Versioning is [semantic](https://semver.org) with one deliberate exception: **pr
 
 ## delegation-tiering
 
+### 0.1.1
+
+Documentation voice pass; no behavior change — the gate and ledger are untouched.
+
+- **The skill states its principles in its own voice.** Inline article attributions and quotation wrappers are gone; the Source section remains the single attribution point. Anthropic's advisor benchmark figure keeps a compact attribution because it is their measurement, not this skill's claim.
+- **Verification-history narration is gone** from the skill's maintenance note and the canary's report step. Verification dates live in the repo's coverage matrix, which both already point at.
+- **The README's Verify heading drops "— required, not optional".** The section still explains the silent fail-open that makes the canary worth running.
+
 ### 0.1.0
 
 First release under this name. `delegation-steering` (retired section below) split in two: this plugin keeps the enforcement half — tiering skill, gate, ledger, canary — and the steering-mechanism decision guide is now the sibling plugin `steering-claude-code`. Versions reset with the new identities. Relative to `delegation-steering` 0.1.x, everything below changed.
@@ -23,6 +31,13 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 - **The plugin README states the missing-runtime fail-open right under Components**, in a Verify section framed as required, and the canary is namespaced `/delegation-tiering:canary`.
 
 ## steering-claude-code
+
+### 0.1.1
+
+Documentation voice pass; no behavior change.
+
+- **The skill states the core principle and the prose-failure warning in its own voice**, and the anti-patterns heading drops its "(from the article)" tag. The Source section remains the single attribution point.
+- **The source line drops verification-history narration**; the digest's capture date stays, since it tells the reader how stale the captured quotes are.
 
 ### 0.1.0
 
