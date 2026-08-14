@@ -18,4 +18,4 @@ Run the delegation-tiering verification canary. Execute the steps in order; do n
 
 3. **Live canary B — Workflow path.** Launch a minimal Workflow whose script contains exactly one `agent()` call with no `model` (trivial prompt, meta name `gate-canary`). Expected: the LAUNCH is denied with the offending call quoted. If it launches, stop the run immediately and report — the Workflow lint is not firing.
 
-4. **Report.** State pass/fail per step. If any step failed after a Claude Code update, point at the drift procedure in the plugin repo: `docs/REMEDIATION.md` in [TheRealBillSiegler/claude-plugins](https://github.com/TheRealBillSiegler/claude-plugins). If all passed, remind that "Last verified" dates live in that repo (the skill's Enforcement section and the cells of `docs/COVERAGE.md`) and should be updated there, not in the installed cache.
+4. **Report.** State pass/fail per step. If any step failed after a Claude Code update, point at the drift procedure in the plugin repo: [docs/REMEDIATION.md](https://github.com/TheRealBillSiegler/claude-plugins/blob/main/docs/REMEDIATION.md).

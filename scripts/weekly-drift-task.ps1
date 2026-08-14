@@ -30,7 +30,7 @@ if ($code -eq 1) {
     Add-Content $log "$stamp drift detected - launching scoping agent"
     Set-Location $repo
     $date = Get-Date -Format yyyy-MM-dd
-    $scope = claude -p "Drift was detected by scripts/check-drift.js. Follow ONLY step 1 of docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the claims mapped in the skills' Doc anchors sections, and write a report to docs/drift/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
+    $scope = claude -p "Drift was detected by scripts/check-drift.js. Follow ONLY step 1 of docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the page-to-claim mapping in docs/COVERAGE.md's dependency table, and write a report to docs/drift/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
     Add-Content $log $scope.TrimEnd()
     Add-Content $log "$stamp scoping agent finished (exit $LASTEXITCODE)"
 } elseif ($code -eq 0) {
