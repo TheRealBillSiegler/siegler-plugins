@@ -6,14 +6,6 @@ Versioning is [semantic](https://semver.org) with one deliberate exception: **pr
 
 ## delegation-tiering
 
-### 0.1.1
-
-Documentation voice pass; no behavior change — the gate and ledger are untouched.
-
-- **The skill states its principles in its own voice.** Inline article attributions and quotation wrappers are gone; the Source section remains the single attribution point. Anthropic's advisor benchmark figure keeps a compact attribution because it is their measurement, not this skill's claim.
-- **Verification-history narration is gone** from the skill's maintenance note and the canary's report step. Verification dates live in the repo's coverage matrix, which both already point at.
-- **The README's Verify heading drops "— required, not optional".** The section still explains the silent fail-open that makes the canary worth running.
-
 ### 0.1.0
 
 First release under this name. `delegation-steering` (retired section below) split in two: this plugin keeps the enforcement half — tiering skill, gate, ledger, canary — and the steering-mechanism decision guide is now the sibling plugin `steering-claude-code`. Versions reset with the new identities. Relative to `delegation-steering` 0.1.x, everything below changed.
@@ -26,18 +18,11 @@ How the hooks are wired changed; what the gate decides did not. It denies and al
 - **Breaking, for anyone reading the ledger file:** the workflow entry's `models` field is now `modelLiterals`. The contents are unchanged — model strings scanned out of the script text, one entry per literal rather than per agent spawned — but the name now says so.
 - **The gate checks the tool name instead of inferring it.** Anything the matcher passed that was not a `Workflow` was treated as an `Agent` call and denied for lacking a `model` field. Agent and Workflow calls are unaffected; a tool the gate has no rule for now passes through untouched.
 - **Two documented claims were wrong and are corrected.** `/* model-gate:allow */` suppresses only the `agent()` call whose span it sits in, not the whole script as the hooks README stated — a marker in a file header suppresses nothing. And an unreadable `scriptPath` fails open *silently*, not with a reminder as the plugin README stated. Both now have contract cases.
-- **The tiering skill leads with the ladder.** The design justification that opened the file moves to a rationale section at the bottom; the scope condition inside it (supervised delegation only) moves up beside the standing rule. Scattered verification dates collapse into one staleness stamp pointing at the repo's coverage matrix.
+- **The tiering skill leads with the ladder.** The design justification that opened the file moves to a rationale section at the bottom; the scope condition inside it (supervised delegation only) moves up beside the standing rule. The skill speaks in its own voice — the Source section is the single attribution point — and verification dates move out of the skill entirely; the repo's coverage matrix owns them.
 - **The ladder is data.** `hooks/tiers.js` holds the rungs and top-tier preference order and derives the denial string from them — byte-identical to the previous literal, so no user-visible change.
-- **The plugin README states the missing-runtime fail-open right under Components**, in a Verify section framed as required, and the canary is namespaced `/delegation-tiering:canary`.
+- **The plugin README states the missing-runtime fail-open right under Components**, in a Verify section, and the canary is namespaced `/delegation-tiering:canary`.
 
 ## steering-claude-code
-
-### 0.1.1
-
-Documentation voice pass; no behavior change.
-
-- **The skill states the core principle and the prose-failure warning in its own voice**, and the anti-patterns heading drops its "(from the article)" tag. The Source section remains the single attribution point.
-- **The source line drops verification-history narration**; the digest's capture date stays, since it tells the reader how stale the captured quotes are.
 
 ### 0.1.0
 
