@@ -7,7 +7,7 @@ description: Use when spawning or configuring any delegated agent — an Agent t
 
 Standing rule: every delegated agent gets an **explicit model** at the **lowest tier sufficient** for its task. State the tiering rationale when presenting a plan that spawns agents.
 
-Scope: supervised delegation only — a capable orchestrator stays in the loop, writing the spec, choosing the tier, reviewing the output. For a standalone workload with no orchestrator, work top-down instead: start with the most capable model and dial effort (rationale under Design rationale below).
+Scope: supervised delegation only — this ladder is bottom-up because the orchestrator, already the most capable model in the session, stays in the loop: writing the spec, choosing the tier, reviewing the output. For a standalone workload with no orchestrator, work top-down instead: start with the most capable model and dial effort.
 
 ## The ladder
 
@@ -60,7 +60,7 @@ The gate earns top tier once per claim, not once per retry: a follow-up named "r
 
 ## Advisor pattern
 
-For fan-outs, prefer cheap workers plus a top-tier gate over top tier everywhere. Anthropic's benchmark example — one benchmark, not a general result: on SWE-bench Pro, Sonnet 5 with a Fable 5 advisor lands within 10% of Fable 5's score at 63% of the price of running Fable 5 end to end. Structure: fastest/balanced-tier finders → top-tier adversarial verify.
+For fan-outs, prefer cheap workers plus a top-tier gate over top tier everywhere: fastest/balanced-tier finders → top-tier adversarial verify. Benchmark evidence for the pattern is in the dated capture under Source.
 
 ## Evaluation
 
@@ -85,13 +85,8 @@ Not covered: the `claude -p` spawn itself, which is a Bash command rather than a
 
 Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-tiering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). The per-path verification dates, gaps, and platform dependencies are the plugin repo's `docs/COVERAGE.md`, and doc drift is watched there weekly.
 
-## Design rationale
-
-Why bottom-up, when the source's default is top-down (start with the most intelligent model, dial in with effort): this skill operates strictly downstream of that choice. The orchestrator doing the delegating already **is** the most capable model available in the session, and it stays in the loop — writing the spec, choosing the tier, reviewing the output. That structure is the advisor strategy generalized across the ladder.
-
 ## Source
 
-- [Claude models explained: choosing the best model for your use case](https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case) — Anthropic, claude.com blog. The selection framework, economics guidance, and advisor example above are drawn from it; the ladder's effort mapping, question 4, and the bottom-up posture are delegation-specific adaptations.
-- [Quote-anchored digest of the article](references/claude-models-explained-2026-08-05.md) — captured 2026-08-05 with cross-verified verbatim quotes; re-verify against the live URL before relying on a quote for a durable claim.
+- Rationale beyond this skill: [Claude models explained: choosing the best model for your use case](https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case) — the post behind the selection framework — or the dated capture shipped at [references/claude-models-explained-2026-08-05.md](references/claude-models-explained-2026-08-05.md). The live post wins over the capture; the doc anchors below win over both.
 - Doc anchors (enforcement mechanics): hook control surface — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; matchable tool names — <https://code.claude.com/docs/en/tools-reference.md>; workflow spawn isolation — <https://code.claude.com/docs/en/workflows.md> and <https://code.claude.com/docs/en/sub-agents.md>; effort pinning in agent definitions — <https://code.claude.com/docs/en/sub-agents.md>. Where the article and docs disagree, docs win.
 - Model facts (IDs, tiers, pricing, effort vocabulary): the maintained anchors are the [platform models overview](https://platform.claude.com/docs/en/about-claude/models/overview) and the local `claude-api` skill — not this skill or its digest.
