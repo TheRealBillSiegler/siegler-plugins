@@ -89,12 +89,15 @@ for (const plugin of touched) {
   } else if (after == null) {
     failures++;
     console.error('FAIL ' + plugin + ': plugins/' + plugin + '/.claude-plugin/plugin.json is missing or unreadable');
-  } else if (before == null) {
-    console.log('ok   ' + plugin + ': new plugin at version ' + after);
   } else {
+    // Absence at the PR base is not absence for installers: a plugin deleted on
+    // the base branch but still on origin/main (deleted, then re-added later)
+    // is compared against the released version like any other change.
     const released = mainRef ? versionAt(mainRef, plugin) : before;
-    if (mainRef && released == null) {
-      console.log('ok   ' + plugin + ': never released on main — version ' + after + ' needs no bump');
+    if (released == null) {
+      console.log('ok   ' + plugin + ': ' + (before == null
+        ? 'new plugin at version ' + after
+        : 'never released on main — version ' + after + ' needs no bump'));
     } else if (isGreater(after, released)) {
       console.log('ok   ' + plugin + ': released ' + released + ' -> ' + after + ' at head (' + files.length + ' shipped file(s) changed)');
     } else {
