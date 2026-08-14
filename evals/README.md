@@ -39,7 +39,7 @@ The four evaluation layers chain from proving the hooks' contract as implemented
 
 **Protocol:** fresh-context subagent given ONLY the skill file ("Read the skill and answer from it alone"), run at the weakest tier the skill should serve *before* stronger ones. Baselines are recorded in each scenario file with dates and **full model IDs captured at run time, never aliases** — an alias ("sonnet") goes ambiguous the moment a new generation ships, which is exactly when a stamp needs to say what it was measured on. Grading rule: if a model at or below sonnet misses a scenario, the skill's guidance is insufficient — fix the skill, not the model.
 
-**Grading is mechanical, not judged:** the subagent returns a structured verdict per scenario (one canonical tier token plus effort band, as JSON), and pass/fail is computed by code — exact comparison against a checked-in answer key derived from each scenario table's Expected column. No LLM sits in the grading loop, so the judge-bias caveat class (unblinded comparison, paraphrase tolerance, author grading own skill) exits the design. Minimum 3 replicates per tier for a variance estimate. The 2026-08-05/06 baselines predate this rule — unblinded LLM comparison, single rep (limitation recorded in [../docs/METHODS.md](../docs/METHODS.md)) — and stand as smoke-test evidence only until the first mechanized re-baseline, which lands the answer key and comparator alongside its run record. Scheduled: after the plugin cutover (canary), so the re-baseline measures the shipped artifact.
+**Grading is mechanical, not judged:** the subagent returns a structured verdict per scenario (one canonical tier token plus effort band, as JSON), and pass/fail is computed by code — exact comparison against a checked-in answer key derived from each scenario table's Expected column. No LLM sits in the grading loop, so the judge-bias caveat class (unblinded comparison, paraphrase tolerance, author grading own skill) exits the design. Minimum 3 replicates per tier for a variance estimate. The 2026-08-05/06 baselines predate this rule — unblinded LLM comparison, single rep, graded by the same session that orchestrated the eval rather than an independent rater — and stand as smoke-test evidence only until the first mechanized re-baseline, which lands the answer key and comparator alongside the baseline it stamps. Scheduled: after the plugin cutover (canary), so the re-baseline measures the shipped artifact.
 
 **Growth rule — toward production-drawn evals:** the source article's counsel is that real evals are "drawn from production." The delegation ledger is the production feed: when a weekly mix summary or manual review surfaces a mis-tiered delegation, convert it into a scenario with the correct expected tier. Author-derived scenarios (the current set) are the floor, not the end state.
 
@@ -70,10 +70,6 @@ Current status, stamped claude-fable-5 / 2026-08-06 (static-read assertions — 
 | Drift pipeline | one real catch (n=1) | 2026-08-06: claim-affecting doc change caught in week one | track catch/noise ratio across runs |
 
 Harm surveillance (the third verdict): denial rate (friction on legitimate work), `model-gate:allow` marker frequency (lint false positives), redos after cheap delegations (ledger review). Cadence: re-run verdicts after each model upgrade — a verdict stamped on one model says nothing about the next.
-
-## Methods records
-
-Every eval or verdict run records its methodology in [../docs/METHODS.md](../docs/METHODS.md), whose Requirements section defines what a record contains. Baselines cited in scenario files must have a corresponding methods record.
 
 ## What the evals cannot show
 

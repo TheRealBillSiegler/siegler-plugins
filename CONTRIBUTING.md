@@ -1,7 +1,6 @@
 # Contributing
 
-Feature branch → PR into `develop`; releases merge `develop` → `main` by PR — `main` is what the marketplace serves, so nothing reaches an installer until that second merge. No direct pushes to either. Conventional commits. Multi-agent runs whose conclusions land in the repo record their methodology in [docs/METHODS.md](docs/METHODS.md).
-
+Feature branch → PR into `develop`; releases merge `develop` → `main` by PR — `main` is what the marketplace serves, so nothing reaches an installer until that second merge. No direct pushes to either. Conventional commits.
 ## Before you push
 
 Run from the repo root:
@@ -51,9 +50,9 @@ READMEs and `docs/` prose.
 
 ### Files that are data
 
-`docs/COVERAGE.md`, `docs/METHODS.md`, `docs/drift/`, `evals/*/scenarios.md` — matrices, registers, and answer keys that happen to render as markdown.
+`docs/COVERAGE.md`, `docs/drift/`, `evals/*/scenarios.md` — matrices, registers, and answer keys that happen to render as markdown.
 
-- **The register is append-only.** A wrong record is corrected by a new dated entry that names it, never edited in place ([METHODS.md requirements](docs/METHODS.md)).
+- **Dated records are append-only.** A wrong record is corrected by a new dated entry that names it, never edited in place.
 - **Dates live in cells, not prose.** The matrix owns verification dates; prose that needs one links the cell.
 - **Reference rows by topic, not ordinal.** Row numbers shift on insert; "the workflow-spawn scenario" does not.
 - **Expiring records carry their date in the filename** (`*-2026-08-09.md`), so staleness is visible from the directory listing.
