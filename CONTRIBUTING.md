@@ -1,7 +1,6 @@
 # Contributing
 
-Feature branch → PR into `develop`; releases merge `develop` → `main` by PR — `main` is what the marketplace serves, so nothing reaches an installer until that second merge. No direct pushes to either. Conventional commits. A measured number cited in the repo carries its qualifying method inline where the number lives ([convention](evals/README.md)).
-
+Feature branch → PR into `develop`; releases merge `develop` → `main` by PR — `main` is what the marketplace serves, so nothing reaches an installer until that second merge. No direct pushes to either. Conventional commits.
 ## Before you push
 
 Run from the repo root:

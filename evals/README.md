@@ -71,10 +71,6 @@ Current status, stamped claude-fable-5 / 2026-08-06 (static-read assertions — 
 
 Harm surveillance (the third verdict): denial rate (friction on legitimate work), `model-gate:allow` marker frequency (lint false positives), redos after cheap delegations (ledger review). Cadence: re-run verdicts after each model upgrade — a verdict stamped on one model says nothing about the next.
 
-## Method travels with the number
-
-A measured number cited beyond its run — a scenario baseline, a study result — carries its qualifying method inline where the number lives: date, full model ID captured at run time, replicate count, blinding/grading status, and the limitation that most constrains it. There is no separate register: a number whose qualifier sits elsewhere overclaims wherever it is quoted. (A central register, `docs/METHODS.md`, was tried and dissolved 2026-08-12; its records remain in git history.)
-
 ## What the evals cannot show
 
 Tier *optimality*. The layers prove models are explicit (gate), the gate is alive (probe), and the skills' guidance is retrievable and applicable (scenarios). Whether a specific real-world delegation used the cheapest sufficient tier is a judgment call — the ledger makes those calls reviewable, and [ROADMAP.md](../docs/ROADMAP.md) states what evidence would justify enforcing more.
