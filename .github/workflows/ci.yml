@@ -66,9 +66,10 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          # The guard diffs against the base commit, which a shallow clone lacks.
+          # The guard diffs against the base commit and reads the released
+          # version from origin/main; a shallow clone lacks both.
           fetch-depth: 0
-      - name: Check plugin version against base
+      - name: Check plugin version against the released baseline
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
