@@ -1,4 +1,4 @@
-# Weekly validation for delegation-steering (Windows Task Scheduler wrapper).
+# Weekly validation for delegation-tiering (Windows Task Scheduler wrapper).
 # Register with a trigger of your choice, e.g.:
 #   $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"<path-to-this-script>`""
 #   $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 09:17
@@ -30,7 +30,7 @@ if ($code -eq 1) {
     Add-Content $log "$stamp drift detected - launching scoping agent"
     Set-Location $repo
     $date = Get-Date -Format yyyy-MM-dd
-    $scope = claude -p "Drift was detected by scripts/check-drift.js. Follow ONLY step 1 of docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the claims mapped in the skills' Doc anchors sections, and write a report to docs/drift/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
+    $scope = claude -p "Drift was detected by scripts/check-drift.js. Follow ONLY step 1 of docs/REMEDIATION.md: re-run the script to list what changed, fetch and diff each changed page against the page-to-claim mapping in docs/COVERAGE.md's dependency table, and write a report to docs/drift/DRIFT-REPORT-$date.md classifying the drift as noise or claim-affecting, with evidence per claim. Do not edit skills, hooks, or anchors.json - report only." 2>&1 | Out-String
     Add-Content $log $scope.TrimEnd()
     Add-Content $log "$stamp scoping agent finished (exit $LASTEXITCODE)"
 } elseif ($code -eq 0) {
@@ -50,18 +50,29 @@ if ($probe -match 'GATE-AGENT:\s*DENIED' -and $probe -match 'GATE-WORKFLOW:\s*DE
 }
 
 # --- 3. Ledger summary (7-day delegation mix) ---
-$ledger = Join-Path $env:USERPROFILE ".claude\delegation-ledger.jsonl"
-if (Test-Path $ledger) {
+# The ledger writes to the plugin's data directory. The legacy path is read
+# too, so a window spanning the move is not silently half-counted.
+$ledgers = @(
+    (Join-Path $env:USERPROFILE ".claude\plugins\data\delegation-tiering-siegler-plugins\delegation-ledger.jsonl"),
+    # Legacy locations, read so a window spanning the rename or the pre-data-dir move stays whole.
+    (Join-Path $env:USERPROFILE ".claude\plugins\data\delegation-steering-siegler-plugins\delegation-ledger.jsonl"),
+    (Join-Path $env:USERPROFILE ".claude\delegation-ledger.jsonl")
+) | Where-Object { Test-Path $_ }
+if ($ledgers) {
     $cut = (Get-Date).AddDays(-7)
     $denied = 0
-    $models = foreach ($line in Get-Content $ledger) {
+    $models = foreach ($line in (Get-Content -Path $ledgers)) {
         try { $e = $line | ConvertFrom-Json } catch { continue }
         try { $ts = [datetime]$e.ts } catch { continue }
         if ($ts -lt $cut) { continue }
         if ($e.denied) { $denied++; continue }
         if ($e.tool -eq 'Agent') {
             if ($null -eq $e.model) { 'NONE' } else { $e.model }
+        } elseif ($e.modelLiterals) {
+            $e.modelLiterals
         } elseif ($e.models) {
+            # Workflow lines written before the field was renamed. Drop this
+            # branch when the legacy ledger path above is dropped.
             $e.models
         }
     }

@@ -1,67 +1,90 @@
 # claude-plugins
 
-Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), served from the `siegler-plugins` marketplace. Currently one plugin: **delegation-steering** — explicit model/effort tiering for every delegated agent, enforced by a deterministic gate rather than trusted to prose, with the evals and drift detection that keep it true as Claude Code evolves.
+Claude Code plugins by [Bill Siegler](https://github.com/TheRealBillSiegler), served from the `siegler-plugins` marketplace.
+
+| Plugin | What it does |
+| --- | --- |
+| [**delegation-tiering**](plugins/delegation-tiering/) | Explicit model tiering for every delegated agent, hook-enforced |
+| [**steering-claude-code**](plugins/steering-claude-code/) | Decision guide for where a Claude Code behavior should live — a single skill |
 
 ## Install
 
-```text
-/plugin marketplace add TheRealBillSiegler/claude-plugins
-/plugin install delegation-steering@siegler-plugins
+The plugins are independent — install either or both:
+
+```bash
+claude plugin marketplace add TheRealBillSiegler/claude-plugins
+claude plugin install delegation-tiering@siegler-plugins
+claude plugin install steering-claude-code@siegler-plugins
 ```
 
-Or directly in `~/.claude/settings.json`:
+**Requirement:** delegation-tiering's hooks run on Node.js, so `node` must resolve on `PATH` (check with `node --version`). Without it the gate [fails open — silently](plugins/delegation-tiering/README.md#verify); step 2 below is the detector. steering-claude-code needs nothing beyond Claude Code.
+
+Then:
+
+1. Restart or run `/reload-plugins` — no install form takes effect in a running session.
+2. delegation-tiering only: run `/delegation-tiering:canary`. It installs the always-loaded rule file and verifies both deny paths — required, not just a check.
+
+### Other ways to install
+
+**In a session** — `/plugin marketplace add TheRealBillSiegler/claude-plugins`, then `/plugin install <plugin>@siegler-plugins`.
+
+**By hand**, for dotfiles or config you version yourself — merge these keys into `~/.claude/settings.json` ([settings reference](https://code.claude.com/docs/en/settings#plugin-settings)), keeping only the plugins you want:
 
 ```json
-"extraKnownMarketplaces": {
-  "siegler-plugins": { "source": { "source": "github", "repo": "TheRealBillSiegler/claude-plugins" } }
-},
-"enabledPlugins": { "delegation-steering@siegler-plugins": true }
+{
+  "extraKnownMarketplaces": {
+    "siegler-plugins": {
+      "source": { "source": "github", "repo": "TheRealBillSiegler/claude-plugins" }
+    }
+  },
+  "enabledPlugins": {
+    "delegation-tiering@siegler-plugins": true,
+    "steering-claude-code@siegler-plugins": true
+  }
+}
 ```
 
-Restart your session, then run `/delegation-steering:canary` — it verifies the gate end-to-end and installs the always-loaded rule file.
+**Without installing**, to try one or test a local change — clone the repo and load a plugin for one session only:
 
-**Requirements:** Node.js on `PATH`; on Windows, Git for Windows (hooks declare `"shell": "bash"`).
-
-## What you get
-
-The two skills are consultation surfaces — `delegation-tiering` fires when Claude spawns or configures agents; ask `steering-claude-code` "where should this behavior live?" — and the hooks enforce and observe without being asked:
-
-| Component                    | What it does                                                                       |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| `delegation-tiering` skill   | Assigns each delegated agent the lowest sufficient model/effort tier               |
-| `steering-claude-code` skill | Decision tree: CLAUDE.md vs rules vs skills vs subagents vs hooks vs output styles |
-| `agent-model-gate` hook      | PreToolUse gate: denies model-less Agent calls, lints Workflow scripts at launch   |
-| `delegation-ledger` hook     | Appends one JSONL line per delegation for tier-quality review                      |
-| `canary` command             | Live end-to-end verification of the gate, plus rule-file install                   |
-
-Full component docs: [plugins/delegation-steering/](plugins/delegation-steering/). The measurement apparatus — contract tests and fixtures, scenario evals, coverage matrix, drift detection, methods records — lives at repo level ([evals/](evals/), [docs/](docs/), [scripts/](scripts/)) and is deliberately **not** part of the installed plugin.
-
-## Why trust it
-
-Every claim is verified or explicitly marked pending: the gate is live-tested on all branches (deny, allow, launch-lint, nested spawns), the contract suite runs 10/10, both skills carry dated baselines (12/12 and 7/7 at the weakest served tiers — smoke-test grade until the mechanized re-baseline, per the [eval methodology](evals/README.md)), and the drift pipeline caught a real claim-affecting upstream doc change in its first week. What is *not* yet proven is tracked in the open — whether each component is *necessary* is a registered open question, and the published base rate for steering artifacts leans "no effect" ([research record](docs/research/prior-art-and-eval-methodology-2026-08-09.md)); the measurement program exists to find out, stamping load-bearing / ceremony / harmful verdicts per component. This repo is deliberately two things: a small plugin, and a working demonstration of evidence-first plugin maintenance — drift-watched claims, methods records, pre-registered necessity studies. Receipts: [coverage matrix](docs/COVERAGE.md) · [methods records](docs/METHODS.md) · [eval methodology](evals/README.md) · [measurement map](https://github.com/TheRealBillSiegler/claude-plugins/issues/2)
-
-## How it stays fresh
-
-Claude Code ships fast; these plugins anchor their claims instead of assuming them — dated quote digests for article-only claims, specific doc pages for mechanics (docs win over articles), dated live tests for enforcement boundaries. A weekly scheduled task runs the loop:
-
-```mermaid
-flowchart LR
-    SRC["anchored sources<br>(6 doc pages + CC version)"] --> CHK["check-drift.js<br>weekly, deterministic, free"]
-    CHK -- "no drift" --> LOG["one log line, done"]
-    CHK -- "drift" --> SCOPE["read-only scoping agent<br>writes DRIFT-REPORT"]
-    SCOPE -- "noise" --> UPD["refresh anchors.json via PR"]
-    SCOPE -- "claim-affecting" --> REM["REMEDIATION.md: re-verify<br>empirically, edit, PR — never auto-merge"]
-    PRB["behavioral probe<br>weekly, one headless session"] --> PP["gate alive? PASS/FAIL in drift.log"]
-    LGR["ledger summary<br>weekly, free"] --> MIX["7-day delegation mix<br>evidence for deferred hardenings"]
+```bash
+claude --plugin-dir ./plugins/delegation-tiering
+# or: claude --plugin-dir ./plugins/steering-claude-code
 ```
 
-Drift triage and edit rules: [REMEDIATION.md](docs/REMEDIATION.md)
+## delegation-tiering
+
+When Claude spawns a subagent or launches a workflow without naming a model, the subagent silently inherits the session's model — no one asks whether a cheaper one would do. delegation-tiering forces the question: a deterministic hook (not a CLAUDE.md line Claude may or may not follow) **denies** any delegation that doesn't name a model. The refusal opens:
+
+> **Agent call has no explicit model.**
+
+It then hands back the ladder, so the call can be re-issued with a tier named:
+
+| Tier | For |
+| --- | --- |
+| `haiku` | Mechanical scouting, extraction |
+| `sonnet` | Anchored implementation, doc research |
+| `opus` | Reasoning beyond `sonnet` |
+| Top tier — `fable`, else `opus`, else `sonnet` | Adversarial review gates, open-ended design, security reads |
+
+Workflow scripts get the same check at launch. Each denial includes its fix, so the call comes back with a model named — an extra round trip, not a dead end.
+
+On your machine:
+
+- **Gates** direct `Agent` calls and `Workflow` launches with readable script text — model-less ones are denied; nothing else is touched. The paths it does not reach are named in the [coverage matrix](docs/COVERAGE.md)
+- **Logs** one line per delegation to the plugin's own data directory, so uninstalling takes it with them
+- **Installs** `~/.claude/rules/delegation.md` (via the canary)
+- **Off switch:** `/plugin disable delegation-tiering` — leaves the rule file in place; uninstalling takes the ledger with the plugin's data directory
+
+Components, enforcement layers, escape hatches, known gaps, and the coverage map: [plugins/delegation-tiering/](plugins/delegation-tiering/). Claims, tests, and drift watch: [docs/](docs/) and [evals/](evals/).
+
+## steering-claude-code
+
+The other half of the question: not *which model*, but *where should a behavior live at all* — CLAUDE.md, a rules file, a skill, a subagent, a hook, an output style, or a system-prompt append. A single-skill plugin: one decision tree with per-option enforcement mechanics, no hooks, nothing always-on beyond its listing.
+
+Details: [plugins/steering-claude-code/](plugins/steering-claude-code/).
 
 ## Development
 
-- Branch → PR into `main`; no direct pushes. Conventional commits.
-- Contract tests: `node evals/contract/run-contract-tests.js`
-- Any change to hook lint semantics must keep `node plugins/delegation-steering/hooks/agent-model-gate.js --test` passing and add a case for the failure class it fixes.
-- Multi-agent runs that produce conclusions must record their methodology in [METHODS.md](docs/METHODS.md).
+Branch flow, test commands, versioning, and the repo's authoring conventions: [CONTRIBUTING.md](CONTRIBUTING.md). The claim set, procedures, and records behind the plugin: [docs/](docs/).
 
 [MIT licensed](LICENSE).

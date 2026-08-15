@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 // Deterministic drift detection for the claims this plugin anchors to living
-// sources: the six Claude Code doc pages plus the installed Claude Code
+// sources: the Claude Code doc pages it cites, plus the installed Claude Code
 // version. Compares SHA-256 of each page body against scripts/anchors.json.
+//
+// The watched set is derived from the pages the shipped skills and the
+// coverage matrix actually cite, not maintained as a list here. Citing a new
+// page in a claim is what puts it under watch; a hand-kept list goes stale
+// silently, leaving the newest claim the only unwatched one.
 //
 //   node scripts/check-drift.js           exit 0 = no drift; exit 1 = drift (prints what changed)
 //   node scripts/check-drift.js --update  rewrite anchors.json from current state
@@ -14,14 +19,42 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const ANCHORS = path.join(__dirname, 'anchors.json');
-const URLS = [
-  'https://code.claude.com/docs/en/hooks.md',
-  'https://code.claude.com/docs/en/hooks-guide.md',
-  'https://code.claude.com/docs/en/memory.md',
-  'https://code.claude.com/docs/en/sub-agents.md',
-  'https://code.claude.com/docs/en/workflows.md',
-  'https://code.claude.com/docs/en/tools-reference.md',
+const REPO = path.join(__dirname, '..');
+// Where claims cite their doc basis. Not every markdown file in the repo: a
+// link in a README is orientation, not a claim under watch. Every shipped
+// plugin's skills are claim-bearing, so the set is enumerated, not named.
+const CITING = [
+  ...fs
+    .readdirSync(path.join(REPO, 'plugins'))
+    .map((p) => path.join(REPO, 'plugins', p, 'skills'))
+    .filter((p) => fs.existsSync(p)),
+  path.join(REPO, 'docs', 'COVERAGE.md'),
 ];
+
+function markdownFiles(target) {
+  if (fs.statSync(target).isFile()) return [target];
+  return fs
+    .readdirSync(target, { recursive: true })
+    .map((f) => path.join(target, f))
+    .filter((f) => f.endsWith('.md') && fs.statSync(f).isFile());
+}
+
+function anchoredUrls() {
+  const pages = new Set();
+  for (const source of CITING) {
+    for (const file of markdownFiles(source)) {
+      const text = fs.readFileSync(file, 'utf8');
+      // Normalize: a page is cited with or without the .md suffix, and may
+      // carry a #fragment. All forms name the same page body.
+      for (const m of text.matchAll(/code\.claude\.com\/docs\/en\/([a-z0-9-]+)/g)) {
+        pages.add(`https://code.claude.com/docs/en/${m[1]}.md`);
+      }
+    }
+  }
+  return [...pages].sort();
+}
+
+const URLS = anchoredUrls();
 
 function claudeVersion() {
   try {
