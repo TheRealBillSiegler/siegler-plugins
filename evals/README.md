@@ -26,7 +26,7 @@ The four evaluation layers chain from proving the hooks' contract as implemented
 
 ## Layer 2: live verification (canary + weekly probe)
 
-**Based on:** the enforcement-boundary claims — what actually fires for what. These are largely undocumented (per-claim doc status is in [../docs/COVERAGE.md](../docs/COVERAGE.md)'s dependency table), were established by dated live tests (see the skill's Enforcement section), and can silently change on any Claude Code update — so they are re-established empirically, never assumed.
+**Based on:** the enforcement-boundary claims — what actually fires for what. These are largely undocumented (per-claim doc status is in [../docs/COVERAGE.md](../docs/COVERAGE.md)'s dependency table), were established by dated live tests (dates in the same table), and can silently change on any Claude Code update — so they are re-established empirically, never assumed.
 
 **Protocol:** `/delegation-tiering:canary` in a live session (both gate paths must deny; also performs the rule-file install). The weekly probe in `../scripts/weekly-drift-task.ps1` automates the same two assertions headlessly and logs PASS/FAIL to `drift.log`.
 

@@ -17,7 +17,7 @@ claude plugin install delegation-tiering@siegler-plugins
 claude plugin install steering-claude-code@siegler-plugins
 ```
 
-**Requirement:** delegation-tiering's hooks run on Node.js, so `node` must resolve on `PATH` (check with `node --version`). Without it the gate [fails open — silently](plugins/delegation-tiering/README.md#verify--required-not-optional); step 2 below is the detector. steering-claude-code needs nothing beyond Claude Code.
+**Requirement:** delegation-tiering's hooks run on Node.js, so `node` must resolve on `PATH` (check with `node --version`). Without it the gate [fails open — silently](plugins/delegation-tiering/README.md#verify); step 2 below is the detector. steering-claude-code needs nothing beyond Claude Code.
 
 Then:
 
