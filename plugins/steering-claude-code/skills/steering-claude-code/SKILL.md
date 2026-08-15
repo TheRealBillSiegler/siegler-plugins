@@ -43,7 +43,7 @@ Take the first branch that fits:
 
 ## Building enforcement (hooks)
 
-When branch 1 lands on a hook: PreToolUse controls via structured JSON — `hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow; the exit-code-2/stderr path is the simpler alternative. Matchers use bare tool names, and `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable — to enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Which events fire where, with dated evidence, is one cell in the plugin repo's `docs/COVERAGE.md`. Worked example: the sibling `delegation-tiering` plugin's `hooks/agent-model-gate.js` (same marketplace).
+When branch 1 lands on a hook: PreToolUse controls via structured JSON — `hookSpecificOutput.permissionDecision: "deny"` + `permissionDecisionReason`, and `additionalContext` on allow; the exit-code-2/stderr path is the simpler alternative. Matchers use bare tool names, and `Agent` and `Workflow` are distinct tools. Per-spawn events inside a running workflow are not hookable — to enforce a property of workflow-spawned agents, lint the script text at Workflow launch (`tool_input.script` / `scriptPath`). Worked example: the sibling `delegation-tiering` plugin's `hooks/agent-model-gate.js` (same marketplace).
 
 ## Pattern: a rule that must hold everywhere
 
@@ -51,5 +51,5 @@ Always-loaded rule (floor) + skill (judgment on invocation) + PreToolUse hook (d
 
 ## Source
 
-- Rationale beyond this skill: [Steering Claude Code: skills, hooks, rules, subagents, and more](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) — the post behind this guide — or the dated capture shipped at [references/steering-claude-code-2026-08-05.md](references/steering-claude-code-2026-08-05.md). The live post wins over the capture; the doc anchors below win over both.
-- Doc anchors (mechanics): hooks events and JSON control — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; CLAUDE.md and rules loading — <https://code.claude.com/docs/en/memory.md>; subagents — <https://code.claude.com/docs/en/sub-agents.md>; workflows — <https://code.claude.com/docs/en/workflows.md>; tool names — <https://code.claude.com/docs/en/tools-reference.md>. Re-verify mechanics there before relying on them for config that must not silently break; doc drift is watched in the plugin repo (TheRealBillSiegler/claude-plugins: `scripts/check-drift.js` against `scripts/anchors.json`).
+- Rationale beyond this skill: [Steering Claude Code: skills, hooks, rules, subagents, and more](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) — the post behind this guide.
+- Mechanics come from the official docs — [hooks](https://code.claude.com/docs/en/hooks.md), [memory](https://code.claude.com/docs/en/memory.md), [sub-agents](https://code.claude.com/docs/en/sub-agents.md), [workflows](https://code.claude.com/docs/en/workflows.md) — and where the article and docs disagree, the docs win: re-verify there before relying on a mechanic for config that must not silently break.

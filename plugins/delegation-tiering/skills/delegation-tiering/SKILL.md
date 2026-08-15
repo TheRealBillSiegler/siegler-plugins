@@ -37,8 +37,6 @@ Durable rules about the table:
 3. **Unit economics?** Judge cost-per-task, not price-per-token — cost-per-task is often lower for more intelligent models, especially at lower effort levels, even when price-per-token is higher. A weaker model that retries or produces work needing a redo is not cheap.
 4. **Did design already happen?** When a design phase produced implementation-ready specs, downgrade the implementer (work planned at the reasoning tier drops to the balanced tier once specified to near-code level).
 
-There is no access-constraints question: every model available to the session is equally accessible to a delegated agent, so availability is already folded into the top-tier definition.
-
 ## Traps
 
 - **Workflow scripts:** omitting `model` on an `agent()` call inherits the *session* model — often the top tier. Set `model` (and `effort`) explicitly on every `agent()` call; if inheriting genuinely is the lowest sufficient choice, still write the model explicitly so the choice is visible. The launch-time script lint (see Enforcement) backstops this path, but only heuristically — keep the discipline regardless.
@@ -60,7 +58,7 @@ The gate earns top tier once per claim, not once per retry: a follow-up named "r
 
 ## Advisor pattern
 
-For fan-outs, prefer cheap workers plus a top-tier gate over top tier everywhere: fastest/balanced-tier finders → top-tier adversarial verify. Benchmark evidence for the pattern is in the dated capture under Source.
+For fan-outs, prefer cheap workers plus a top-tier gate over top tier everywhere: fastest/balanced-tier finders → top-tier adversarial verify. The economics hold on at least one real benchmark: on SWE-bench Pro, Sonnet 5 with a Fable 5 advisor is within 10% of Fable 5's score at 63% of the price of using Fable 5 for the whole task — a single-benchmark figure, not a general result.
 
 ## Evaluation
 
@@ -74,19 +72,18 @@ What backs the standing rule:
 
 - **Agent tool (deterministic):** this plugin's PreToolUse hook (`hooks/agent-model-gate.js`, matcher `Agent|Workflow`) denies Agent calls without `model` and injects a one-line tiering reminder on calls that have one.
 - **Workflow tool (deterministic, heuristic):** the same hook lints the script text at launch and denies on `agent()` calls with no `model:` in their argument span, quoting the offending snippets.
-  - String scan, not a JS parse: a call whose model arrives via a variable or shared options object can false-positive (suppress with a `/* model-gate:allow */` comment inside that call), and stray `model:` text between calls can mask a violation. Self-test: `node hooks/agent-model-gate.js --test` from the plugin root.
+  - String scan, not a JS parse: it can false-positive on a call whose model arrives via a variable or shared options object, and stray `model:` text between calls can mask a violation. The denial message carries the fix, escape marker included; mechanics are in the plugin's `hooks/README.md`.
   - Fail-open paths: named/predefined workflows (no script text to lint) are allowed with only a reminder, and an unreadable `scriptPath` is allowed silently — both fall back to the always-loaded rule alone.
   - Per-spawn events inside a running workflow are not hookable, so launch-time linting is the only deterministic contact point for this path.
 - **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-tiering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
 
-Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable (a weekly mix summary runs in the plugin repo).
+Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable.
 
 Not covered: the `claude -p` spawn itself, which is a Bash command rather than a delegation call — choose that session's model deliberately. The child session then gates its own delegations normally, since it loads the same plugins and hooks.
 
-Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-tiering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). The per-path verification dates, gaps, and platform dependencies are the plugin repo's `docs/COVERAGE.md`, and doc drift is watched there weekly.
+Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-tiering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied).
 
 ## Source
 
-- Rationale beyond this skill: [Claude models explained: choosing the best model for your use case](https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case) — the post behind the selection framework — or the dated capture shipped at [references/claude-models-explained-2026-08-05.md](references/claude-models-explained-2026-08-05.md). The live post wins over the capture; the doc anchors below win over both.
-- Doc anchors (enforcement mechanics): hook control surface — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; matchable tool names — <https://code.claude.com/docs/en/tools-reference.md>; workflow spawn isolation — <https://code.claude.com/docs/en/workflows.md> and <https://code.claude.com/docs/en/sub-agents.md>; effort pinning in agent definitions — <https://code.claude.com/docs/en/sub-agents.md>. Where the article and docs disagree, docs win.
-- Model facts (IDs, tiers, pricing, effort vocabulary): the maintained anchors are the [platform models overview](https://platform.claude.com/docs/en/about-claude/models/overview) and the local `claude-api` skill — not this skill or its digest.
+- Rationale beyond this skill: [Claude models explained: choosing the best model for your use case](https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case) — the post behind the selection framework and the advisor figure.
+- Model facts (IDs, tiers, pricing, effort vocabulary): the maintained anchors are the [platform models overview](https://platform.claude.com/docs/en/about-claude/models/overview) and the local `claude-api` skill — not this skill.
