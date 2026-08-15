@@ -25,13 +25,13 @@ In text: check-drift.js compares the anchored doc pages and the Claude Code vers
 
 Which anchor a claim needs depends on which of three fidelity tiers it belongs to. Step 2 below re-verifies against whichever tier the drifted claim belongs to.
 
-- **Article-only claims** (advisor figure, start-smart posture): dated quote digests in each skill's `references/` — the blogs are the primary source; digests are the ceiling.
-- **Mechanics**: specific `code.claude.com/docs` pages, listed per claim in each SKILL.md's Doc anchors; docs win over articles.
+- **Article-only claims** (advisor figure, start-smart posture): dated quote digests in [docs/research/](research/) — the blogs are the primary source; digests are the ceiling. (Moved out of the skills' `references/`: the payload carries what Claude needs to execute, not the apparatus that verifies it.)
+- **Mechanics**: specific `code.claude.com/docs` pages, listed per claim in [COVERAGE.md](COVERAGE.md)'s dependency table; the steering-claude-code skill also links its doc pages inline as user-facing guidance. Docs win over articles.
 - **Enforcement-boundary behavior** (what actually fires for what): empirical, dated live tests — largely undocumented; where a doc page does state a boundary, [COVERAGE.md](COVERAGE.md)'s dependency table cites it, and the canary and weekly probe re-establish the behavior after Claude Code updates either way.
 
 ## Procedure
 
-1. **Scope the drift first — exit early if it's noise.** For each page check-drift reports as changed, fetch it and diff against the claims the skills actually anchor to it (each SKILL.md's "Doc anchors" bullet names the page-to-claim mapping). Typo/format/unrelated-section changes → run `node scripts/check-drift.js --update`, commit the refreshed `anchors.json` with a one-line note, and stop. Do not touch skill prose for noise.
+1. **Scope the drift first — exit early if it's noise.** For each page check-drift reports as changed, fetch it and diff against the claims the skills actually anchor to it ([COVERAGE.md](COVERAGE.md)'s dependency table names the page-to-claim mapping). Typo/format/unrelated-section changes → run `node scripts/check-drift.js --update`, commit the refreshed `anchors.json` with a one-line note, and stop. Do not touch skill prose for noise.
 
 2. **If an anchored claim is affected**, re-verify the mechanic empirically before editing prose:
    - Run `node evals/delegation-tiering/contract/run-contract-tests.js` (offline contract).

@@ -7,7 +7,7 @@ description: Use when spawning or configuring any delegated agent — an Agent t
 
 Standing rule: every delegated agent gets an **explicit model** at the **lowest tier sufficient** for its task. State the tiering rationale when presenting a plan that spawns agents.
 
-Scope: supervised delegation only — a capable orchestrator stays in the loop, writing the spec, choosing the tier, reviewing the output. For a standalone workload with no orchestrator, follow the source article's top-down default instead (rationale under Design rationale below).
+Scope: supervised delegation only — a capable orchestrator stays in the loop, writing the spec, choosing the tier, reviewing the output. For a standalone workload with no orchestrator, follow the source article's top-down default instead: start with the most capable model and use effort to dial cost down (why this skill inverts that default: the plugin README's Design rationale section).
 
 ## The ladder
 
@@ -36,8 +36,6 @@ Durable rules about the table:
 2. **Latency/volume?** High-frequency fan-out stages point down the ladder.
 3. **Unit economics?** Judge cost-per-task, not price-per-token — the article notes cost-per-task is often lower for more intelligent models, especially at lower effort levels, even when price-per-token is higher. A weaker model that retries or produces work needing a redo is not cheap.
 4. **Did design already happen?** When a design phase produced implementation-ready specs, downgrade the implementer (work planned at the reasoning tier drops to the balanced tier once specified to near-code level).
-
-Questions 1–3 adapt three of the article's four (task difficulty, latency, unit economics); the access-constraints question is deliberately dropped — every model available to the session is equally accessible to a delegated agent, so availability is already folded into the top-tier definition. Question 4 is a delegation-specific addition with no article counterpart.
 
 ## Traps
 
@@ -74,24 +72,18 @@ What backs the standing rule:
 
 - **Agent tool (deterministic):** this plugin's PreToolUse hook (`hooks/agent-model-gate.js`, matcher `Agent|Workflow`) denies Agent calls without `model` and injects a one-line tiering reminder on calls that have one.
 - **Workflow tool (deterministic, heuristic):** the same hook lints the script text at launch and denies on `agent()` calls with no `model:` in their argument span, quoting the offending snippets.
-  - String scan, not a JS parse: a call whose model arrives via a variable or shared options object can false-positive (suppress with a `/* model-gate:allow */` comment inside that call), and stray `model:` text between calls can mask a violation. Self-test: `node hooks/agent-model-gate.js --test` from the plugin root.
+  - String scan, not a JS parse: it can false-positive on a call whose model arrives via a variable or shared options object, and stray `model:` text between calls can mask a violation. The denial message carries the fix, escape marker included; mechanics are in the plugin's `hooks/README.md`.
   - Fail-open paths: named/predefined workflows (no script text to lint) are allowed with only a reminder, and an unreadable `scriptPath` is allowed silently — both fall back to the always-loaded rule alone.
   - Per-spawn events inside a running workflow are not hookable, so launch-time linting is the only deterministic contact point for this path.
 - **Always-loaded rule (probabilistic):** the standing rule also lives in `~/.claude/rules/delegation.md` (installed by the `/delegation-tiering:canary` command if missing), so it holds even when this skill is never invoked and survives compaction.
 
-Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable (a weekly mix summary runs in the plugin repo).
+Alongside the layers, observability: this plugin's PostToolUse hook (`hooks/delegation-ledger.js`) records every delegation to the plugin's data directory — the gate makes models explicit; the ledger makes tier choices reviewable.
 
 Not covered: the `claude -p` spawn itself, which is a Bash command rather than a delegation call — choose that session's model deliberately. The child session then gates its own delegations normally, since it loads the same plugins and hooks.
 
-Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-tiering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied). Enforcement mechanics last verified 2026-08-09; the per-path dates, gaps, and platform dependencies are the plugin repo's `docs/COVERAGE.md`, and doc drift is watched there weekly.
-
-## Design rationale
-
-Why bottom-up, when the article's default is top-down: the source article recommends "start with the most intelligent generally available model and use effort level to dial in performance and cost." This skill deliberately takes the article's alternative path because it operates strictly downstream of that choice — the orchestrator doing the delegating already **is** the most capable model available in the session, and it stays in the loop. That structure is the article's own advisor strategy generalized across the ladder.
+Maintenance: `Agent` and `Workflow` are documented tool names, but a rename would disable the gate silently — after a Claude Code update, run `/delegation-tiering:canary` (one Agent call without `model` and one Workflow script containing a model-less `agent()` call; expect both denied).
 
 ## Source
 
 - [Claude models explained: choosing the best model for your use case](https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case) — Anthropic, claude.com blog. The selection framework, economics guidance, and advisor example above are drawn from it; the ladder's effort mapping, question 4, and the bottom-up posture are delegation-specific adaptations.
-- [Quote-anchored digest of the article](references/claude-models-explained-2026-08-05.md) — captured 2026-08-05 with cross-verified verbatim quotes; re-verify against the live URL before relying on a quote for a durable claim.
-- Doc anchors (enforcement mechanics): hook control surface — <https://code.claude.com/docs/en/hooks.md> and <https://code.claude.com/docs/en/hooks-guide.md>; matchable tool names — <https://code.claude.com/docs/en/tools-reference.md>; workflow spawn isolation — <https://code.claude.com/docs/en/workflows.md> and <https://code.claude.com/docs/en/sub-agents.md>; effort pinning in agent definitions — <https://code.claude.com/docs/en/sub-agents.md>. Where the article and docs disagree, docs win.
-- Model facts (IDs, tiers, pricing, effort vocabulary): the maintained anchors are the [platform models overview](https://platform.claude.com/docs/en/about-claude/models/overview) and the local `claude-api` skill — not this skill or its digest.
+- Model facts (IDs, tiers, pricing, effort vocabulary): the maintained anchors are the [platform models overview](https://platform.claude.com/docs/en/about-claude/models/overview) and the local `claude-api` skill — not this skill.
