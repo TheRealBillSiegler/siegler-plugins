@@ -1,7 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "siegler-plugins",
-  "description": "Bill Siegler's Claude Code plugins: delegation tiering enforcement, steering-mechanism guidance, the instrument that tests whether steering text earns its place, and their freshness pipeline.",
   "owner": {
     "name": "Bill Siegler",
     "url": "https://github.com/TheRealBillSiegler"
