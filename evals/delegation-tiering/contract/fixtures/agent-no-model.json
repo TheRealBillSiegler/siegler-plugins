@@ -1,1 +1,0 @@
-{"_purpose":"Gate deny branch: an Agent call with no model parameter must be denied with re-issue instructions.","tool_name":"Agent","tool_input":{"prompt":"x"}}
