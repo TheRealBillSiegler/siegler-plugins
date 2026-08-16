@@ -10,19 +10,19 @@
     {
       "name": "delegation-tiering",
       "description": "Model/effort tiering for every delegated agent: tier-ladder skill, deterministic PreToolUse gate, per-delegation ledger, live canary.",
-      "source": { "source": "github", "repo": "TheRealBillSiegler/delegation-tiering" },
+      "source": { "source": "url", "url": "https://github.com/TheRealBillSiegler/delegation-tiering.git" },
       "category": "productivity"
     },
     {
       "name": "steering-claude-code",
       "description": "A single skill: the decision guide for where a Claude Code behavior should live, with enforcement mechanics per option.",
-      "source": { "source": "github", "repo": "TheRealBillSiegler/steering-claude-code" },
+      "source": { "source": "url", "url": "https://github.com/TheRealBillSiegler/steering-claude-code.git" },
       "category": "productivity"
     },
     {
       "name": "ablation",
       "description": "A single skill: tests whether a piece of instruction text still earns its place, by running matched tasks with and without it under blind judging — and reports the smallest difference the design could have detected.",
-      "source": { "source": "github", "repo": "TheRealBillSiegler/ablation" },
+      "source": { "source": "url", "url": "https://github.com/TheRealBillSiegler/ablation.git" },
       "category": "productivity"
     }
   ]

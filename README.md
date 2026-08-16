@@ -13,7 +13,7 @@ Claude Code plugin marketplace by [Bill Siegler](https://github.com/TheRealBillS
 The plugins are independent — install any subset:
 
 ```bash
-claude plugin marketplace add TheRealBillSiegler/siegler-plugins
+claude plugin marketplace add https://github.com/TheRealBillSiegler/siegler-plugins
 claude plugin install delegation-tiering@siegler-plugins
 claude plugin install steering-claude-code@siegler-plugins
 claude plugin install ablation@siegler-plugins
@@ -28,9 +28,9 @@ Then:
 
 ### Other ways to install
 
-**In a session** — `/plugin marketplace add TheRealBillSiegler/siegler-plugins`, then `/plugin install <plugin>@siegler-plugins`.
+**In a session** — `/plugin marketplace add https://github.com/TheRealBillSiegler/siegler-plugins`, then `/plugin install <plugin>@siegler-plugins`.
 
-**Direct from a plugin's own repo** — each plugin repo self-registers as a one-plugin marketplace, e.g. `/plugin marketplace add TheRealBillSiegler/ablation`, then `/plugin install ablation@ablation` (the doubled name is correct).
+**Direct from a plugin's own repo** — each plugin repo self-registers as a one-plugin marketplace, e.g. `/plugin marketplace add https://github.com/TheRealBillSiegler/ablation`, then `/plugin install ablation@ablation` (the doubled name is correct).
 
 **By hand**, for dotfiles or config you version yourself — merge these keys into `~/.claude/settings.json` ([settings reference](https://code.claude.com/docs/en/settings#plugin-settings)), keeping only the plugins you want:
 
@@ -38,7 +38,7 @@ Then:
 {
   "extraKnownMarketplaces": {
     "siegler-plugins": {
-      "source": { "source": "github", "repo": "TheRealBillSiegler/siegler-plugins" }
+      "source": { "source": "url", "url": "https://github.com/TheRealBillSiegler/siegler-plugins.git" }
     }
   },
   "enabledPlugins": {
